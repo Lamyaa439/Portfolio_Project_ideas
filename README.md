@@ -152,8 +152,17 @@ manage a personal store, and communicate directly with customers. It
 also aims to make it easier for users to discover local artists and 
 artistic products in one place.
 
+### Potential Challenges
+- Attracting enough artists and users to the platform in its early stages
+- Managing secure and reliable payment systems
+- Verifying artists and maintaining content quality
+
+### Opportunities
+- Supporting local artists and creative communities
+- Expanding the platform to include art events, exhibitions, and workshops
+- Creating a growing marketplace for handmade and artistic products
+
 ### ✅ Why This Idea Was Selected
 This idea was selected because it presents a clear problem, a feasible 
 technical scope for an MVP, and strong potential to support the growing 
 creative community.
-
