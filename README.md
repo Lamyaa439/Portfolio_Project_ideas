@@ -25,7 +25,7 @@ implement while still addressing a meaningful problem.
 
 ---
 
-## 💡 Idea 1: Platform for People with Special Needs — *Wesal / Wiam*
+## 💡 Idea 1: Platform for People with Special Needs — *وصال / وئام*
 
 ### Description
 A digital platform (application) that forms an integrated community for people 
@@ -139,3 +139,21 @@ user's live location to the nearest emergency response centers.
 ### ❌ Reason for Rejection
 - High risk of false or non-serious emergency reports, which could overload 
   emergency services
+---
+
+## 🎨 Selected MVP — Artists Platform *(LOVEN / لوڤن)*
+
+### Description
+The selected MVP is a digital platform designed to support artists by 
+providing a centralized space where they can showcase their work, sell 
+their artwork, and connect with potential buyers and art enthusiasts. 
+The platform allows artists to create profiles, display their artwork, 
+manage a personal store, and communicate directly with customers. It 
+also aims to make it easier for users to discover local artists and 
+artistic products in one place.
+
+### ✅ Why This Idea Was Selected
+This idea was selected because it presents a clear problem, a feasible 
+technical scope for an MVP, and strong potential to support the growing 
+creative community.
+
