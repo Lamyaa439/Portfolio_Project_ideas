@@ -28,7 +28,7 @@ This diagram represents the relational database design of the system. It shows t
 # High-level sequence diagrams
 This section presents high-level sequence diagrams that illustrate the interaction between system components during key use cases in the art marketplace system. The diagrams show communication between the client, frontend, backend API, database, and external services.
 
-1.	Artist registration
+## 1.	Artist registration
 * Goal: Create a new artist account while ensuring valid input and preventing duplicate registrations.
 * Actors/Components:
     - **Artist (Client)**: Enters registration details and submits the form.
@@ -42,7 +42,7 @@ This section presents high-level sequence diagrams that illustrate the interacti
   </p>
 The artist fills the registration form, and the frontend sends the request to the backend. The backend validates input data and checks whether the email already exists. If the email is already registered, an error is returned. Otherwise, the password is hashed, and both the user and artist profile records are created in the database. A success response is then returned to the frontend.
 
-2.	Login
+## 2.	Login
 * Goal: Allow a user to log in securely using their email and password.
 * Actors / Components:
     - **User (Client)**: Enters email and password to access the system.
@@ -57,7 +57,7 @@ The artist fills the registration form, and the frontend sends the request to th
 The user enters their email and password in the frontend. The frontend sends a login request to the backend API. The backend retrieves the user record from the database using the email.
 The backend then verifies the password. If the credentials are valid, the system generates and returns an access token. If the credentials are invalid, an error message is returned to the frontend.
 
-3.	Artist uploads a new artwork
+## 3.	Artist uploads a new artwork
 * Goal: An artist uploads a new artwork by entering details and uploading an image.
 * Actors / Components 
     - **Artist (Client)**: Provides artwork details and uploads image.
@@ -72,7 +72,7 @@ The backend then verifies the password. If the credentials are valid, the system
   </p>
 The artist submits artwork details and an image. The backend verifies the artist account, uploads the image to storage, and receives the image URL. Then, it creates the artwork and artwork image records in the database and returns a success response.
 
-4.	Customer order
+## 4.	Customer order
 * Goal: A customer places an order by adding items to the cart and completing payment.
 * Actors / Components 
     - **Customer (Client)**: Adds items to cart and initiates checkout.
@@ -180,33 +180,33 @@ The LOVEN backend integrates with the following third-party services to offload 
 
 # SCM and QA Plans
 
-1. Source Code Management (SCM) Plan:
+## 1. Source Code Management (SCM) Plan:
 The LOVEN project uses **Git** and **GitHub** as the primary tools for source code management, following the **GitHub Flow** branching strategy to support organized and collaborative development.
 
 The workflow includes:
-	A main branch that contains the stable and production-ready version of the project.
-	Creating separate feature branches for each task, feature, or documentation update (e.g., ```feature/login```, ```docs/project-charter```).
-	Using **pull requests (PRs)** to propose changes and review them before merging into the main branch.
-	Performing code reviews to ensure code quality, consistency, and correctness before approval.
-	Writing clear and descriptive commit messages to track changes and maintain a readable project history.
-	Following branch naming conventions to keep the repository organized.
-	Resolving merge conflicts carefully before integrating changes.
+* A main branch that contains the stable and production-ready version of the project.
+* Creating separate feature branches for each task, feature, or documentation update (e.g., ```feature/login```, ```docs/project-charter```).
+* Using **pull requests (PRs)** to propose changes and review them before merging into the main branch.
+* Performing code reviews to ensure code quality, consistency, and correctness before approval.
+* Writing clear and descriptive commit messages to track changes and maintain a readable project history.
+* Following branch naming conventions to keep the repository organized.
+* Resolving merge conflicts carefully before integrating changes.
 This structured workflow ensures better collaboration among team members, reduces conflicts, and maintains a clean and traceable development process.
 
 The team uses **Visual Studio Code (VS Code)** as the main development environment, which is integrated with **Git** and **GitHub** to manage version control, track changes, and support collaboration.
 
-2. Quality Assurance (QA) Plan
+## 2. Quality Assurance (QA) Plan
 To ensure the reliability and functionality of the LOVEN application, the team applies continuous testing throughout the development process.
 
 The QA strategy includes:
-	API testing using **Postman** and **command-line tools (e.g., curl)** to verify endpoint functionality, request handling, and responses.
-	Manual testing of key user flows such as registration, login, browsing artworks, adding items to cart, and completing purchases.
-	Integration testing to ensure proper communication between the mobile application, backend services, and database.
-	Validation and error handling testing to ensure the system correctly handles invalid inputs and unexpected scenarios.
-	Authentication and authorization testing to verify secure access control and protected routes.
-	Regression testing to ensure that new changes do not negatively affect existing features.
-	Database testing to confirm correct storage, retrieval, and updating of data.
+* API testing using **Postman** and **command-line tools (e.g., curl)** to verify endpoint functionality, request handling, and responses.
+* Manual testing of key user flows such as registration, login, browsing artworks, adding items to cart, and completing purchases.
+* Integration testing to ensure proper communication between the mobile application, backend services, and database.
+* Validation and error handling testing to ensure the system correctly handles invalid inputs and unexpected scenarios.
+* Authentication and authorization testing to verify secure access control and protected routes.
+* Regression testing to ensure that new changes do not negatively affect existing features.
+* Database testing to confirm correct storage, retrieval, and updating of data.
 Testing focuses on core MVP functionalities to ensure system stability, usability, and correctness before final delivery.
 
-3. Technical Justification
+## 3. Technical Justification
 The use of **GitHub Flow** provides a simple and effective branching strategy that supports parallel development and safe integration of changes. Additionally, using **Postman** and **command-line tools** enables efficient and reliable API testing, allowing the team to validate backend functionality before integrating it with the mobile application. Continuous testing throughout development helps identify issues early, improves system reliability, and increases the likelihood of delivering a functional and stable MVP.
