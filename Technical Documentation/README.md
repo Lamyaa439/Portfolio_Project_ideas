@@ -227,8 +227,7 @@ As an artist, I want to create and manage my profile, so that I can showcase my 
 As an artist, I want to upload and manage artwork listings, so that I can sell my work.
 As an artist, I want to view incoming orders, so that I can manage sales.
 As an artist, I want to update shipment information (shipping company & tracking number), so that buyers can track deliveries.
-Tools for Your Mockups
-You can say in your submission:
+Tools for Mockups:
 I used Figma to design the mobile UI mockups for LOVEN.
 Screens include: Login, Home, Artwork Details, Cart, Orders, and Artist Dashboard.
 Canva to design the Logo of the app
