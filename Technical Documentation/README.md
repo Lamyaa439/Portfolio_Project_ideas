@@ -10,15 +10,14 @@ This diagram illustrates the overall system architecture, showing the interactio
 ## 1. Classes
 Figure 2: Class Diagram
 
-![Class Diagram](<img width="8192" height="8135" alt="LOVEN Mobile App Payment-2026-04-23-084136" src="https://github.com/user-attachments/assets/08167734-75d6-4663-a80d-34cb2de49c17" />
-)
+<img src="https://github.com/user-attachments/assets/08167734-75d6-4663-a80d-34cb2de49c17" width="600"/>
 
 This diagram illustrates the main back-end classes of the system, including their attributes, methods, and relationships. It represents the business logic and interactions between system components.
 
 ## 2. Database Design
 Figure 3: Entity Relationship Diagram (ERD)
 
-![Entity Relationship Diagram](<img width="7600" height="8192" alt="LOVEN mobile App ED" src="https://github.com/user-attachments/assets/3471af10-5c4e-4127-873a-fa658445ed26" />)
+<img src="https://github.com/user-attachments/assets/3471af10-5c4e-4127-873a-fa658445ed26" width="600"/>
 
 This diagram represents the relational database design of the system. It shows tables, attributes, primary keys, foreign keys, and relationships between entities.
 
@@ -33,9 +32,10 @@ This section presents high-level sequence diagrams that illustrate the interacti
     •	**Backend API**: Validates input, checks email uniqueness, hashes password, and creates user and artist profile.
     •	**Database**: Stores user and artist profile records and checks for existing email.
 
-Figure 4: Artist registration sequence diagram
-
-![Artist registration sequence diagram](<img width="692" height="582" alt="Artist Profile sequence diagram drawio" src="https://github.com/user-attachments/assets/5bac8d39-c1fc-4250-9529-2b506989ef0f" />)
+<p align="center">
+  <strong>Figure 4: Artist Registration Sequence Diagram</strong><br><br>
+  <img src="https://github.com/user-attachments/assets/5bac8d39-c1fc-4250-9529-2b506989ef0f" width="600"/>
+</p>
 
 The artist fills the registration form, and the frontend sends the request to the backend. The backend validates input data and checks whether the email already exists. If the email is already registered, an error is returned. Otherwise, the password is hashed, and both the user and artist profile records are created in the database. A success response is then returned to the frontend.
 
@@ -47,9 +47,10 @@ The artist fills the registration form, and the frontend sends the request to th
     •	**Backend API**: Validates credentials, verifies password, and generates access token.
     •	**Database**: Retrieves user record based on email.
 
-Figure 5: Login sequence diagram
-
-![Login sequence diagram](<img width="611" height="471" alt="fd04cb10-cef1-464e-93b4-a513a84d6e1a" src="https://github.com/user-attachments/assets/96f03add-3c99-45f7-842a-fca76e803cb8" />)
+<p align="center">
+  <strong>Figure 5: Login Sequence Diagram</strong><br><br>
+  <img src="https://github.com/user-attachments/assets/96f03add-3c99-45f7-842a-fca76e803cb8" width="600"/>
+</p>
 
 The user enters their email and password in the frontend. The frontend sends a login request to the backend API. The backend retrieves the user record from the database using the email.
 The backend then verifies the password. If the credentials are valid, the system generates and returns an access token. If the credentials are invalid, an error message is returned to the frontend.
@@ -63,9 +64,10 @@ The backend then verifies the password. If the credentials are valid, the system
     •	**Database**: Stores artwork and artwork image records.
     •	**Image Storage**: Stores uploaded image and returns its URL.
 
-Figure 6: Artist uploads a new artwork sequence diagram
-
-![Artist uploads a new artwork sequence diagram](<img width="781" height="442" alt="Artist Uploads a New Artwork drawio" src="https://github.com/user-attachments/assets/49d99fd2-dbed-4dae-91b7-e90350352439" />)
+<p align="center">
+  <strong>Figure 6: Artist uploads a new artwork Sequence Diagram</strong><br><br>
+  <img src="https://github.com/user-attachments/assets/49d99fd2-dbed-4dae-91b7-e90350352439" width="600"/>
+</p>
 
 The artist submits artwork details and an image. The backend verifies the artist account, uploads the image to storage, and receives the image URL. Then, it creates the artwork and artwork image records in the database and returns a success response.
 
@@ -78,12 +80,12 @@ The artist submits artwork details and an image. The backend verifies the artist
     •	**Database**: Stores cart, order, and order items; updates artwork stock.
     •	**Payment Service**: Processes payment and returns success or failure.
 
-Figure 7: Customer order sequence diagram
-
-![Customer order sequence diagram](<img width="821" height="725" alt="Customer Order sequence diagram drawio" src="https://github.com/user-attachments/assets/a84eca90-2c2e-4990-8bcd-2df1b4932518" />)
+<p align="center">
+  <strong>Figure 7: Customer order sequence diagram</strong><br><br>
+  <img src="https://github.com/user-attachments/assets/a84eca90-2c2e-4990-8bcd-2df1b4932518" width="600"/>
+</p>
 
 The customer adds items to the cart, and the backend checks artwork availability and updates the cart. During checkout, the backend calculates totals and sends a payment request. Once payment is successful, the system creates the order and order items, updates stock, clears the cart, and returns confirmation.
-
 
 # LOVEN — API Documentation
 
