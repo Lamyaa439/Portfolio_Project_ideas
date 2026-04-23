@@ -1,4 +1,18 @@
 # Technical Documentation
+
+# Design System Architecture
+
+<img width="6458" height="3563" alt="Payment Processing Flow in-2026-04-23-090142" src="https://github.com/user-attachments/assets/bfd0e88e-2b3c-4fa7-9853-5916f5b27e5e" />
+
+# Classes, and Database Design
+
+## 1. Classes
+<img width="8192" height="8135" alt="LOVEN Mobile App Payment-2026-04-23-084136" src="https://github.com/user-attachments/assets/08167734-75d6-4663-a80d-34cb2de49c17" />
+
+## 2. Database Design
+<img width="7600" height="8192" alt="LOVEN mobile App ED" src="https://github.com/user-attachments/assets/3471af10-5c4e-4127-873a-fa658445ed26" />
+
+
 # LOVEN — API Documentation
 
 
@@ -23,51 +37,71 @@ The LOVEN backend integrates with the following third-party services to offload 
 - **Authentication:** All protected endpoints require a `Bearer <token>` in the HTTP `Authorization` header.
 - **Identifiers:** All resource IDs are secure, non-sequential **UUIDs**.
 
-### Authentication & Account Management
-| Method | Endpoint | Input Format | Output Format | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/auth/register` | JSON (name, email, password, role) | User Object + Token | Registers a new buyer or artist. |
-| `POST` | `/auth/login` | JSON (email, password) | Auth Token | Authenticates user and returns JWT. |
-| `GET` | `/users/me` | None (Auth Header) | User Object | Retrieves the current user's profile. |
-| `PUT` | `/users/me` | JSON (name, email, etc.) | Updated User Object | Modifies user account data. |
-| `DELETE` | `/users/me` | None (Auth Header) | Success Message | Performs a soft delete on the account. |
+## Authentication & Identity Layer
 
-### Artist Profile Management
 | Method | Endpoint | Input Format | Output Format | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/artists` | JSON (display_name, bio) | Artist Object | Initializes an artist profile for a User. |
-| `GET` | `/artists/{id}` | Path Param | Artist + Artworks | Public view of an artist's portfolio. |
-| `PUT` | `/artists/me` | JSON (bio, city, policy) | Updated Artist | Updates own artist profile details. |
-| `POST` | `/artists/me/verify`| JSON (doc_type, doc_no, inst) | Verification Object | Submits institutional data for verification. |
+| `POST` | `/auth/register` | JSON (name, email, password) | User Object + Token | تسجيل مستخدم جديد (مشتري/فنان). |
+| `POST` | `/auth/login` | JSON (email, password) | Auth Token | التحقق من الهوية واستلام توكن الدخول. |
+| `PATCH` | `/users/me/fcm-token` | JSON (fcm_token) | Success Message | **مهم:** تحديث عنوان الجهاز لإرسال التنبيهات. |
+| `GET` | `/users/me` | None (Auth Header) | User Object | جلب بيانات البروفايل للمستخدم الحالي. |
+| `PUT` | `/users/me` | JSON (name, lang, city) | Updated User Object | تحديث البيانات الشخصية. |
+| `DELETE` | `/users/me` | None (Auth Header) | Success Message | تنفيذ الحذف المنطقي (Soft Delete). |
 
-### Artwork Marketplace
-| Method | Endpoint | Input Format | Output Format | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/artworks` | Query Params (`?search=`, `?cat=`) | Array (Artworks) | Browses marketplace with filters. |
-| `GET` | `/artworks/{id}` | Path Param | Artwork Object | Detailed view of a single piece. |
-| `POST` | `/artworks` | JSON (title, price, qty, etc.)| Created Artwork | Artist adds a new listing. |
-| `PUT` | `/artworks/{id}` | JSON (fields to change) | Updated Artwork | Modifies an existing listing. |
-| `DELETE` | `/artworks/{id}` | Path Param | Success Message | Soft deletes a listing from the shop. |
+---
 
-### Cart & Favorites
-| Method | Endpoint | Input Format | Output Format | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/cart` | None (Auth Header) | Cart Items + Total | Retrieves current active cart items. |
-| `POST` | `/cart/items` | JSON (artwork_id, qty) | Updated Cart | Adds or updates item quantity in cart. |
-| `DELETE` | `/cart/items/{id}`| Path Param | Updated Cart | Removes an item from the cart. |
-| `GET` | `/favorites` | None (Auth Header) | Array (Artworks) | Lists user's saved artworks. |
-| `POST` | `/favorites` | JSON (artwork_id) | Success Message | Adds an artwork to favorites. |
+## Artist & Verification Layer
 
-### Orders & Fulfillment
 | Method | Endpoint | Input Format | Output Format | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/orders` | JSON (payment_id) | Order Object | Processes cart into a confirmed order. |
-| `GET` | `/orders` | Query (`?role=buyer/seller`) | Array (Orders) | Lists order history by role. |
-| `GET` | `/orders/{id}` | Path Param | Order Details | Full status and shipping info. |
-| `PATCH` | `/orders/{id}/shipment`| JSON (company, tracking_no) | Updated Order | Artist updates shipping; triggers FCM. |
+| `POST` | `/artists` | JSON (display_name, bio) | Artist Object | إنشاء بروفايل فنان لمستخدم مسجل. |
+| `GET` | `/artists/{id}` | Path Param | Artist + Artworks | العرض العام لبروفايل الفنان وأعماله. |
+| `PUT` | `/artists/me` | JSON (bio, city, policy) | Updated Artist | تحديث بيانات الفنان المهنية. |
+| `POST` | `/artists/me/verify`| JSON (doc_type, doc_no, inst) | Verification Object | تقديم طلب التوثيق الرسمي للإدارة. |
 
-### Support & Feedback
+---
+
+## Artwork Marketplace (Catalog)
+
 | Method | Endpoint | Input Format | Output Format | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/reports` | JSON (artwork_id, reason) | Success Message | Reports problematic artwork. |
-| `POST` | `/feedback` | JSON (subject, message) | Success Message | Submits general platform feedback. |
+| `GET` | `/artworks` | Query (`search, category, page`) | Paginated Array | تصفح المتجر مع دعم البحث والتقسيم (Pagination). |
+| `GET` | `/artworks/{id}` | Path Param | Artwork Object | عرض تفاصيل العمل الفني والكمية المتوفرة. |
+| `POST` | `/artworks` | JSON (title, price, stock, images)| Created Artwork | إضافة عمل فني جديد (خاص بالفنانين فقط). |
+| `PUT` | `/artworks/{id}` | JSON (updatable fields) | Updated Artwork | تعديل بيانات العمل الفني. |
+| `DELETE` | `/artworks/{id}` | Path Param | Success Message | أرشفة العمل الفني (Soft Delete). |
+
+---
+
+## Cart & Favorites (Interactions)
+
+| Method | Endpoint | Input Format | Output Format | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/cart` | None (Auth Header) | Cart Items + Total | جلب محتويات السلة الحالية. |
+| `POST` | `/cart/items` | JSON (artwork_id, qty) | Updated Cart | إضافة أو تحديث كمية منتج في السلة. |
+| `DELETE` | `/cart/items/{id}`| Path Param | Updated Cart | حذف منتج معين من السلة. |
+| `GET` | `/favorites` | None (Auth Header) | Array (Artworks) | عرض قائمة المفضلات للمستخدم. |
+| `POST` | `/favorites/toggle`| JSON (artwork_id) | `{ status: "added/removed" }`| **Toggle:** إضافة أو حذف من المفضلات بطلب واحد. |
+
+---
+
+## Orders & Financial Transactions
+
+| Method | Endpoint | Input Format | Output Format | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/orders` | JSON (payment_method) | Order Object | تحويل السلة إلى طلب والبدء في عملية الدفع. |
+| `GET` | `/orders` | Query (`?role=buyer/seller`) | Array (Orders) | عرض سجل الطلبات حسب دور المستخدم. |
+| `GET` | `/orders/{id}` | Path Param | Order Detailed Obj | تفاصيل الطلب، الفاتورة، وبيانات الشحن. |
+| `PATCH` | `/orders/{id}/status` | JSON (status) | Updated Order | تحديث حالة الطلب (Cancelled, Delivered). |
+| `PATCH` | `/orders/{id}/shipment`| JSON (company, tracking_no) | Updated Order | **للفنانين:** إضافة بيانات الشحن وإطلاق تنبيه FCM. |
+
+---
+
+## System Governance (Support)
+
+| Method | Endpoint | Input Format | Output Format | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/reports` | JSON (artwork_id, reason, text) | Success Message | الإبلاغ عن محتوى مخالف. |
+| `POST` | `/feedback` | JSON (subject, message) | Success Message | إرسال مقترح أو ملاحظة للإدارة. |
+
+---
