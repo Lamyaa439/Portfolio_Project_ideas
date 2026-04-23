@@ -1,4 +1,4 @@
-# Technical Documentation
+<h1 align="center">Technical Documentation</h1>
 
 ## Design System Architecture
 <p align="center">
