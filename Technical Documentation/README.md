@@ -106,7 +106,7 @@ This diagram illustrates the main back-end classes of the system, including thei
   <strong>Figure 3: Entity Relationship Diagram (ERD)</strong><br><br>
   <img src="https://github.com/user-attachments/assets/dcc53505-a302-4649-818b-a131027fdba3" width="600"/>
   </p>
-This diagram represents the relational database design of the system. It shows tables, attributes, primary keys, foreign keys, and relationships between entities.
+This diagram represents the relational database design of the system. It shows tables, attributes, primary keys, unique keys, foreign keys, and relationships between entities.
 
 ## High-level sequence diagrams
 This section presents high-level sequence diagrams that illustrate the interaction between system components during key use cases in the art marketplace system. The diagrams show communication between the client, frontend, backend API, database, and external services.
