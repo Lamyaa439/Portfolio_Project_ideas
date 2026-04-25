@@ -86,7 +86,7 @@ Canva to design the Logo of the app
 ## Design System Architecture
 <p align="center">
   <strong>Figure 1: System Architecture Diagram</strong><br><br>
-<img width="6458" height="3563" alt="Payment Processing Flow in-2026-04-23-090142" src="https://github.com/user-attachments/assets/bfd0e88e-2b3c-4fa7-9853-5916f5b27e5e" />
+<img width="8191" height="2004" alt="FinalDSH" src="https://github.com/user-attachments/assets/f712bfed-e455-48c0-8b13-3c9a8378de65" />
 This diagram illustrates the overall system architecture, showing the interaction between the mobile frontend, backend API, database, and external services such as payment processing, cloud storage, and push notifications.
 </p>
 
