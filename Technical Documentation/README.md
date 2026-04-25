@@ -61,8 +61,6 @@ Important to explicitly define to avoid scope creep.
  - Multi-language support
  - Advanced payment options (crypto, installment plans)
 
-
-
 ### 2.  Mockups (Main Screens Overview) (4 enitites)
 
 #### 📱 Authentication Screens
@@ -83,7 +81,7 @@ Canva to design the Logo of the app
 
 | Splash Screen | Login | Sign Up |
 |:-------------:|:-----:|:-------:|
-| <img src="https://github.com/user-attachments/assets/7dcc8f08-5940-4df5-8d03-40a3400d6a43" width="200"/> | <img src="https://github.com/user-attachments/assets/8ddde36e-df2b-42e8-99c9-27bae2faaaa0" width="200"/> | <img src="https://github.com/user-attachments/assets/461dbbc1-209d-4dd0-abca-c273c519bb20" width="200"/> |
+| <p align="center"><img src="https://github.com/user-attachments/assets/7dcc8f08-5940-4df5-8d03-40a3400d6a43" width="200"/></p> | <p align="center"><img src="https://github.com/user-attachments/assets/8ddde36e-df2b-42e8-99c9-27bae2faaaa0" width="200"/></p> | <p align="center"><img src="https://github.com/user-attachments/assets/461dbbc1-209d-4dd0-abca-c273c519bb20" width="200"/></p> |
 
 ## Design System Architecture
 <p align="center">
