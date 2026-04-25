@@ -7,12 +7,12 @@
 #### Must Have (Core MVP – absolutely required)
 These are essential for the platform to function as a marketplace.
 
-* Authentication & Accounts
+##### Authentication & Accounts
 
  - As a user, I want to create an account and log in, so that I can access the LOVEN platform securely.
  - As a user, I want to log out, so that I can protect my account.
 
-* Artwork Discovery & Purchase
+##### Artwork Discovery & Purchase
 
  - As a user, I want to browse artworks, so that I can discover art available for purchase.
  - As a user, I want to view artwork details (title, description, price, images), so that I can decide whether to buy.
@@ -20,11 +20,11 @@ These are essential for the platform to function as a marketplace.
  - As a user, I want to remove items from my cart, so that I can manage my selections.
  - As a user, I want to complete a purchase, so that I can buy artworks.
 
-* Orders
+##### Orders
 
  - As a user, I want to view my orders, so that I can track my purchases.
 
-* Artist Core Features
+##### Artist Core Features
 
  - As an artist, I want to create and manage my profile, so that I can showcase my artwork.
  - As an artist, I want to upload and manage artwork listings, so that I can sell my work.
@@ -65,16 +65,16 @@ Important to explicitly define to avoid scope creep.
 
 #### 📱 Authentication Screens
 
-* Login Screen
+##### Login Screen
 
  - Email & password input, Login button, Link to Sign Up
 
-#### Sign Up Screen
+##### Sign Up Screen
 
  - Name, email, password inputs
 Create account button
 
-Tools for Mockups:
+#### Tools for Mockups:
 I used Figma to design the mobile UI mockups for LOVEN.
 Screens include: Login, Home, Artwork Details, Cart, Orders, and Artist Dashboard.
 Canva to design the Logo of the app
