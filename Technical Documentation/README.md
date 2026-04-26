@@ -137,10 +137,15 @@ This diagram illustrates the main back-end classes of the system, including thei
 ### 2. Database Design
 
 <p align="center">
-  <strong>Figure 3: Entity Relationship Diagram (ERD)</strong><br><br>
+  <strong>
+    Figure 3:
+    <a href="https://www.drawdb.app/editor?shareId=5d16e3046a7c6619ad7deb3b41d75061">
+      Entity Relationship Diagram (ERD)
+    </a>
+  </strong>
+  <br><br>
   <img width="5880" alt="finalll" src="https://github.com/user-attachments/assets/63d27741-6b89-419f-b303-bc36bb9880a4" />
-
-  </p>
+</p>
 This diagram represents the relational database design of the system. It shows tables, attributes, primary keys, unique keys, foreign keys, and relationships between entities.
 
 ## High-level sequence diagrams
@@ -186,7 +191,7 @@ The backend then verifies the password. If the credentials are valid, the system
 
 <p align="center">
   <strong>Figure 6: Artist uploads a new artwork Sequence Diagram</strong><br><br>
-  <img src="https://github.com/user-attachments/assets/16c577d6-69e8-4e99-865a-746d5901caa4" width="600"/>
+  <img src="https://github.com/user-attachments/assets/ce3b176f-0e40-4e58-b3b6-54105babddd9" width="600"/>
   </p>
 The artist submits artwork details and an image. The backend verifies the artist account, uploads the image to storage, and receives the image URL. Then, it creates the artwork and artwork image records in the database and returns a success response.
 
@@ -368,42 +373,74 @@ Ensures:
 - Data consistency and integrity
 - Correct CRUD operations
 - Proper handling of relationships (users, artworks, orders)
+  
 
 ## Technical Justification
 
+## Frontend Platform & Technology (Mobile + Flutter)
+
 ### 1. Flutter for Cross-Platform Development
-Flutter was chosen because it allows the development of both Android and iOS applications using a single codebase. This significantly reduces development time and effort compared to building separate native applications. This choice aligns with the scope of the project as an MVP, where time and resources are limited, enabling faster delivery without compromising quality.
 
-### 2. Mobile App over Web Application
-A mobile application was selected instead of a web application to provide better accessibility and user engagement. Mobile apps allow users to easily browse artworks, make purchases, and receive real-time updates. This decision fits the scope of the system, as the platform focuses on frequent user interaction and benefits from mobile-specific features such as push notifications.
+It was chosen over other native development (```Kotlin```/```Swift```) to eliminate platform duplication and reduce maintenance overhead. While native apps may offer slightly better platform-specific optimizations, Flutter provides sufficient performance for an image-driven marketplace while significantly accelerating development and release cycles.
 
-### 3. High Performance UI with Flutter
-Flutter provides high performance because it compiles directly to native code, resulting in smooth animations and fast rendering. This is especially important for the LOVEN platform, where users interact with image-heavy content such as artwork listings. Ensuring a responsive UI within the scope of the MVP enhances user experience without requiring complex frontend optimization.
+It also reduces overall development effort by avoiding the need to build and maintain separate applications for different platforms. This aligns with the project scope as an MVP, where time and resources are limited and rapid delivery is a priority without compromising quality.
 
-### 4. UI/UX Design Tools – Figma & Canva
-Figma was used to design the mobile UI mockups for the LOVEN application, including screens such as Login, Home, Artwork Details, Cart, Orders, and the Artist Dashboard. It supports rapid prototyping and easy iteration, which is essential within the scope of an MVP, where quick design validation is needed.
 
-Canva was used to design the application logo due to its simplicity and efficiency in creating visual assets. It allows the team to produce professional-quality branding without requiring advanced design skills, making it suitable for the project’s limited scope and resources.
+### 2. Mobile-First Approach vs Web Application
 
-### 5. Python for Rapid Development
-Python was selected as the backend programming language due to its simplicity and readability, which enables rapid development and easier collaboration. This makes it highly suitable for the limited scope and timeframe of an MVP, allowing the team to efficiently implement core features.
+A mobile-first approach was selected instead of a web application due to the nature of user interaction within the platform. The system relies on frequent engagement, real-time updates, and personalized experiences, which are better supported in mobile environments.
 
-### 6. Flask as a Lightweight Backend Framework
-Flask was chosen because it is a lightweight and flexible web framework that provides only the essential tools needed to build RESTful APIs. It avoids unnecessary complexity, making it ideal for the project scope, where a simple and maintainable backend is sufficient.
+Mobile applications enable:
+- push notifications
+- persistent sessions
+- and tighter integration with device capabilities.
 
-### 7. RESTful API Design
+While web applications offer broader accessibility and easier deployment, they lack the same level of real-time engagement and user retention mechanisms required for this use case.
+
+
+### 3. Performance Advantages of Flutter
+
+Flutter compiles directly to native code, which enables smooth animations and efficient UI rendering—particularly important for an image-heavy marketplace like LOVEN.
+
+Unlike frameworks such as ```React Native```, which rely on a ```JavaScript``` bridge, Flutter provides more consistent performance across devices. The main trade-off is a larger application size, which is acceptable within the scope of this project.
+
+
+
+### 4. UI/UX Design Tools (Figma & Canva)
+
+
+#### UI/UX Design Tools
+To support efficient design and rapid iteration, lightweight and collaborative design tools were selected for both interface design and branding.
+
+| Tool | Justification | Trade-off |
+| :--- | :------------ | :-------- | 
+| Figma | Enables real-time collaboration, rapid prototyping, and efficient design-to-development handoff | Requires internet access and may have performance limits on large files |
+| Canva | Quick and easy creation of branding assets like logos without advanced design skills | Less flexible and powerful than professional tools like Adobe Illustrator |
+
+
+## Backend Development (Python & Flask)
+
+### 5. the chose of Python and Flask
+
+* Python
+Python was selected as the backend language due to its readability and rapid development capabilities, which improve team productivity and simplify implementation of business logic. It allows faster iteration compared to alternatives such as Node.js, especially for teams prioritizing clarity and maintainability.
+
+* Flask
+Flask was chosen as the web framework due to its lightweight and flexible design. Unlike full-stack frameworks such as Django, Flask does not enforce strict structures, allowing the team to build a clean, modular RESTful API tailored to the system’s needs. While this requires more manual configuration, it avoids unnecessary complexity and provides greater control over the application architecture.
+
+### 6. RESTful API Design
 The backend follows a RESTful API design to ensure clear and standardized communication between the frontend and backend. This approach simplifies integration with the Flutter application and supports future scalability. It aligns with the scope of the system by providing a structured yet flexible architecture.
 
-### 8. PostgreSQL for Relational Data Management
+### 7. PostgreSQL for Relational Data Management
 PostgreSQL was selected as the database because it provides strong support for relational data and ensures data integrity. The LOVEN system relies on structured relationships between entities such as users, artworks, and orders. This choice fits the scope of the application, where reliable data management is essential.
 
-### 9. Containerization using Docker
+### 8. Containerization using Docker
 Docker was used to containerize the application, ensuring a consistent development and execution environment across different machines. This eliminates issues related to dependency conflicts and environment configuration differences between team members. It also simplifies setup and deployment processes. This choice aligns with the scope of the project, as it improves development efficiency and collaboration without introducing unnecessary complexity.
 
-### 10. ACID Compliance for Transactions
+### 9. ACID Compliance for Transactions
 **PostgreSQL** was configured to ensure **ACID (Atomicity, Consistency, Isolation, Durability)** compliance for all database transactions. In a marketplace like **LOVEN**, where a single purchase involves multiple steps—such as deducting stock, creating an order record, and confirming payment—ACID properties guarantee that either all steps succeed or none do. This prevents data corruption and ensures that the system remains in a consistent state, which is critical for maintaining user trust and financial accuracy.
 
-### 11. Use of External Payment Gateway (Moyasar)
+### 10. Use of External Payment Gateway (Moyasar)
 **Moyasar** was integrated as the primary payment gateway to handle financial transactions securely. By offloading payment processing to a specialized provider, the system ensures compliance with **PCI DSS** standards without the need to store sensitive credit card information on the local server. Moyasar was specifically chosen for its robust support of local payment methods in Saudi Arabia, such as **Mada and Apple Pay**, which enhances the user experience and facilitates seamless transactions within the target market.
 
 ### 12. Firebase Cloud Storage (FCS) for Media Handling
@@ -412,11 +449,11 @@ Docker was used to containerize the application, ensuring a consistent developme
 ### 13. Firebase Cloud Messaging (FCM) for Notifications
 **Firebase Cloud Messaging (FCM)** was selected as the optimal push notification infrastructure for the LOVEN MVP due to its strategic alignment with our tech stack and operational efficiency. Since the frontend is built with **Flutter**, FCM provides a seamless "One Codebase" advantage, acting as a universal translator that reliably delivers notifications to both iOS and Android devices without the need to maintain separate logic for APNs and Android services. On the backend, the official **Python Admin SDK** allows for painless integration with Flask, enabling instant notification dispatch using the user's stored `fcm_token` without building complex HTTP requests. Crucially, unlike custom WebSocket solutions that drop when an app is closed, FCM connects directly at the OS level, guaranteeing delivery even when the app is in the background or fully terminated. Furthermore, it delivers this enterprise-grade, highly scalable notification system at **zero cost** for standard messages, making it the perfect resource-efficient choice for validating the MVP.
 
-### 14. JWT for Secure Authentication
+### 13. JWT for Secure Authentication
 **JSON Web Tokens (JWT)** were adopted for secure, stateless authentication between the Flutter frontend and the Flask backend. JWT allows the server to verify user identity without the need to maintain session data in memory, which enhances system scalability. Each request is authenticated via a signed token, ensuring that sensitive actions—such as managing an artist profile or completing a purchase—are protected against unauthorized access.
 
-### 15. UUIDs for Resource Identification
+### 14. UUIDs for Resource Identification
 The system utilizes **UUIDs (Universally Unique Identifiers)** instead of sequential integers for identifying all primary resources (Users, Artworks, Orders). This approach enhances security by preventing **ID enumeration attacks**, where malicious actors could guess resource URLs by incrementing IDs. Additionally, UUIDs provide a future-proof foundation for database sharding or merging, ensuring that identifiers remain unique across different distributed systems.
 
-### 16. Modular System Architecture (Facade & Repositories)
+### 15. Modular System Architecture (Facade & Repositories)
 A **Modular Architecture**—incorporating the **Facade and Repository patterns**—was implemented to ensure a strict **Separation of Concerns**. The Repository layer abstracts database interactions, while the Facade layer orchestrates complex business logic. This modularity makes the codebase significantly easier to test, maintain, and scale. It also allows the team to modify specific components, such as changing a third-party service or updating database logic, with minimal impact on the rest of the system.
