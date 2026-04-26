@@ -161,7 +161,7 @@ This section presents high-level sequence diagrams that illustrate the interacti
 
 <p align="center">
   <strong>Figure 4: Artist Registration Sequence Diagram</strong><br><br>
-  <img src="https://github.com/user-attachments/assets/495fd6f0-9839-4cf0-bc0c-77eb99d0121f" width="600"/>
+  <img src= "https://github.com/user-attachments/assets/d82c56c2-a075-471b-915b-8eb7c7947c55" width="600"/>
   </p>
 The artist fills the registration form, and the frontend sends the request to the backend. The backend validates input data and checks whether the email already exists. If the email is already registered, an error is returned. Otherwise, the password is hashed, and both the user and artist profile records are created in the database. A success response is then returned to the frontend.
 
@@ -175,7 +175,7 @@ The artist fills the registration form, and the frontend sends the request to th
 
 <p align="center">
   <strong>Figure 5: Login Sequence Diagram</strong><br><br>
-  <img src="https://github.com/user-attachments/assets/edfa1020-30ca-48c1-83ba-4b0a7ab7c16c" width="600"/>
+  <img src= "https://github.com/user-attachments/assets/301365fd-36be-44c6-a340-77f89d44888b" width="600"/>
   </p>
 The user enters their email and password in the frontend. The frontend sends a login request to the backend API. The backend retrieves the user record from the database using the email.
 The backend then verifies the password. If the credentials are valid, the system generates and returns an access token. If the credentials are invalid, an error message is returned to the frontend.
@@ -206,7 +206,7 @@ The artist submits artwork details and an image. The backend verifies the artist
 
 <p align="center">
    <strong>Figure 7: Customer order sequence diagram</strong><br><br>
-  <img src="https://github.com/user-attachments/assets/918d6c47-277b-44ab-bf26-0d9e5a6eb5cf" width="600"/>
+  <img src="https://github.com/user-attachments/assets/20204dfd-38f3-4764-b5d9-1b7f38969be1" width="600"/>
   </p>
 The customer adds items to the cart, and the backend checks artwork availability and updates the cart. During checkout, the backend calculates totals and sends a payment request. Once payment is successful, the system creates the order and order items, updates stock, clears the cart, and returns confirmation.
 
