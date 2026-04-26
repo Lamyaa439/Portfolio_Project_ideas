@@ -368,19 +368,29 @@ Ensures:
 - Data consistency and integrity
 - Correct CRUD operations
 - Proper handling of relationships (users, artworks, orders)
+  
 
 ## Technical Justification
 
 ### 1. Flutter for Cross-Platform Development
-Flutter was chosen because it allows the development of both Android and iOS applications using a single codebase. This significantly reduces development time and effort compared to building separate native applications. This choice aligns with the scope of the project as an MVP, where time and resources are limited, enabling faster delivery without compromising quality.
 
-### 2. Mobile App over Web Application
+* Why Flutter?
+
+It was chosen over other native development (Kotlin/Swift) to eliminate platform duplication and reduce maintenance overhead. While native apps may offer slightly better platform-specific optimizations, Flutter provides sufficient performance for an image-driven marketplace while significantly accelerating development and release cycles.
+
+It also significantly reduces development time and effort compared to building separate native applications. This choice aligns with the scope of the project as an MVP, where time and resources are limited, enabling faster delivery without compromising quality.
+
+
+### 2. Mobile App Vs Web Application
+
+
 A mobile application was selected instead of a web application to provide better accessibility and user engagement. Mobile apps allow users to easily browse artworks, make purchases, and receive real-time updates. This decision fits the scope of the system, as the platform focuses on frequent user interaction and benefits from mobile-specific features such as push notifications.
 
 ### 3. High Performance UI with Flutter
 Flutter provides high performance because it compiles directly to native code, resulting in smooth animations and fast rendering. This is especially important for the LOVEN platform, where users interact with image-heavy content such as artwork listings. Ensuring a responsive UI within the scope of the MVP enhances user experience without requiring complex frontend optimization.
 
-### 4. UI/UX Design Tools – Figma & Canva
+### 4. UI/UX Design Tools (Figma & Canva)
+
 Figma was used to design the mobile UI mockups for the LOVEN application, including screens such as Login, Home, Artwork Details, Cart, Orders, and the Artist Dashboard. It supports rapid prototyping and easy iteration, which is essential within the scope of an MVP, where quick design validation is needed.
 
 Canva was used to design the application logo due to its simplicity and efficiency in creating visual assets. It allows the team to produce professional-quality branding without requiring advanced design skills, making it suitable for the project’s limited scope and resources.
