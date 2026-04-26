@@ -174,15 +174,14 @@ The customer adds items to the cart, and the backend checks artwork availability
 
 ## LOVEN — API Documentation
 
-### 1. External APIs
+### 1. External Services Integration (SDK & API)
+The backend integrates with third-party services using a mix of REST APIs and Official Admin SDKs to ensure secure and efficient operations.
 
-The LOVEN backend integrates with the following third-party services to offload specialized tasks and maintain architectural efficiency.
-
-| Service | Purpose | Reason for Selection |
-| :--- | :--- | :--- |
-| **Moyasar API** | Payment Processing | Securely handles Mada, Visa, and Apple Pay. Ensures PCI compliance without storing sensitive card data on our servers. |
-| **Firebase Storage** | Media Hosting | Offloads binary image data (artworks/profiles). Improves database performance by storing only lightweight URLs in PostgreSQL. |
-| **Firebase Cloud Messaging (FCM)** | Push Notifications | Essential for real-time order updates. Provides a reliable delivery system for the `fcm_token` stored in the User model. |
+| Service | Integration Method | Input Format | Output Format | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Moyasar** | REST API (Server-to-Server) | JSON (amount, order_id, source) | JSON (Payment Object) | Validates payment transactions and links them to the Order UUID. |
+| **Firebase Storage** | Firebase Admin SDK | File Stream / Binary | string (Public URL) | Uploads artwork/profile images and retrieves persistent access URLs. |
+| **Firebase Messaging**| Firebase Admin SDK | JSON (fcm_token, payload) | JSON (Message ID) | Dispatches real-time push notifications using the Server-side Admin SDK. |
 
 ---
 
