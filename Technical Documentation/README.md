@@ -212,16 +212,45 @@ The customer adds items to the cart, and the backend checks artwork availability
 
 ## LOVEN — API Documentation
 
-### 1. External Services Integration (SDK & API)
-The backend integrates with third-party services using a mix of REST APIs and Official Admin SDKs to ensure secure and efficient operations.
+### 1. External API Specification
 
-| Service | Integration Method | Input Format | Output Format | Description |
+#### Moyasar Payment Gateway
+- **Base URL:** `https://api.moyasar.com/v1`
+- **Content-Type:** `application/json`
+- **Authorization**: Basic Auth (Using `Secret_API_Key` from the backend environment variables).
+- **Purpose:** Secure financial transaction management and verification.
+
+| Method | Endpoint | Input Format | Output Format | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **Moyasar** | REST API (Server-to-Server) | JSON (amount, order_id, source) | JSON (Payment Object) | Validates payment transactions and links them to the Order UUID. |
-| **Firebase Storage** | Firebase Admin SDK | File Stream / Binary | string (Public URL) | Uploads artwork/profile images and retrieves persistent access URLs. |
-| **Firebase Messaging**| Firebase Admin SDK | JSON (fcm_token, payload) | JSON (Message ID) | Dispatches real-time push notifications using the Server-side Admin SDK. |
+| `POST` | `/payments` | JSON (amount, source, description) | JSON (Payment Object) | Initiates a payment request (Used for server-side specific payments). |
+| `GET` | `/payments/{id}` | Path Param | JSON (Payment Object) | Independently fetches and verifies payment status and amount on the backend. |
+| `PUT` | `/payments/{id}` | JSON (description, metadata) | JSON (Updated Payment Obj) | Updates metadata, such as attaching tracking numbers to a transaction. |
+| `POST` | `/payments/{id}/refund` | JSON (amount) | JSON (Refund Object) | Processes full or partial refunds for canceled or returned orders. |
 
 ---
+
+#### Firebase Cloud Storage (FCS)
+- **Base URL:** Admin SDK (`https://firebasestorage.googleapis.com`)
+- **Integration Method:** Firebase Admin SDK for Python.
+- **Authorization**: Google Service Account Key (`serviceAccountKey.json`).
+- **Purpose:** Handling high-resolution binary media efficiently.
+
+| Method | Endpoint / SDK Action | Input Format | Output Format | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `bucket.blob().upload_from_file()`| File Stream / Binary | String (Public URL) | Uploads artwork images or artist profile pictures to the cloud CDN. |
+| `DELETE` | `bucket.blob().delete()` | String (File Name/Path) | Success / Exception | Deletes an image from storage when an artwork is archived or deleted. |
+
+---
+
+#### Firebase Cloud Messaging (FCM)
+- **Base URL:** Admin SDK (`https://fcm.googleapis.com/v1`)
+- **Integration Method:** Firebase Admin SDK for Python.
+- **Authorization**: Google Service Account Key (`serviceAccountKey.json`).
+- **Purpose:** Dispatched real-time push notifications to mobile clients.
+
+| Method | Endpoint / SDK Action | Input Format | Output Format | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `Messaging` | JSON (fcm_token, title, body) | String (Message ID) | Sends a direct push notification to a specific user (e.g., Order Shipped). |
 
 ### 2. Internal API Specification
 
