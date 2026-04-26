@@ -189,7 +189,7 @@ The LOVEN backend integrates with the following third-party services to offload 
 ### 2. Internal API Specification
 
 #### General Configuration
-- **Base URL:** 
+- **Base URL:** `https://api.loven-app.com/v1`
 - **Content-Type:** `application/json`
 - **Authorization**: Bearer `<JWT_TOKEN>` (Required for all endpoints except `/auth/register`, `/auth/login`, and public GET catalog routes).
 - **Identifiers:** All resource IDs are secure, non-sequential **UUIDs**.
@@ -200,6 +200,7 @@ The LOVEN backend integrates with the following third-party services to offload 
 | :--- | :--- | :--- | :--- | :--- |
 | `POST` | `/auth/register` | JSON (name, email, password) | JSON (User Object + Token) | Creates a new user account. |
 | `POST` | `/auth/login` | JSON (email, password) | JSON (Token Object) | Authenticates user and returns JWT. |
+|`POST`| `/auth/logout` | None |JSON (Success) | Invalidates the current JWT token and ends the session.|
 | `PATCH` | `/users/me/fcm-token` | JSON (fcm_token) | JSON (Success Message) | Updates Firebase Cloud Messaging token. |
 | `GET` | `/users/me` | None | JSON (User Object) | Retrieves current authenticated user profile. |
 | `PATCH` | `/users/me` | JSON (name, email) | JSON (Updated User Object) | Updates the authenticated user's personal information. |
@@ -237,8 +238,8 @@ The LOVEN backend integrates with the following third-party services to offload 
 | `GET` | `/cart` | None | JSON (Cart Object + Total) | Retrieves the active cart and calculates the total. |
 | `POST` | `/cart/items` | JSON (artwork_id, qty) | JSON ( Cart Object) | Adds an artwork to the cart or updates its quantity. |
 | `DELETE` | `/cart/items/{id}`| Path Param | JSON ( Cart Object) | Removes a specific item from the cart.|
-| `GET` | `/favorites` | None | JSON (Array of Artworks) | Lists the user's saved artworks. |
-| `POST` | `/favorites/toggle`| JSON (artwork_id) | JSON (Status Object) | Toggles (adds/removes) an artwork in favorites. |
+| `GET` | `/favorites` | None | JSON (Array of Artworks) | Fetches artworks based on the `favorite_artworks_ids` array. |
+| `POST` | `/favorites/toggle`| JSON (artwork_id) | JSON (Status Object) | Executes `toggle_favorite(id)` method in the User class. |
 
 ---
 
