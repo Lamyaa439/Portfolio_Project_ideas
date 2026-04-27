@@ -446,7 +446,7 @@ To support efficient design and rapid iteration, lightweight and collaborative d
 
 ## Backend Development (Python & Flask)
 
-### 5. the chose of Python and Flask
+### 5. The choice of Python and Flask
 
 * Python
 Python was selected as the backend language due to its readability and rapid development capabilities, which improve team productivity and simplify implementation of business logic. It allows faster iteration compared to alternatives such as Node.js, especially for teams prioritizing clarity and maintainability.
