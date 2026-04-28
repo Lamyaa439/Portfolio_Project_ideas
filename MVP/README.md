@@ -1,7 +1,7 @@
 # MVP
 
-```
 ## Project Structure
+```
 
 MVP/
 ├── Frontend/              # Frontend (Flutter)
