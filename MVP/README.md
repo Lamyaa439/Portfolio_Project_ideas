@@ -1,6 +1,6 @@
 # MVP
-<<<<<<< HEAD
 
+```
 ## Project Structure
 
 MVP/
@@ -34,5 +34,3 @@ MVP/
 ├── requirements.txt
 └── README.md
 ```
-=======
->>>>>>> 2628689b9cf58193650c82e55d64433235837ba7
