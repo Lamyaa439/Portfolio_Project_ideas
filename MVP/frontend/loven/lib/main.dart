@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:card_app/bloc/card_bloc.dart';
-import 'package:card_app/bloc/card_event.dart';
-import 'package:card_app/bloc/card_state.dart';
 
 const Color offWhite = Color(0xFFF8F8F8);
 
