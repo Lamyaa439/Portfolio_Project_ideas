@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 const Color offWhite = Color(0xFFF8F8F8);
 
@@ -14,41 +13,36 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BlocProvider(
-        create: (context) => CardBloc(),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Card App"),
-            backgroundColor: Colors.deepOrange,
-          ),
-          // The color of the background
-          backgroundColor: offWhite,
-          body: Center(
-            child: Container(
-              height: 400,
-              width: 300,
-              decoration: BoxDecoration(
-                color: Colors.deepOrange,
-                // curved corners
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: EdgeInsets.all(25),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "I Rook! \nwelcome to Mi-End",
-                    style: TextStyle(
-                      color: offWhite,
-                      fontFamily: "Roboto",
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Card App"),
+          backgroundColor: Colors.deepOrange,
+        ),
+        backgroundColor: offWhite,
+        body: Center(
+          child: Container(
+            height: 400,
+            width: 300,
+            decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.all(25),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "I Rook! \nwelcome to Mi-End",
+                  style: TextStyle(
+                    color: offWhite,
+                    fontFamily: "Roboto",
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(height: 20),
-                  ObscureTextFieldSample(),
-                ],
-              ),
+                ),
+                SizedBox(height: 20),
+                ObscureTextFieldSample(),
+              ],
             ),
           ),
         ),
