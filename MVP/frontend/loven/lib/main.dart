@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 const Color offWhite = Color(0xFFF8F8F8);
 
@@ -14,6 +15,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.deepOrange,
+          child: const Icon(Icons.add, color: offWhite),
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Floating Button Pressed")),
+            );
+          },
+        ),
         appBar: AppBar(
           title: const Text("Card App"),
           backgroundColor: Colors.deepOrange,
