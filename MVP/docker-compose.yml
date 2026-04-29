@@ -4,25 +4,7 @@ services:
       context: ./backend
     container_name: loven-backend
     ports:
-      - "5432:5432"
+      - "5000:5000"
     env_file:
       - ./backend/.env
-    depends_on:
-      - db
     restart: always
-
-  db:
-    image: postgres:15
-    container_name: loven-db
-    environment:
-      POSTGRES_USER: lamyaa_admin
-      POSTGRES_PASSWORD: Lamyaa@3123
-      POSTGRES_DB: loven_main_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - loven_postgres_data:/var/lib/postgresql/data
-    restart: always
-
-volumes:
-  loven_postgres_data:
