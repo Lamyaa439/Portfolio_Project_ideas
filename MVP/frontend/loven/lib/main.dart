@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+const String baseUrl = "http://localhost:5000";
 const Color offWhite = Color(0xFFF8F8F8);
 
 void main() {
