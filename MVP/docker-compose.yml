@@ -9,7 +9,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ./backend/.env
+      - .env
     depends_on:
       - db           # Architectural rule: The database starts before the backend server
                      # since PostgreSQL database is heavier, so it needs a few seconde to allocate memory.
@@ -21,8 +21,10 @@ services:
     image: postgres:15-alpine  # Uses the official, lightweight Alpine version of PostgreSQL 15
     container_name: loven-db
     restart: always
-    env_file:
-      - ./backend/.env # Reads POSTGRES_USER, PASSWORD, and DB from .env to configure the database
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"  # Exposes the standard Postgres port so tools like SQLTools can connect
     volumes:
