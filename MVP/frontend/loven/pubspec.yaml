@@ -12,7 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # --- State Mangement ---
-  flutter_bloc: ^8.1.6
+  flutter_bloc: ^9.1.1
   equatable: ^2.0.5
 
   # -- Networking & Backend connection ---
@@ -21,11 +21,11 @@ dependencies:
 # --- Localization & Bilingual support ---
   flutter_localizations:
     sdk: flutter
-  intl: ^0.19.0
+  intl: 0.20.2
 
   # --- UI & Styling ---
   flutter_svg: ^2.0.10+1
-  google_fonts: ^6.2.1
+  google_fonts: ^8.1.0
 
 dev_dependencies:
   flutter_test:
@@ -34,10 +34,10 @@ dev_dependencies:
 
   # --- Flutter Specific Configuration ---
   # --- It must be at the very edge ---
-  flutter:
-    uses-material-design: true
+flutter:
+  uses-material-design: true
 
-    assets:
-    - assets/images/ # For art pieces and backgrounds
+  assets:
+    - assets/images/ #For art pieces and backgrounds
     - assets/icons/ # For LOVEN branding
     - assets/fonts/ # For custom SVGs (such as cart, heart, etc.)
