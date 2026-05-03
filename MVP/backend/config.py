@@ -9,6 +9,10 @@ load_dotenv() # This line loads the .env file.
 
 
 class Config:
+    # security settings (important for JWT and sessions)
+    # read it from .env, if not found, we use a fallback for development only.
+    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
+
     # connect the app to PostgreSQL
     DB_HOST = os.getenv("DB_HOST")
     DB_NAME = os.getenv("DB_NAME")
@@ -17,11 +21,6 @@ class Config:
     DB_PORT = os.getenv("DB_PORT")
 
     # the line here builds the database connection URL.
-    """
-    Since we use a PostgreSQL database, this will connect to the PostgreSQL
-    database running on the AWS server (16.170.246.241), port 5432, 
-    and use the database loven_main_db.
-    """
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
