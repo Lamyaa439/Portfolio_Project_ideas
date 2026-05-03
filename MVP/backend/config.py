@@ -1,4 +1,5 @@
 import os
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
 """
@@ -20,9 +21,13 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_PORT = os.getenv("DB_PORT")
 
+    # Encode the password to handle special characters (like '@') in the connection URI
+    # This prevents SQLAlchemy from misinterpreting the URI structure
+    safe_password = quote_plus(DB_PASSWORD) if DB_PASSWORD else ""
+
     # the line here builds the database connection URL.
     SQLALCHEMY_DATABASE_URI = (
-        f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        f"postgresql://{DB_USER}:{safe_password}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
