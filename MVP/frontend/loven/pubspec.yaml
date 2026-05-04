@@ -37,6 +37,19 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  fonts:
+  - family: Almarai
+    fonts:
+      - asset: assets/fonts/Almarai-Regular.ttf
+      - asset: assets/fonts/Almarai-Bold.ttf
+        weight: 700
+
+  - family: PT Serif
+    fonts:
+      - asset: assets/fonts/PTSerif-Regular.ttf
+      - asset: assets/fonts/PTSerif-Bold.ttf
+        weight: 700     
+        
   assets:
     - assets/images/ #For art pieces and backgrounds
     - assets/icons/ # For LOVEN branding
