@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
 import 'presentation/home/screens/home_screen.dart';
+import 'core/res/theme/app_theme.dart'; // Importing the theme file
 
 void main() {
   runApp(const LovenApp());
@@ -26,7 +27,7 @@ class LovenApp extends StatelessWidget {
 
         // --- Bilingual Support ---
         // I added this so user can sweitch between English and Arabic :)
-        locale: const Locale('en', 'US'),
+        locale: const Locale('en', 'US'), // defualte Lan
         supportedLocales: const [
           Locale('en', 'US'),
           Locale('ar', 'SA'),
@@ -37,12 +38,7 @@ class LovenApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
 
-        // --- Theme ---
-        theme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: Color(0xFF6200EE), // -- later based on the logo
-          brightness: Brightness.light,
-        ),
+        theme: AppTheme.lightTheme, // Applying the custom theme
 
         home: HomeScreen(),
       ),
