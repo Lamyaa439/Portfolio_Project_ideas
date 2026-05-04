@@ -6,6 +6,14 @@ import 'presentation/home/bloc/home_event.dart';
 import 'presentation/home/screens/home_screen.dart';
 import 'core/res/theme/app_theme.dart'; // Importing the theme file
 
+// You will need this simple Cubit to manage the theme state
+// You can move this to a separate file later: lib/core/theme/theme_bloc.dart
+class ThemeBloc extends Cubit<ThemeMode> {
+  ThemeBloc() : super(ThemeMode.light);
+  void toggleTheme() =>
+      emit(state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
+}
+
 void main() {
   runApp(const LovenApp());
 }
@@ -20,27 +28,38 @@ class LovenApp extends StatelessWidget {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
+        // Adding the ThemeBloc provider to manage dark/light state
+        BlocProvider<ThemeBloc>(
+          create: (context) => ThemeBloc(),
+        ),
       ],
-      child: MaterialApp(
-        title: 'LOVEN',
-        debugShowCheckedModeBanner: false,
+      // We wrap MaterialApp in a BlocBuilder so it rebuilds when the theme changes
+      child: BlocBuilder<ThemeBloc, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            title: 'LOVEN',
+            debugShowCheckedModeBanner: false,
 
-        // --- Bilingual Support ---
-        // I added this so user can sweitch between English and Arabic :)
-        locale: const Locale('en', 'US'), // defualte Lan
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('ar', 'SA'),
-        ],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+            // --- Bilingual Support ---
+            // I added this so user can sweitch between English and Arabic :)
+            locale: const Locale('en', 'US'), // defualte Lan
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('ar', 'SA'),
+            ],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
 
-        theme: AppTheme.lightTheme, // Applying the custom theme
+            theme: AppTheme.lightTheme, // Applying the custom theme
+            darkTheme: AppTheme.darkTheme, // Applying the dark theme version
+            themeMode: themeMode, // This tells the app which one to use
 
-        home: HomeScreen(),
+            home: const HomeScreen(),
+          );
+        },
       ),
     );
   }
