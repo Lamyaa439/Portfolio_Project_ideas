@@ -1,41 +1,56 @@
 from flask import Blueprint, request, jsonify
+from app.services.auth_service import register_user, login_user
 
+# Blueprint for authentication-related routes (register, login, logout)
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @auth_bp.post("/register")
 def register():
+    """
+    Handle user registration.
+
+    Expects JSON body with:
+        - name
+        - email
+        - password
+
+    Returns:
+        JSON response with result and HTTP status code.
+    """
     data = request.get_json()
+    result, status_code = register_user(data)
 
-    # TODO: validate name, email, password
-    # TODO: call auth_service.register_user(data)
-    # TODO: return user object + token
-
-    return jsonify({
-        "message": "Register endpoint ready",
-        "todo": "Connect to User model and auth_service"
-    }), 501
+    return jsonify(result), status_code
 
 
 @auth_bp.post("/login")
 def login():
+    """
+    Handle user login.
+
+    Expects JSON body with:
+        - email
+        - password
+
+    Returns:
+        JSON response with JWT token if successful.
+    """
     data = request.get_json()
+    result, status_code = login_user(data)
 
-    # TODO: validate email and password
-    # TODO: call auth_service.login_user(data)
-    # TODO: verify password and return JWT token
-
-    return jsonify({
-        "message": "Login endpoint ready",
-        "todo": "Connect to User model and auth_service"
-    }), 501
+    return jsonify(result), status_code
 
 
 @auth_bp.post("/logout")
 def logout():
-    # For JWT, logout is usually handled on frontend by deleting token.
-    # TODO: add token blacklist later.
+    """
+    Handle user logout.
 
+    Note:
+        For JWT-based authentication, logout is typically handled
+        on the client side by removing the stored token.
+    """
     return jsonify({
         "message": "Logged out successfully"
     }), 200
