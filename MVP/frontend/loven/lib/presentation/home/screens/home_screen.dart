@@ -4,7 +4,7 @@ import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
 import '../widgets/home_drawer.dart';
-// Import your main.dart or core theme file to access ThemeBloc
+// Ensure this points to where your ThemeBloc is defined
 import '../../../main.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,11 +12,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the current theme to use its colors for non-Material widgets
     final theme = Theme.of(context);
 
     return Scaffold(
-      // Dynamic background color based on theme
       backgroundColor: theme.scaffoldBackgroundColor,
       drawer: const HomeDrawer(),
       appBar: AppBar(
@@ -24,7 +22,6 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            // Adapts icon color to theme
             icon: Icon(Icons.menu,
                 color: theme.colorScheme.onSurface.withOpacity(0.3)),
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -35,13 +32,11 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              // Toggle icon based on current state
               context.watch<ThemeBloc>().state == ThemeMode.light
                   ? Icons.nightlight_outlined
                   : Icons.light_mode_outlined,
               color: theme.colorScheme.onSurface.withOpacity(0.3),
             ),
-            // This triggers the switch you set up in main.dart
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
         ],
@@ -63,7 +58,6 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
-                        // Uses 'surface' color which changes in Dark Mode
                         color: theme.colorScheme.surface,
                         borderRadius: BorderRadius.circular(25),
                       ),
@@ -86,7 +80,7 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 30),
 
-                  // --- Categories (Fixed for image_62ce47.png) ---
+                  // --- Categories ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -98,7 +92,7 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 30),
 
-                  // --- The Swipeable Art Feed ---
+                  // --- Featured Art Feed ---
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25, vertical: 10),
@@ -147,24 +141,16 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Updated Helper method to use Context-based Theme
+  // Implementation of Purple Category Boxes
   Widget _buildCategoryCard(BuildContext context, String title) {
     final theme = Theme.of(context);
     return Container(
       width: 100,
       height: 100,
       decoration: BoxDecoration(
-        // Dynamic color: Light = Off-white, Dark = Dark Grey/Surface
-        color: theme.colorScheme.surface,
+        // Uses the deepPurple defined in your AppTheme secondary slot
+        color: theme.colorScheme.secondary,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          if (theme.brightness == Brightness.light)
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-        ],
       ),
       child: Center(
         child: Padding(
@@ -172,11 +158,10 @@ class HomeScreen extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color:
-                  theme.colorScheme.onSurface, // Text flips color automatically
+              color: Colors.white, // High contrast for the purple background
             ),
           ),
         ),
