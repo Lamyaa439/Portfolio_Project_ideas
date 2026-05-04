@@ -6,8 +6,7 @@ import 'presentation/home/bloc/home_event.dart';
 import 'presentation/home/screens/home_screen.dart';
 import 'core/res/theme/app_theme.dart'; // Importing the theme file
 
-// You will need this simple Cubit to manage the theme state
-// You can move this to a separate file later: lib/core/theme/theme_bloc.dart
+// Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
   ThemeBloc() : super(ThemeMode.light);
   void toggleTheme() =>
@@ -28,12 +27,11 @@ class LovenApp extends StatelessWidget {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
-        // Adding the ThemeBloc provider to manage dark/light state
+        // Providing ThemeBloc at the top level
         BlocProvider<ThemeBloc>(
           create: (context) => ThemeBloc(),
         ),
       ],
-      // We wrap MaterialApp in a BlocBuilder so it rebuilds when the theme changes
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp(
@@ -54,8 +52,8 @@ class LovenApp extends StatelessWidget {
             ],
 
             theme: AppTheme.lightTheme, // Applying the custom theme
-            darkTheme: AppTheme.darkTheme, // Applying the dark theme version
-            themeMode: themeMode, // This tells the app which one to use
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeMode,
 
             home: const HomeScreen(),
           );

@@ -3,25 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
-import '../widgets/home_drawer.dart'; // Add this import
-import '../../../core/res/theme/app_theme.dart';
+import '../widgets/home_drawer.dart';
+// Import your main.dart or core theme file to access ThemeBloc
+import '../../../main.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme to use its colors for non-Material widgets
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      // 1. Add the Drawer here
+      // Dynamic background color based on theme
+      backgroundColor: theme.scaffoldBackgroundColor,
       drawer: const HomeDrawer(),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        // 2. Wrap leading in a Builder so the menu button works
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black26),
+            // Adapts icon color to theme
+            icon: Icon(Icons.menu,
+                color: theme.colorScheme.onSurface.withOpacity(0.3)),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -29,8 +34,15 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.nightlight_outlined, color: Colors.black26),
-            onPressed: () {}, // Theme toggle logic goes here
+            icon: Icon(
+              // Toggle icon based on current state
+              context.watch<ThemeBloc>().state == ThemeMode.light
+                  ? Icons.nightlight_outlined
+                  : Icons.light_mode_outlined,
+              color: theme.colorScheme.onSurface.withOpacity(0.3),
+            ),
+            // This triggers the switch you set up in main.dart
+            onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
         ],
       ),
@@ -41,8 +53,7 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeLoaded) {
             return SingleChildScrollView(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start, // Align text to start
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
 
@@ -52,16 +63,22 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        // Uses 'surface' color which changes in Dark Mode
+                        color: theme.colorScheme.surface,
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      child: const TextField(
+                      child: TextField(
                         textAlign: TextAlign.right,
+                        style: TextStyle(color: theme.colorScheme.onSurface),
                         decoration: InputDecoration(
                           hintText: 'Search art, artists, categories...',
+                          hintStyle: TextStyle(
+                              color:
+                                  theme.colorScheme.onSurface.withOpacity(0.5)),
                           border: InputBorder.none,
-                          prefixIcon: Icon(Icons.tune, size: 20),
-                          suffixIcon: Icon(Icons.search),
+                          prefixIcon: Icon(Icons.tune,
+                              size: 20, color: theme.colorScheme.primary),
+                          suffixIcon: const Icon(Icons.search),
                         ),
                       ),
                     ),
@@ -69,30 +86,32 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 30),
 
-                  // --- Categories ---
+                  // --- Categories (Fixed for image_62ce47.png) ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildCategoryCard("Artists"),
-                      _buildCategoryCard("Top Artworks"),
-                      _buildCategoryCard("My Collection"),
+                      _buildCategoryCard(context, "Artists"),
+                      _buildCategoryCard(context, "Top Artworks"),
+                      _buildCategoryCard(context, "My Collection"),
                     ],
                   ),
 
                   const SizedBox(height: 30),
 
-                  // 3. --- The Swipeable Art Feed ---
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  // --- The Swipeable Art Feed ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25, vertical: 10),
                     child: Text(
                       "Featured Art",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
 
                   SizedBox(
-                    height: 320, // Give the horizontal list a fixed height
+                    height: 320,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.only(left: 20),
@@ -128,13 +147,24 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String title) {
+  // Updated Helper method to use Context-based Theme
+  Widget _buildCategoryCard(BuildContext context, String title) {
+    final theme = Theme.of(context);
     return Container(
       width: 100,
       height: 100,
       decoration: BoxDecoration(
-        color: const Color(0xFFF2F0EF), // Using your brand off-white
+        // Dynamic color: Light = Off-white, Dark = Dark Grey/Surface
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          if (theme.brightness == Brightness.light)
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+        ],
       ),
       child: Center(
         child: Padding(
@@ -142,10 +172,11 @@ class HomeScreen extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color:
+                  theme.colorScheme.onSurface, // Text flips color automatically
             ),
           ),
         ),
