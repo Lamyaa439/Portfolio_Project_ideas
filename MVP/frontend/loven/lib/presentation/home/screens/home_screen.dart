@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         leading: const Icon(Icons.menu, color: Colors.black26),
         title:
-            Image.asset('assets/images/LOVEN_logo.png', height: 40), //logo here
+            Image.asset('assets/images/loven-logo.png', height: 40), //logo here
         centerTitle: true,
         actions: [
           IconButton(
