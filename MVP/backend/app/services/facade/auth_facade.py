@@ -6,6 +6,7 @@ without cluttering the core service logic.
 """
 
 from app.services.auth_service import register_user, login_user
+from app.external_services.notification_service import send_welcome_notification
 
 class AuthFacade:
 
@@ -22,9 +23,12 @@ class AuthFacade:
 
         # if registration is successful (201 Created)
         if status_code == 201:
-            # todo: add Firebase welcome notification logic here
-            pass
-        
+            user_name = data.get("name", "Dear artist")
+            fcm_token = data.get("fcm_token")
+
+            # Firebase welcome notification
+            send_welcome_notification(fcm_token, user_name)
+
         # return the final result to the API
         return result, status_code
     
