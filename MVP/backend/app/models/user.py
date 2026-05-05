@@ -140,7 +140,7 @@ class User(db.Model):
         # If the value starts with the bcrypt signature '$2b$' and has sufficient length,
         # it means the password is already hashed (e.g., during a DB refresh). 
         # We return it as-is to prevent hashing a hash.
-        if value.startswith('$2b$') and len(value) >= 50:
+        if value.startswith(("$2a$", "$2b$", "$2y$")) and len(value) >= 50:
             return value
         
         if len(value) < 8:
@@ -151,16 +151,17 @@ class User(db.Model):
     def check_password(self, plain_password):
         """
         Verifies a plain-text password against the stored hash in the database.
-        Args:
-            plain_password (str): The password entered by the user during login.
-        Returns:
-            bool: True if the password matches the hash, False otherwise.
         """
         if not self.password:
             return False
-        # Compare the provided plain password with the hashed password in the DB.
-        return verify_password(plain_password, self.password)
-
-
+        
+        if not self.password.startswith(("$2a$", "$2b$", "$2y$")):
+            return False
+        
+        try:
+            return verify_password(plain_password, self.password)
+        except ValueError:
+            return False
+    
     def __repr__(self):
         return f"<User(email={self.email}, role={self.system_role})>"
