@@ -21,8 +21,10 @@ CREATE TABLE IF NOT EXISTS "users" (
 
     PRIMARY KEY("id")
 );
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE artworks (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     artist_id INT NOT NULL,
     title VARCHAR(150) NOT NULL,
     description TEXT,
@@ -34,28 +36,28 @@ CREATE TABLE artworks (
 );
 
 CREATE TABLE favorites (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT NOT NULL,
-    artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
+    artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, artwork_id)
 );
 
 CREATE TABLE cart (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT UNIQUE NOT NULL
 );
 
 CREATE TABLE cart_items (
-    id SERIAL PRIMARY KEY,
-    cart_id INT REFERENCES cart(id) ON DELETE CASCADE,
-    artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cart_id UUID REFERENCES cart(id) ON DELETE CASCADE,
+    artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
     quantity INT NOT NULL CHECK (quantity > 0),
     UNIQUE(cart_id, artwork_id)
 );
 
 CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT NOT NULL,
     total_price NUMERIC(10,2),
     status VARCHAR(50) DEFAULT 'pending',
@@ -63,37 +65,37 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE order_items (
-    id SERIAL PRIMARY KEY,
-    order_id INT REFERENCES orders(id) ON DELETE CASCADE,
-    artwork_id INT REFERENCES artworks(id),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+    artwork_id UUID REFERENCES artworks(id),
     quantity INT NOT NULL,
     price NUMERIC(10,2) NOT NULL
 );
 
 CREATE TABLE reports (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT,
-    artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
+    artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
     reason TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE feedback (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT,
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE artist_profiles (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT UNIQUE NOT NULL,
     portfolio_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE verification_requests (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id INT NOT NULL,
     document_url TEXT,
     status VARCHAR(50) DEFAULT 'pending',
@@ -101,8 +103,8 @@ CREATE TABLE verification_requests (
 );
 
 CREATE TABLE payments (
-    id SERIAL PRIMARY KEY,
-    order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
     amount NUMERIC(10,2) NOT NULL,
     payment_method VARCHAR(50),
     status VARCHAR(50) DEFAULT 'pending',
