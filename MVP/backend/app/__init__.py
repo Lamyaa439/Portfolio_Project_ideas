@@ -12,6 +12,11 @@ def create_app():
     # Initialize the database instance with the application context
     db.init_app(app)
 
+    # Create database tables from SQLAlchemy models
+    with app.app_context():
+        from app.models.user import User
+        db.create_all()
+
     @app.route("/")
     def home():
         return {"message": "LOVEN on Air!"}

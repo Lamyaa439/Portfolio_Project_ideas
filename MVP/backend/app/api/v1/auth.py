@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.auth_service import register_user, login_user
+from app.services.facade.auth_service import register_user, login_user
 
 # Blueprint for authentication-related routes (register, login, logout)
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")

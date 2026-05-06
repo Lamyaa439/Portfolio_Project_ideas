@@ -14,6 +14,9 @@ services:
       - db           # Architectural rule: The database starts before the backend server
                      # since PostgreSQL database is heavier, so it needs a few seconde to allocate memory.
     restart: always
+    environment:
+      - PYTHONUNBUFFERED=1   # ensures print() shows instantly
+      - FLASK_ENV=development  # optional: better debug behavior
 # =========================================================================
   # DATABASE SERVICE: PostgreSQL 15 (Alpine)
 # =========================================================================
