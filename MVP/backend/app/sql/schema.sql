@@ -23,10 +23,6 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid()
-);
-
 CREATE TABLE artist_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
