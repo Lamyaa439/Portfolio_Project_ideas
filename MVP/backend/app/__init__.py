@@ -21,6 +21,6 @@ def create_app():
     def home():
         return {"message": "LOVEN on Air!"}
 
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp, url_prefix='/api/v1')
 
     return app
