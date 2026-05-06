@@ -23,6 +23,17 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+);
+
+CREATE TABLE artist_profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    portfolio_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE artworks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     artist_profile_id UUID NOT NULL REFERENCES artist_profiles(id) ON DELETE CASCADE,
@@ -30,17 +41,9 @@ CREATE TABLE artworks (
     description TEXT,
     image_url TEXT,
     price NUMERIC(10,2) NOT NULL,
-    quantity INT DEFAULT 1,
+    quantity INT DEFAULT 1 CHECK (quantity > 0),
     shipping_fee NUMERIC(10,2) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE favorites (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, artwork_id)
 );
 
 CREATE TABLE cart (
@@ -67,9 +70,17 @@ CREATE TABLE orders (
 CREATE TABLE order_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
-    artwork_id UUID REFERENCES artworks(id),
-    quantity INT NOT NULL,
+    artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
+    quantity INT NOT NULL CHECK (quantity > 0),
     price NUMERIC(10,2) NOT NULL
+);
+
+CREATE TABLE favorites (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, artwork_id)
 );
 
 CREATE TABLE reports (
@@ -84,13 +95,6 @@ CREATE TABLE feedback (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE artist_profiles (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    portfolio_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
