@@ -25,7 +25,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE artworks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    artist_id INT NOT NULL,
+    artist_profile_id UUID NOT NULL REFERENCES artist_profiles(id) ON DELETE CASCADE,
     title VARCHAR(150) NOT NULL,
     description TEXT,
     image_url TEXT,
@@ -37,7 +37,7 @@ CREATE TABLE artworks (
 
 CREATE TABLE favorites (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, artwork_id)
@@ -45,7 +45,7 @@ CREATE TABLE favorites (
 
 CREATE TABLE cart (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT UNIQUE NOT NULL
+    user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cart_items (
@@ -58,7 +58,7 @@ CREATE TABLE cart_items (
 
 CREATE TABLE orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     total_price NUMERIC(10,2),
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -74,7 +74,7 @@ CREATE TABLE order_items (
 
 CREATE TABLE reports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     artwork_id UUID REFERENCES artworks(id) ON DELETE CASCADE,
     reason TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -82,21 +82,21 @@ CREATE TABLE reports (
 
 CREATE TABLE feedback (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE artist_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT UNIQUE NOT NULL,
+    user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     portfolio_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE verification_requests (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     document_url TEXT,
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
