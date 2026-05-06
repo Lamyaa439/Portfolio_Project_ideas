@@ -1,86 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'presentation/home/bloc/home_bloc.dart';
+import 'presentation/home/bloc/home_event.dart';
+import 'presentation/home/screens/home_screen.dart';
+import 'core/res/theme/app_theme.dart'; // Importing the theme file
 
-const String baseUrl = "http://localhost:5000";
-const Color offWhite = Color(0xFFF8F8F8);
+// Simple Cubit to manage theme switching logic
+class ThemeBloc extends Cubit<ThemeMode> {
+  ThemeBloc() : super(ThemeMode.light);
+  void toggleTheme() =>
+      emit(state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
+}
 
 void main() {
-  runApp(const MyApp());
+  runApp(const LovenApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LovenApp extends StatelessWidget {
+  const LovenApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.deepOrange,
-          child: const Icon(Icons.add, color: offWhite),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Floating Button Pressed")),
-            );
-          },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeBloc>(
+          create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
-        appBar: AppBar(
-          title: const Text("Card App"),
-          backgroundColor: Colors.deepOrange,
+        // Providing ThemeBloc at the top level
+        BlocProvider<ThemeBloc>(
+          create: (context) => ThemeBloc(),
         ),
-        backgroundColor: offWhite,
-        body: Center(
-          child: Container(
-            height: 400,
-            width: 300,
-            decoration: BoxDecoration(
-              color: Colors.deepOrange,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(25),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "I Rook! \nwelcome to Mi-End",
-                  style: TextStyle(
-                    color: offWhite,
-                    fontFamily: "Roboto",
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 20),
-                ObscureTextFieldSample(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+      ],
+      child: BlocBuilder<ThemeBloc, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            title: 'LOVEN',
+            debugShowCheckedModeBanner: false,
 
-class ObscureTextFieldSample extends StatelessWidget {
-  const ObscureTextFieldSample({super.key});
+            // --- Bilingual Support ---
+            // I added this so user can sweitch between English and Arabic :)
+            locale: const Locale('en', 'US'), // defualte Lan
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('ar', 'SA'),
+            ],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
 
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 250,
-      child: TextField(
-        obscureText: true,
-        style: TextStyle(color: Colors.black),
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          labelStyle: TextStyle(color: Colors.black),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          labelText: "Password",
-        ),
+            theme: AppTheme.lightTheme, // Applying the custom theme
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeMode,
+
+            home: const HomeScreen(),
+          );
+        },
       ),
     );
   }
