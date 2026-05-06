@@ -75,3 +75,36 @@ CREATE TABLE reports (
     user_id INT,
     artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
     reason TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE feedback (
+    id SERIAL PRIMARY KEY,
+    user_id INT,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE artist_profiles (
+    id SERIAL PRIMARY KEY,
+    user_id INT UNIQUE NOT NULL,
+    portfolio_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE verification_requests (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    document_url TEXT,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE payments (
+    id SERIAL PRIMARY KEY,
+    order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+    amount NUMERIC(10,2) NOT NULL,
+    payment_method VARCHAR(50),
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
