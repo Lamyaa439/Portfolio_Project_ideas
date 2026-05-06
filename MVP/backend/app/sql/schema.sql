@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 
     PRIMARY KEY("id")
 );
-CREATE TABLE Artworks (
+CREATE TABLE artworks (
     id SERIAL PRIMARY KEY,
     artist_id INT NOT NULL,
     title VARCHAR(150) NOT NULL,
@@ -33,28 +33,28 @@ CREATE TABLE Artworks (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Favorites (
+CREATE TABLE favorites (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
-    artwork_id INT REFERENCES Artworks(id) ON DELETE CASCADE,
+    artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, artwork_id)
 );
 
-CREATE TABLE Cart (
+CREATE TABLE cart (
     id SERIAL PRIMARY KEY,
     user_id INT UNIQUE NOT NULL
 );
 
-CREATE TABLE Cart_Items (
+CREATE TABLE cart_items (
     id SERIAL PRIMARY KEY,
-    cart_id INT REFERENCES Cart(id) ON DELETE CASCADE,
-    artwork_id INT REFERENCES Artworks(id) ON DELETE CASCADE,
+    cart_id INT REFERENCES cart(id) ON DELETE CASCADE,
+    artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
     quantity INT NOT NULL CHECK (quantity > 0),
     UNIQUE(cart_id, artwork_id)
 );
 
-CREATE TABLE Orders (
+CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     total_price NUMERIC(10,2),
@@ -62,34 +62,16 @@ CREATE TABLE Orders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Order_Items (
+CREATE TABLE order_items (
     id SERIAL PRIMARY KEY,
-    order_id INT REFERENCES Orders(id) ON DELETE CASCADE,
-    artwork_id INT REFERENCES Artworks(id),
+    order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+    artwork_id INT REFERENCES artworks(id),
     quantity INT NOT NULL,
     price NUMERIC(10,2) NOT NULL
 );
 
-CREATE TABLE Shipments (
-    id SERIAL PRIMARY KEY,
-    order_id INT UNIQUE REFERENCES Orders(id) ON DELETE CASCADE,
-    shipping_company VARCHAR(100),
-    tracking_number VARCHAR(150),
-    status VARCHAR(50),
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Reports (
+CREATE TABLE reports (
     id SERIAL PRIMARY KEY,
     user_id INT,
-    artwork_id INT REFERENCES Artworks(id) ON DELETE CASCADE,
+    artwork_id INT REFERENCES artworks(id) ON DELETE CASCADE,
     reason TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Feedback (
-    id SERIAL PRIMARY KEY,
-    user_id INT,
-    message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
