@@ -23,8 +23,6 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
 CREATE TABLE artworks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     artist_id INT NOT NULL,
