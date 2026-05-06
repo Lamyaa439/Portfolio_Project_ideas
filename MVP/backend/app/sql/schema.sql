@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE artworks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     artist_id INT NOT NULL,
@@ -109,4 +111,5 @@ CREATE TABLE payments (
     payment_method VARCHAR(50),
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);STAMP DEFAULT CURRENT_TIMESTAMP
 );
