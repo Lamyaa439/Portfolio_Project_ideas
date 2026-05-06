@@ -110,4 +110,3 @@ CREATE TABLE payments (
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-);
