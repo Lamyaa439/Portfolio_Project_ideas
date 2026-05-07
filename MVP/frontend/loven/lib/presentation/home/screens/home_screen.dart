@@ -4,8 +4,8 @@ import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
 import '../widgets/home_drawer.dart';
-// Ensure this points to where your ThemeBloc is defined
 import '../../../main.dart';
+import '../../auth/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,8 +22,10 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu,
-                color: theme.colorScheme.onSurface.withOpacity(0.3)),
+            icon: Icon(
+              Icons.menu,
+              color: theme.colorScheme.onSurface.withOpacity(0.3),
+            ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -39,6 +41,20 @@ class HomeScreen extends StatelessWidget {
             ),
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
+          IconButton(
+            icon: Icon(
+              Icons.person_add_outlined,
+              color: theme.colorScheme.primary.withOpacity(0.6),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SignupPage(),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
@@ -51,59 +67,33 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-
-                  // --- Search bar ---
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.surface,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        textAlign: TextAlign.right,
-                        style: TextStyle(color: theme.colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          hintText: 'Search art, artists, categories...',
-                          hintStyle: TextStyle(
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.5)),
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.tune,
-                              size: 20, color: theme.colorScheme.primary),
-                          suffixIcon: const Icon(Icons.search),
-                        ),
-                      ),
-                    ),
-                  ),
-
+                  _buildSearchBar(theme),
                   const SizedBox(height: 30),
-
-                  // --- Categories ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildCategoryCard(context, "Artists"),
-                      _buildCategoryCard(context, "Top Artworks"),
-                      _buildCategoryCard(context, "My Collection"),
+                      _buildCategoryCard(context, 'Artists'),
+                      _buildCategoryCard(context, 'Top Artworks'),
+                      _buildCategoryCard(
+                        context,
+                        'My Collection',
+                        isRestricted: true,
+                      ),
                     ],
                   ),
-
                   const SizedBox(height: 30),
-
-                  // --- Featured Art Feed ---
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 25, vertical: 10),
+                      horizontal: 25,
+                      vertical: 10,
+                    ),
                     child: Text(
-                      "Featured Art",
+                      'Featured Art',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-
                   SizedBox(
                     height: 320,
                     child: ListView(
@@ -111,19 +101,19 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 20),
                       children: const [
                         ArtCard(
-                          title: "Sunset over Riyadh",
-                          price: "1,200",
-                          imageUrl: "assets/images/art1.jpg",
+                          title: 'Sunset over Riyadh',
+                          price: '1,200',
+                          imageUrl: 'assets/images/art1.jpg',
                         ),
                         ArtCard(
-                          title: "Modern Calligraphy",
-                          price: "850",
-                          imageUrl: "assets/images/art2.jpg",
+                          title: 'Modern Calligraphy',
+                          price: '850',
+                          imageUrl: 'assets/images/art2.jpg',
                         ),
                         ArtCard(
-                          title: "Desert Silence",
-                          price: "2,100",
-                          imageUrl: "assets/images/art3.jpg",
+                          title: 'Desert Silence',
+                          price: '2,100',
+                          imageUrl: 'assets/images/art3.jpg',
                         ),
                       ],
                     ),
@@ -135,33 +125,79 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeError) {
             return Center(child: Text(state.message));
           }
+
           return const Center(child: Text('Start exploring art!'));
         },
       ),
     );
   }
 
-  // Implementation of Purple Category Boxes
-  Widget _buildCategoryCard(BuildContext context, String title) {
-    final theme = Theme.of(context);
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        // Uses the deepPurple defined in your AppTheme secondary slot
-        color: theme.colorScheme.secondary,
-        borderRadius: BorderRadius.circular(15),
+  Widget _buildSearchBar(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: TextField(
+          textAlign: TextAlign.right,
+          style: TextStyle(color: theme.colorScheme.onSurface),
+          decoration: InputDecoration(
+            hintText: 'Search art, artists, categories...',
+            hintStyle: TextStyle(
+              color: theme.colorScheme.onSurface.withOpacity(0.5),
+            ),
+            border: InputBorder.none,
+            prefixIcon: Icon(
+              Icons.tune,
+              size: 20,
+              color: theme.colorScheme.primary,
+            ),
+            suffixIcon: const Icon(Icons.search),
+          ),
+        ),
       ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.white, // High contrast for the purple background
+    );
+  }
+
+  Widget _buildCategoryCard(
+    BuildContext context,
+    String title, {
+    bool isRestricted = false,
+  }) {
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onTap: () {
+        if (isRestricted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SignupPage(),
+            ),
+          );
+        }
+      },
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondary,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

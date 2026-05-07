@@ -1,75 +1,79 @@
 import 'package:flutter/material.dart';
-import '../../../data/datasources/auth_remote_data_source.dart';
-import '../../home/screens/home_screen.dart';
-import 'signup_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import 'login_page.dart';
+
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
 
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  bool rememberPassword = false;
+  bool acceptedTerms = false;
   bool obscurePassword = true;
   bool isLoading = false;
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _signup() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (!acceptedTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please accept the terms and privacy policy'),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+      return;
+    }
 
     setState(() {
       isLoading = true;
     });
 
-    final auth = AuthRemoteDataSource();
-
     try {
-      await auth.login(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+      // TODO: Connect signup API
+
+      await Future.delayed(const Duration(seconds: 1));
 
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Login successful'),
+          content: Text('Account created successfully'),
         ),
       );
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const LoginPage(),
         ),
       );
     } catch (e) {
       if (!mounted) return;
 
-      String errorMessage = 'Invalid email or password';
-
-      if (e.toString().contains('Failed to fetch')) {
-        errorMessage = 'Unable to connect to server';
-      } else if (e.toString().contains('400')) {
-        errorMessage = 'Please check your input';
-      }
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
+          content: const Text('Unable to create account'),
           backgroundColor: Colors.redAccent,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -111,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 80),
+                const SizedBox(height: 60),
 
                 Center(
                   child: Image.asset(
@@ -121,13 +125,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 32),
 
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
-                    vertical: 48,
+                    vertical: 44,
                   ),
                   decoration: const BoxDecoration(
                     color: Color(0xFFF5F5F5),
@@ -151,13 +155,35 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Text(
-                              'Login',
+                              'Sign Up',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 32),
+
+                        const Text(
+                          'Full Name',
+                          style: TextStyle(fontSize: 16),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        TextFormField(
+                          controller: nameController,
+                          enabled: !isLoading,
+                          decoration: inputDecoration(),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Name is required';
+                            }
+
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
 
                         const Text(
                           'Email',
@@ -168,9 +194,9 @@ class _LoginPageState extends State<LoginPage> {
 
                         TextFormField(
                           controller: emailController,
+                          enabled: !isLoading,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputDecoration(),
-                          enabled: !isLoading,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Email is required';
@@ -184,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
 
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 20),
 
                         const Text(
                           'Password',
@@ -195,8 +221,8 @@ class _LoginPageState extends State<LoginPage> {
 
                         TextFormField(
                           controller: passwordController,
-                          obscureText: obscurePassword,
                           enabled: !isLoading,
+                          obscureText: obscurePassword,
                           decoration: inputDecoration().copyWith(
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -226,38 +252,63 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Checkbox(
-                              value: rememberPassword,
+                              value: acceptedTerms,
                               onChanged: isLoading
                                   ? null
                                   : (value) {
                                       setState(() {
-                                        rememberPassword = value ?? false;
+                                        acceptedTerms = value ?? false;
                                       });
                                     },
                             ),
-                            const Text(
-                              'Remember me',
-                              style: TextStyle(fontSize: 11),
+                            Flexible(
+                              child: RichText(
+                                text: const TextSpan(
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                  ),
+                                  children: [
+                                    TextSpan(text: 'I agree to the '),
+                                    TextSpan(
+                                      text: 'terms and conditions',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                    TextSpan(text: ' and '),
+                                    TextSpan(
+                                      text: 'privacy policy',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 36),
 
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: isLoading ? null : _login,
+                            onPressed: isLoading ? null : _signup,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFEDE7F6),
                               foregroundColor: Colors.black,
-                              disabledBackgroundColor: const Color(0xFFEDE7F6),
+                              disabledBackgroundColor:
+                                  const Color(0xFFEDE7F6),
                               disabledForegroundColor: Colors.black,
                               elevation: 0,
                               padding: const EdgeInsets.symmetric(
@@ -268,31 +319,31 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             child: isLoading
-                                ? const Text('Logging in...')
-                                : const Text('Login'),
+                                ? const Text('Creating account...')
+                                : const Text('Create Account'),
                           ),
                         ),
 
-                        const SizedBox(height: 28),
+                        const SizedBox(height: 24),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Don't have an account? "),
+                            const Text('Already have an account? '),
                             GestureDetector(
                               onTap: isLoading
                                   ? null
                                   : () {
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const SignupPage(),
+                                              const LoginPage(),
                                         ),
                                       );
                                     },
                               child: const Text(
-                                'Sign up!',
+                                'Login',
                                 style: TextStyle(
                                   color: Colors.red,
                                   decoration: TextDecoration.underline,
