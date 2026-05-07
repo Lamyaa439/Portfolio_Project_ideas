@@ -2,9 +2,12 @@ from flask import Flask
 from app.api.v1.auth import auth_bp
 from app.extensions import db
 from config import Config
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
+    
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # Load application configuration from the Config class (including SECRET_KEY)
     app.config.from_object(Config)
@@ -22,5 +25,7 @@ def create_app():
         return {"message": "LOVEN on Air!"}
 
     app.register_blueprint(auth_bp, url_prefix='/api/v1')
+
+    print(app.url_map)
 
     return app
