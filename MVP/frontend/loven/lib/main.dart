@@ -5,6 +5,7 @@ import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
 import 'presentation/home/screens/home_screen.dart';
 import 'core/res/theme/app_theme.dart'; // Importing the theme file
+import 'presentation/auth/screens/login_page.dart';
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
@@ -55,7 +56,7 @@ class LovenApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
 
-            home: const HomeScreen(),
+            home: const LoginPage(),
           );
         },
       ),
