@@ -15,6 +15,7 @@ class AuthRemoteDataSource {
     required String name,
     required String email,
     required String password,
+    required String systemRole
   }) async {
     final response = await http.post(
       Uri.parse(ApiConstants.register),
@@ -25,6 +26,7 @@ class AuthRemoteDataSource {
         'name': name,
         'email': email,
         'password': password,
+        'system_role': systemRole,
       }),
     );
 
