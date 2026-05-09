@@ -1,31 +1,76 @@
 import 'package:flutter/material.dart';
 
-// A Drawer widget containing ListTiles for "My Orders" and "Settings".
+import '../../../core/storage/token_storage.dart';
+import '../../welcome/welcome_screen.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
 
+  Future<void> _logout(BuildContext context) async {
+    await TokenStorage().clearToken();
+
+    if (!context.mounted) return;
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const WelcomeScreen(),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-            child: const Text('LOVEN Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24)),
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Color(0xFF303FAD),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'LOVEN Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                ),
+              ),
+            ),
           ),
+
           ListTile(
             leading: const Icon(Icons.palette),
             title: const Text('My Collection'),
-            onTap: () {}, // Links to User's collection
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
+
           ListTile(
             leading: const Icon(Icons.history),
             title: const Text('Orders'),
-            onTap: () {}, // Links to Order class
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
+
+          const Spacer(),
+
+          const Divider(),
+
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.redAccent),
+            title: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            onTap: () => _logout(context),
+          ),
+
+          const SizedBox(height: 16),
         ],
       ),
     );

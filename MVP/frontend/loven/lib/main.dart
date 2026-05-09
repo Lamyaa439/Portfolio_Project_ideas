@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
-import 'presentation/home/screens/home_screen.dart';
 import 'core/res/theme/app_theme.dart'; // Importing the theme file
-import 'presentation/auth/screens/login_page.dart';
+import 'presentation/splash/splash_screen.dart';
+import 'presentation/auth/cubit/auth_cubit.dart';
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
@@ -32,7 +32,10 @@ class LovenApp extends StatelessWidget {
         BlocProvider<ThemeBloc>(
           create: (context) => ThemeBloc(),
         ),
-      ],
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(),
+          ),
+          ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp(
@@ -56,7 +59,7 @@ class LovenApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
 
-            home: const LoginPage(),
+            home: const SplashScreen(),
           );
         },
       ),
