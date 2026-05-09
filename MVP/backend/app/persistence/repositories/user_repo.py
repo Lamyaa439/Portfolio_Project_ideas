@@ -22,7 +22,8 @@ def create_user(user_data: dict):
     user = User(
         name=user_data["name"],
         email=user_data["email"],
-        password=user_data["password"]  # model handles hashing
+        password=user_data["password"],  # model handles hashing
+        system_role=user_data.get("system_role", "customer")
     )
 
     db.session.add(user)
