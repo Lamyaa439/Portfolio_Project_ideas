@@ -1,3 +1,25 @@
+-- ====================
+-- LOVEN Schema
+-- ====================
+
+/* =======================================================================
+TABLE: users
+Description: Core authentication and account table for LOVEN app.
+Relationships: Acts as the base table for artist_profiles, carts, orders,
+favorites, reports, feedback, and verification_requests.
+=========================================================================*/
+CREATE TABLE IF NOT EXISTS "users" (
+    "id" UUID PRIMARY KEY,
+    "name" VARCHAR(255),
+    "email" VARCHAR(255) NOT NULL UNIQUE,
+    "password_hash" VARCHAR(255),
+    "system_role" VARCHAR(50),
+    "fcm_token" VARCHAR(255),
+    "is_active" BOOLEAN DEFAULT true,
+    "created_at" TIMESTAMP DEFAULT now(),
+    "updated_at" TIMESTAMP,
+    "deleted_at" TIMESTAMP
+);
 /* ================================
 TABLE: artist_profiles
 =============================== */
