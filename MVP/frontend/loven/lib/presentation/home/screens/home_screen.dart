@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
           builder: (context) => IconButton(
             icon: Icon(
               Icons.menu,
-              color: theme.colorScheme.onSurface.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
@@ -37,14 +37,14 @@ class HomeScreen extends StatelessWidget {
               context.watch<ThemeBloc>().state == ThemeMode.light
                   ? Icons.nightlight_outlined
                   : Icons.light_mode_outlined,
-              color: theme.colorScheme.onSurface.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
           IconButton(
             icon: Icon(
               Icons.person_add_outlined,
-              color: theme.colorScheme.primary.withOpacity(0.6),
+              color: theme.colorScheme.primary.withValues(alpha: 0.6),
             ),
             onPressed: () {
               Navigator.push(
@@ -147,7 +147,7 @@ class HomeScreen extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
-              color: theme.colorScheme.onSurface.withOpacity(0.5),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
             border: InputBorder.none,
             prefixIcon: Icon(
