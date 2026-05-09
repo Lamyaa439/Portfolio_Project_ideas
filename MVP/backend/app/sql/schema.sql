@@ -4,21 +4,22 @@
 
 /* =======================================================================
 TABLE: users
-Description: Core authentication and account table for LOVEN app.
-Relationships: Acts as the base table for artist_profiles, carts, orders,
-favorites, reports, feedback, and verification_requests.
+Description: The core authentication and account table for LOVEN APP
+Relationships: Acts as the base for "artist_profiles" (1-1 relationship)
 =========================================================================*/
 CREATE TABLE IF NOT EXISTS "users" (
-    "id" UUID PRIMARY KEY,
+    "id" UUID,
     "name" VARCHAR(255),
     "email" VARCHAR(255) NOT NULL UNIQUE,
-    "password_hash" VARCHAR(255),
-    "system_role" VARCHAR(50),
-    "fcm_token" VARCHAR(255),
+    "password" VARCHAR(255), -- Stored as a bcrypt hash
+    "system_role" VARCHAR(50), -- Expected values: 'admin', 'customer', 'artist'
+    "fcm_token" VARCHAR(255), -- Firebase Cloud Messaging token
     "is_active" BOOLEAN DEFAULT true,
     "created_at" TIMESTAMP DEFAULT now(),
     "updated_at" TIMESTAMP,
-    "deleted_at" TIMESTAMP
+    "deleted_at" TIMESTAMP,
+
+    PRIMARY KEY("id")
 );
 
 /* =======================================================================
