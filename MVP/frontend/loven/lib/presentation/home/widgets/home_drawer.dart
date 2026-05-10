@@ -187,26 +187,26 @@ class _HomeDrawerState extends State<HomeDrawer> {
               ),
               const SizedBox(width: 12),
               Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.isGuest ? 'Guest User' : 'Creative Soul',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  if (!widget.isGuest)
                     Text(
-                      widget.isGuest ? 'Guest User' : 'Creative Soul',
+                      isArtistMode ? 'Artist Account' : 'Buyer Account',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: isDarkMode ? Colors.white : Colors.black,
+                        color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                        fontSize: 13,
                       ),
                     ),
-                    if (!widget.isGuest)
-                      Text(
-                        isArtistMode ? 'Artist Account' : 'Buyer Account',
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.white70 : Colors.grey[600],
-                          fontSize: 13,
-                        ),
-                      ),
-                  ],
-                  d),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 24),
