@@ -66,7 +66,12 @@ def create_access_token(data: dict) -> str:
     to_encode = data.copy()
 
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+    # set expiration, user identity, and RBAC role for the access token.
+    to_encode.update({
+        "exp": expire,
+        "sub": str(data.get("user_id")),
+        "role": data.get("role")
+        })
 
     token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
