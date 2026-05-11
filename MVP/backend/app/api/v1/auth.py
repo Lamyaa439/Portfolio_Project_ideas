@@ -1,5 +1,9 @@
 from flask import Blueprint, request, jsonify
-from app.services.auth_service import register_user, login_user
+
+# Architectural Change: Replaced direct auth_service imports with AuthFacade.
+# Purpose: The Facade acts as an orchestrator to coordinate between 
+# core business logic (PostgreSQL user creation) and external services (Firebase FCM).
+from app.services.facade.auth_facade import AuthFacade
 
 # Blueprint for authentication-related routes (register, login, logout)
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -14,12 +18,17 @@ def register():
         - name
         - email
         - password
+        - fcm_token (Optional: Used for Firebase welcome notifications)
 
     Returns:
         JSON response with result and HTTP status code.
     """
     data = request.get_json()
-    result, status_code = register_user(data)
+
+    # Delegate the payload to the Facade to handle multiple operations seamlessly:
+    # 1. Persist the new user in the database via auth_service.
+    # 2. Dispatch the welcome push notification via notification_service.
+    result, status_code = AuthFacade.register(data)
 
     return jsonify(result), status_code
 
@@ -32,12 +41,16 @@ def login():
     Expects JSON body with:
         - email
         - password
+        - fcm_token (Optional: To update the device token on login)
 
     Returns:
         JSON response with JWT token if successful.
     """
     data = request.get_json()
-    result, status_code = login_user(data)
+
+    # Delegate the payload to the Facade to verify credentials
+    # and update the user's FCM token in the database.
+    result, status_code = AuthFacade.login(data)
 
     return jsonify(result), status_code
 

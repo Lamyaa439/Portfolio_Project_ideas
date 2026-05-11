@@ -1,0 +1,7 @@
+.env
+__pycache__/
+.vscode/
+*.session.sql
+firebaseKey.json
+venv/
+*.sql
