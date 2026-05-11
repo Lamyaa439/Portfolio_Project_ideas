@@ -3,7 +3,8 @@ import '../../../core/storage/token_storage.dart';
 import '../../splash/splash_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
-  const HomeDrawer({super.key});
+  final bool isGuest;
+  const HomeDrawer({super.key, this.isGuest = false});
 
   @override
   State<HomeDrawer> createState() => _HomeDrawerState();
@@ -52,26 +53,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
               children: [
                 // MAIN SHOPPING SECTION
                 _buildSectionHeader(context, 'SHOPPING'),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.shopping_cart_outlined,
-                  title: 'My Cart',
-                  trailing: _buildBadge('3'), //
-                  onTap: () {},
-                ),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.favorite_border_rounded,
-                  title: 'Favorites',
-                  onTap: () {},
-                ),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.inventory_2_outlined,
-                  title: 'My Orders',
-                  onTap: () {},
-                ),
-
+                if (!widget.isGuest) ...[
+                  _buildMenuItem(
+                    context,
+                    icon: Icons.shopping_cart_outlined,
+                    title: 'My Cart',
+                    trailing: _buildBadge('3'), //
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    context,
+                    icon: Icons.favorite_border_rounded,
+                    title: 'Favorites',
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    context,
+                    icon: Icons.inventory_2_outlined,
+                    title: 'My Orders',
+                    onTap: () {},
+                  ),
+                ],
                 // ARTIST SPECIFIC SECTION
                 if (isArtistMode) ...[
                   const Padding(
@@ -132,14 +134,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
           // 3. LOGOUT SECTION
           const Divider(thickness: 0.5, indent: 20, endIndent: 20),
-          _buildMenuItem(
-            context,
-            icon: Icons.logout_rounded,
-            title: 'Logout',
-            iconColor: Colors.redAccent,
-            textColor: Colors.redAccent,
-            onTap: () => _logout(context),
-          ),
+          if (widget.isGuest)
+            _buildMenuItem(
+              context,
+              icon: Icons.login_rounded,
+              title: 'Login / Sign Up',
+              iconColor: primaryIndigo,
+              textColor: primaryIndigo,
+              onTap: () {
+                // Navigate to your Login Screen here
+                // Navigator.pushNamed(context, '/login');
+              },
+            )
+          else
+            _buildMenuItem(
+              context,
+              icon: Icons.logout_rounded,
+              title: 'Logout',
+              iconColor: Colors.redAccent,
+              textColor: Colors.redAccent,
+              onTap: () => _logout(context),
+            ),
           const SizedBox(height: 30),
         ],
       ),
@@ -162,8 +177,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 child: CircleAvatar(
                   radius: 28,
                   backgroundColor: primaryIndigo.withOpacity(0.1),
-                  child: Icon(Icons.person_outline_rounded,
-                      color: primaryIndigo, size: 30),
+                  child: Icon(
+                      widget.isGuest
+                          ? Icons.person_search
+                          : Icons.person_outline_rounded,
+                      color: primaryIndigo,
+                      size: 30),
                 ),
               ),
               const SizedBox(width: 12),
@@ -171,20 +190,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Creative Soul', // Generic placeholder
+                    widget.isGuest ? 'Guest User' : 'Creative Soul',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: isDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
-                  Text(
-                    isArtistMode ? 'Artist Account' : 'Buyer Account',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white70 : Colors.grey[600],
-                      fontSize: 13,
+                  if (!widget.isGuest)
+                    Text(
+                      isArtistMode ? 'Artist Account' : 'Buyer Account',
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white70 : Colors.grey[600],
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
@@ -192,26 +212,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
           const SizedBox(height: 24),
 
           // MODE SWITCHER WITH CONTRAST FIX
-          Container(
-            height: 48,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: isDarkMode ? Colors.white10 : Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
+          if (!widget.isGuest)
+            Container(
+              height: 48,
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.white10 : Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildToggleButton(
+                        'Buyer', !isArtistMode, Icons.local_mall_outlined),
+                  ),
+                  Expanded(
+                    child: _buildToggleButton(
+                        'Artist', isArtistMode, Icons.auto_awesome_outlined),
+                  ),
+                ],
+              ),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildToggleButton(
-                      'Buyer', !isArtistMode, Icons.local_mall_outlined),
-                ),
-                Expanded(
-                  child: _buildToggleButton(
-                      'Artist', isArtistMode, Icons.auto_awesome_outlined),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

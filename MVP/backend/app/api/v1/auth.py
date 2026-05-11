@@ -1,4 +1,8 @@
 from flask import Blueprint, request, jsonify
+
+# Architectural Change: Replaced direct auth_service imports with AuthFacade.
+# Purpose: The Facade acts as an orchestrator to coordinate between 
+# core business logic (PostgreSQL user creation) and external services (Firebase FCM).
 from app.services.facade.auth_facade import AuthFacade
 from app.persistence.repositories.user_repo import UserRepository
 from flask_jwt_extended import jwt_required, get_jwt_identity

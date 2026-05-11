@@ -8,7 +8,8 @@ import '../../../main.dart';
 import '../../auth/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final bool isGuest;
+  const HomeScreen({super.key, this.isGuest = false});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      drawer: HomeDrawer(),
+      drawer: HomeDrawer(isGuest: isGuest),
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
@@ -77,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                       _buildCategoryCard(
                         context,
                         'My Collection',
-                        isRestricted: true,
+                        isRestricted: isGuest,
                       ),
                     ],
                   ),

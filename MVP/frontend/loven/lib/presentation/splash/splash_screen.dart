@@ -108,7 +108,8 @@ class _SplashScreenState extends State<SplashScreen>
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
+                            builder: (context) =>
+                                const HomeScreen(isGuest: true)),
                       );
                     },
                     child: Text(
