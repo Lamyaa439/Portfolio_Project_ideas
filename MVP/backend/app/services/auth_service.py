@@ -89,7 +89,7 @@ def login_user(data: dict):
 
     # Validate credentials
     if not user or not user.check_password(password):
-        return {"error": "Invalid credentials"}, 401
+        return {"error": "Invalid email or password"}, 401
     
     # UPDATE FCM TOKEN ON LOGIN
     if fcm_token:
@@ -98,7 +98,7 @@ def login_user(data: dict):
     # Generate JWT access token
     token = create_access_token({
         "user_id": str(user.id),
-        "role": user.system.role
+        "role": user.system_role
     })
 
     return {
