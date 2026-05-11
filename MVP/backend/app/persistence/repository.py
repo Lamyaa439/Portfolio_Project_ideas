@@ -23,7 +23,15 @@ class Repository(ABC):
         pass
 
     @abstractmethod
+    def soft_delete(self, obj_id):
+        pass
+
+    @abstractmethod
     def get_by_attribute(self, attr_name, attr_value):
+        pass
+
+    @abstractmethod
+    def get_all_by_attribute(self, attr_name, attr_value):
         pass
 
 class SQLAlchemyRepository(Repository):
@@ -60,8 +68,9 @@ class SQLAlchemyRepository(Repository):
         except Exception as e:
             db.session.rollback()
             raise e
-
+        
     def delete(self, obj_id):
+        """Hard delete an object from the database."""
         obj = self.get(obj_id)
         if not obj:
             return False
@@ -73,5 +82,30 @@ class SQLAlchemyRepository(Repository):
             db.session.rollback()
             raise e
 
+    def soft_delete(self, obj_id):
+        """Marks a record as deleted without removing it from the DB."""
+        from datetime import datetime, timezone
+        obj = self.get(obj_id)
+
+        # if the table has "deleted_at" column
+        if obj and hasattr(obj, 'deleted_at'): 
+            try:
+                obj.deleted_at = datetime.now(timezone.utc) 
+
+                # Check if the model also has an is_active column before modifying it
+                if hasattr(obj, 'is_active'):
+                    obj.is_active = False
+                    
+                db.session.commit()
+                return True
+            except Exception as e:
+                db.session.rollback()
+                raise e
+        return False
+
     def get_by_attribute(self, attr_name, attr_value):
         return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
+    
+    def get_all_by_attribute(self, attr_name, attr_value):
+        """Returns a list of all objects matching the attribute."""
+        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).all()
