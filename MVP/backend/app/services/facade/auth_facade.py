@@ -27,7 +27,12 @@ class AuthFacade:
             fcm_token = data.get("fcm_token")
 
             # Firebase welcome notification
-            send_welcome_notification(fcm_token, user_name)
+            if fcm_token:
+                try:
+                    send_welcome_notification(fcm_token, user_name)
+                except Exception as e:
+                    # Log the error, but don't fail the registration if Firebase is down
+                    print(f"Failed to send welcome notification: {e}")
 
         # return the final result to the API
         return result, status_code
@@ -42,11 +47,6 @@ class AuthFacade:
         Returns:
             tuple: (response data, HTTP status code)
         """
+        # The database update for the FCM token is now securely handled inside login_user!
         result, status_code = login_user(data)
-
-        # If login is successful (200 OK)
-        if status_code == 200:
-            # todo: update FCM device token for notifications here
-            pass
-
         return result, status_code
