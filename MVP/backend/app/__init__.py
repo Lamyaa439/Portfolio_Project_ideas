@@ -3,6 +3,7 @@ from app.api.v1.auth import auth_bp
 from app.extensions import db
 from config import Config
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +15,9 @@ def create_app():
 
     # Initialize the database instance with the application context
     db.init_app(app)
+
+    # Initialize the JWT Manager with the app instance
+    jwt = JWTManager(app)
 
     # Create database tables from SQLAlchemy models
     with app.app_context():
