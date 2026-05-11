@@ -9,7 +9,17 @@ import '../../auth/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
   final bool isGuest;
+
   const HomeScreen({super.key, this.isGuest = false});
+
+void _goToSignup(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SignupPage(),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +40,10 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
-        title: Image.asset('assets/images/loven-logo.png', height: 40),
+        title: Image.asset(
+          'assets/images/loven-logo.png',
+          height: 40,
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -48,12 +61,7 @@ class HomeScreen extends StatelessWidget {
               color: theme.colorScheme.primary.withValues(alpha: 0.6),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignupPage(),
-                ),
-              );
+              _goToSignup(context);
             },
           ),
         ],
@@ -61,15 +69,20 @@ class HomeScreen extends StatelessWidget {
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (state is HomeLoaded) {
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
+
                   _buildSearchBar(theme),
+
                   const SizedBox(height: 30),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -82,7 +95,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 30),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 25,
@@ -95,6 +110,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   SizedBox(
                     height: 320,
                     child: ListView(
@@ -119,15 +135,20 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 20),
                 ],
               ),
             );
           } else if (state is HomeError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Text(state.message),
+            );
           }
 
-          return const Center(child: Text('Start exploring art!'));
+          return const Center(
+            child: Text('Start exploring art!'),
+          );
         },
       ),
     );
@@ -144,7 +165,9 @@ class HomeScreen extends StatelessWidget {
         ),
         child: TextField(
           textAlign: TextAlign.right,
-          style: TextStyle(color: theme.colorScheme.onSurface),
+          style: TextStyle(
+            color: theme.colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
@@ -173,12 +196,7 @@ class HomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (isRestricted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SignupPage(),
-            ),
-          );
+          _goToSignup(context);
         }
       },
       child: Container(
