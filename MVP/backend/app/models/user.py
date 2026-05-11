@@ -143,8 +143,18 @@ class User(db.Model):
         if value.startswith(("$2a$", "$2b$", "$2y$")) and len(value) >= 50:
             return value
         
-        if len(value) < 8:
-            raise ValueError("Password must be at least 8 characters long.")
+        # Password Complexity Regex:
+        # (?=.*[a-z]) : At least one lowercase letter
+        # (?=.*[A-Z]) : At least one uppercase letter
+        # (?=.*\d)    : At least one digit (number)
+        # (?=.*[\W_]) : At least one special character (non-word character or underscore)
+        # .{8,}       : Minimum length of 8 characters
+        password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
+        if not re.match(password_regex, value):
+            raise ValueError(
+                "Password must be at least 8 characters long and include an uppercase letter, "
+                "a lowercase letter, a number, and a special character."
+            )
         # Encrypt the plain-text password using the security.py 
         return hash_password(value)
     
