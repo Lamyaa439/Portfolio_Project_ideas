@@ -6,14 +6,22 @@ Handles database operations related to the User model.
 
 from app.extensions import db
 from app.models.user import User
+from sqlalchemy.exc import IntegrityError
 
 
 def get_user_by_email(email: str):
     """
     Retrieve a user by email.
     """
-    return User.query.filter_by(email=email).first()
+    normalized_email = email.strip().lower() if email else None
+    return User.query.filter_by(email=normalized_email).first()
 
+
+def get_user_by_id(id):
+    """
+    Retrieve a user by ID
+    """ 
+    return 
 
 def create_user(user_data: dict):
     """

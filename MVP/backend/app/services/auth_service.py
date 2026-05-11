@@ -6,7 +6,7 @@ It connects the API layer with the persistence layer and security utilities.
 """
 
 from app.persistence.repositories.user_repo import get_user_by_email, create_user
-from app.core.security import create_access_token
+from app.core.security import create_access_token, create_refresh_token
 
 
 def register_user(data: dict):
@@ -44,7 +44,10 @@ def register_user(data: dict):
     })
 
     # Generate JWT access token using user ID
-    token = create_access_token({"sub": str(user.id)})
+    token = create_access_token({
+        "user_id": user.id,
+        "role": user.system_role
+    })
 
     return {
         "message": "User registered successfully",
