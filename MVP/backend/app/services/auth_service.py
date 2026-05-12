@@ -7,7 +7,7 @@ It connects the API layer with the persistence layer and security utilities.
 
 from app.persistence.repositories.user_repo import UserRepository
 from app.models.user import User
-from app.core.security import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 user_repo = UserRepository()
 
@@ -55,16 +55,23 @@ def register_user(data):
         # Save to database securely using our Generic Repository 
         user_repo.add(new_user)
         
-        # Generate JWT access token using user ID
-        token = create_access_token({
+        # Generate JWT access token:
+        # 1- Define user identity
+        user_identity = {
             "user_id": str(new_user.id),
             "role": new_user.system_role
-            })
+            }
         
+        # 2- Generate BOTH tokens using the flask_jwt_extended library
+        access_token = create_access_token(identity=user_identity)
+        refresh_token = create_refresh_token(identity=user_identity)
+
         return {
             "message": "User registered successfully",
-            "access_token": token
+            "access_token": access_token,
+            "refresh_token": refresh_token
         }, 201
+    
     except ValueError as e:
         # Catching validation errors cleanly
         return {"error": str(e)}, 400
@@ -102,13 +109,19 @@ def login_user(data: dict):
     if fcm_token:
         user_repo.update_fcm_token(user.id, fcm_token)
 
-    # Generate JWT access token
-    token = create_access_token({
+    # Generate JWT access token:
+    # 1- Define user identity
+    user_identity = {
         "user_id": str(user.id),
         "role": user.system_role
-    })
+    }
+
+    # 2- Generate BOTH tokens
+    access_token = create_access_token(identity=user_identity)
+    refresh_token = create_refresh_token(identity=user_identity)
 
     return {
         "message": "Login successful",
-        "access_token": token
+        "access_token": access_token,
+        "refresh_token": refresh_token
     }, 200
