@@ -27,10 +27,16 @@ def register_user(data):
     email = data.get("email")
     password = data.get("password")
     fcm_token = data.get("fcm_token")
+    role = data.get("system_role","customer").lower()
 
     # Validate required fields
     if not name or not email or not password:
         return {"error": "Missing required fields"}, 400
+    
+    # Role Check
+    allowed_roles = ["customer", "artist"]
+    if role not in allowed_roles:
+        return {"error": f"Invalid registration role. Allowed roles are: {', '.join(allowed_roles)}"}, 400
 
     # Check if a user with the same email already exists
     if user_repo.get_user_by_email(email):
@@ -42,7 +48,8 @@ def register_user(data):
         name = name,
         email = email,
         password = password,
-        fcm_token = fcm_token
+        fcm_token = fcm_token,
+        system_role = role
         )
 
         # Save to database securely using our Generic Repository 
