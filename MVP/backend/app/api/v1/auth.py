@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.services.facade.auth_facade import AuthFacade
-from app.persistence.repositories.user_repo import UserRepository
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
 
 # Blueprint for authentication-related routes (register, login, logout)
@@ -45,28 +44,46 @@ def login():
         JSON response with JWT token if successful.
     """
     data = request.get_json()
+
     # Delegate the payload to the Facade to verify credentials
     # and update the user's FCM token in the database.
     result, status_code = AuthFacade.login(data)
     return jsonify(result), status_code
 
+@auth_bp.post("/refresh")
+@jwt_required(refresh=True)
+def refresh():
+    """
+    Handle token refresh.
+    Generates a new short-lived access token using a valid refresh token.
+    """
+
+    # Extract the identity dictionary (contains 'user_id' and 'role') from the refresh token.
+    current_user_identity = get_jwt_identity()
+
+    # Issue a fresh Access Token (valid for 30 mins) without requiring the user to login again.
+    new_access_token = create_access_token(identity=current_user_identity)
+
+    # Return the new token to the client (Flutter app) to continue their session.
+    return jsonify({
+        "access_token": new_access_token
+    }), 200
+
 
 @auth_bp.post("/logout")
-@jwt_required() # 1. Security guard: Requires a valid JWT in the request header to access this route.
+@jwt_required()
 def logout():
     """
     Handle user logout.
     Clears the FCM token from the database to prevent cross-account notifications.
     """
-    # 2. Extract the current user's ID from the validated JWT.
-    current_user_id = get_jwt_identity()
+    # Extract the identity dictionary from the token.
+    current_user_identity = get_jwt_identity()
 
-    # 3. Instantiate the user repository for database operations.
-    user_repo = UserRepository()
+    # Isolate the user_id (crucial to avoid passing the whole dictionary to the database).
+    user_id = current_user_identity.get("user_id")
 
-    # 4. Clear the FCM token (set to None) to stop push notifications to this specific device.
-    user_repo.update_fcm_token(current_user_id, None)
+    # Delegate business logic to Facade
+    result, status_code = AuthFacade.logout(user_id)
 
-    return jsonify({
-        "message": "Logged out successfully and notifications disabled for this device."
-    }), 200
+    return jsonify(result), status_code
