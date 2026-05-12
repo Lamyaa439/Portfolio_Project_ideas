@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import validates
 from app.core.security import hash_password, verify_password
 import re # used for Regular Expressions to validate complex string patterns (e.g., email format).
+from email_validator import validate_email as check_email_domain, EmailNotValidError
 
 """
 User Data Model Definition.
@@ -81,25 +82,26 @@ class User(db.Model):
             str: The normalized (lowercase and stripped) email.
 
         raises:
-            ValueError: if the email is missing or does not match the required regex pattern.
+            ValueError: if the email is missing, malformed, or the domain doesn't exist.
         """
         if not value:
             raise ValueError("Email is required.")
         
-        # It ensures the email contains valid characters, an '@' symbol, a domain, and a 2-7 character extension.   
-        email_regex = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,7}$"
-
         # Data Normalization:
         # Strips accidental spaces and converts to lowercase to prevent case-sensitivity 
         # issues in PostgreSQL. This ensures reliable logins and prevents users 
         # from creating duplicate accounts (e.g., 'User@loven.com' vs 'user@loven.com').
         clean_email = value.strip().lower()
 
-        # validates the email against the Regex pattern.
-        if not re.match(email_regex, clean_email):
-            raise ValueError("Invalid email format.")
-        
-        return clean_email
+        try:
+            # 1. Verifies email syntax and domain existence (DNS/MX records).
+            # 2. Normalizes the email to a safe, standardized format (handles Punycode/case-sensitivity).
+            validation_info = check_email_domain(clean_email, check_deliverability=True)
+            normalized_email = validation_info.normalized
+            return normalized_email
+        except EmailNotValidError as e:
+            # 3. Catch specific library errors and raise a standard ValueError for the Service layer.
+            raise ValueError(str(e))
 
     # ----------------- validate for role -----------------
     @validates("system_role")
@@ -143,8 +145,18 @@ class User(db.Model):
         if value.startswith(("$2a$", "$2b$", "$2y$")) and len(value) >= 50:
             return value
         
-        if len(value) < 8:
-            raise ValueError("Password must be at least 8 characters long.")
+        # Password Complexity Regex:
+        # (?=.*[a-z]) : At least one lowercase letter
+        # (?=.*[A-Z]) : At least one uppercase letter
+        # (?=.*\d)    : At least one digit (number)
+        # (?=.*[\W_]) : At least one special character (non-word character or underscore)
+        # .{8,}       : Minimum length of 8 characters
+        password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
+        if not re.match(password_regex, value):
+            raise ValueError(
+                "Password must be at least 8 characters long and include an uppercase letter, "
+                "a lowercase letter, a number, and a special character."
+            )
         # Encrypt the plain-text password using the security.py 
         return hash_password(value)
     
