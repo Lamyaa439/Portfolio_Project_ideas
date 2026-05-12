@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../splash/splash_screen.dart';
+import '../screens/settings_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
   final bool isGuest;
@@ -106,7 +107,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   context,
                   icon: Icons.settings_outlined,
                   title: 'Settings',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SettingsScreen()));
+                  },
                 ),
 
                 _buildSectionHeader(context, 'SUPPORT'),
@@ -146,9 +153,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const SplashScreen(),
-                    ),
-                    (route) => false,
-                    );
+                  ),
+                  (route) => false,
+                );
               },
             )
           else
