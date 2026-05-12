@@ -1,13 +1,10 @@
 from flask import Blueprint, request, jsonify
-
-# Architectural Change: Replaced direct auth_service imports with AuthFacade.
-# Purpose: The Facade acts as an orchestrator to coordinate between
-# core business logic (PostgreSQL user creation) and external services (Firebase FCM).
 from app.services.facade.auth_facade import AuthFacade
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+
 
 # Blueprint for authentication-related routes (register, login, logout)
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-
 
 @auth_bp.post("/register")
 def register():
@@ -59,19 +56,39 @@ def login():
     # Delegate the payload to the Facade to verify credentials
     # and update the user's FCM token in the database.
     result, status_code = AuthFacade.login(data)
-
     return jsonify(result), status_code
+
+@auth_bp.post("/refresh")
+@jwt_required(refresh=True)
+def refresh():
+    """
+    Handle token refresh.
+    Generates a new short-lived access token using a valid refresh token.
+    """
+
+    # Extract the identity dictionary (contains 'user_id' and 'role') from the refresh token.
+    current_user_identity = get_jwt_identity()
+
+    # Issue a fresh Access Token (valid for 30 mins) without requiring the user to login again.
+    new_access_token = create_access_token(identity=current_user_identity)
+
+    # Return the new token to the client (Flutter app) to continue their session.
+    return jsonify({
+        "access_token": new_access_token
+    }), 200
 
 
 @auth_bp.post("/logout")
+@jwt_required()
 def logout():
     """
     Handle user logout.
-
-    Note:
-        For JWT-based authentication, logout is typically handled
-        on the client side by removing the stored token.
+    Clears the FCM token from the database to prevent cross-account notifications.
     """
-    return jsonify({
-        "message": "Logged out successfully"
-    }), 200
+    # Extract the identity dictionary from the token.
+    current_user_identity = get_jwt_identity()
+
+    # Delegate business logic to Facade
+    result, status_code = AuthFacade.logout(current_user_identity)
+
+    return jsonify(result), status_code
