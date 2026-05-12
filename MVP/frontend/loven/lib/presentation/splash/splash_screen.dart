@@ -161,7 +161,7 @@ class _SplashScreenState extends State<SplashScreen>
           ElevatedButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
+              MaterialPageRoute(builder: (context) => const LoginPage(fromGuest: true)),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryDeepPurple,
@@ -180,7 +180,7 @@ class _SplashScreenState extends State<SplashScreen>
           OutlinedButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SignupPage()),
+              MaterialPageRoute(builder: (context) => const SignupPage(fromGuest: true)),
             ),
             style: OutlinedButton.styleFrom(
               fixedSize: const Size(260, 55),
