@@ -57,13 +57,13 @@ def register_user(data):
         
         # Generate JWT access token:
         # 1- Define user identity
-        user_identity = {
-            "user_id": str(new_user.id),
-            "role": new_user.system_role
-            }
+        user_identity = str(new_user.id)
         
         # 2- Generate BOTH tokens using the flask_jwt_extended library
-        access_token = create_access_token(identity=user_identity)
+        access_token = create_access_token(
+            identity=user_identity,
+            additional_claims={"role": new_user.system_role}
+            )
         refresh_token = create_refresh_token(identity=user_identity)
 
         return {
@@ -111,13 +111,13 @@ def login_user(data: dict):
 
     # Generate JWT access token:
     # 1- Define user identity
-    user_identity = {
-        "user_id": str(user.id),
-        "role": user.system_role
-    }
+    user_identity =str(user.id)
 
     # 2- Generate BOTH tokens
-    access_token = create_access_token(identity=user_identity)
+    access_token = create_access_token(
+        identity=user_identity,
+        additional_claims={"role": user.system_role}
+        )
     refresh_token = create_refresh_token(identity=user_identity)
 
     return {

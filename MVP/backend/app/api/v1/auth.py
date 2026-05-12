@@ -80,10 +80,7 @@ def logout():
     # Extract the identity dictionary from the token.
     current_user_identity = get_jwt_identity()
 
-    # Isolate the user_id (crucial to avoid passing the whole dictionary to the database).
-    user_id = current_user_identity.get("user_id")
-
     # Delegate business logic to Facade
-    result, status_code = AuthFacade.logout(user_id)
+    result, status_code = AuthFacade.logout(current_user_identity)
 
     return jsonify(result), status_code
