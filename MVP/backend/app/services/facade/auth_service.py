@@ -26,6 +26,7 @@ def register_user(data: dict):
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
+    system_role = data.get("system_role", "customer")
 
     # Validate required fields
     if not name or not email or not password:
@@ -40,7 +41,8 @@ def register_user(data: dict):
     user = create_user({
         "name": name,
         "email": email,
-        "password": password
+        "password": password,
+        "system_role": system_role
     })
 
     # Generate JWT access token using user ID
