@@ -23,7 +23,10 @@ def register():
     Returns:
         JSON response with result and HTTP status code.
     """
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
+    # Validate required fields BEFORE passing to service layer
+    if not data.get("email") or not data.get("password"):
+        return jsonify({"error": "email and password are required"}), 400
 
     # Delegate the payload to the Facade to handle multiple operations seamlessly:
     # 1. Persist the new user in the database via auth_service.
@@ -46,7 +49,12 @@ def login():
     Returns:
         JSON response with JWT token if successful.
     """
-    data = request.get_json()
+    # this to safely get JSON body and default to empty dict if missing or invalid
+    data = request.get_json(silent=True) or {}
+
+    # Validate required fields BEFORE authentication logic
+    if not data.get("email") or not data.get("password"):
+        return jsonify({"error": "email and password are required"}), 400
 
     # Delegate the payload to the Facade to verify credentials
     # and update the user's FCM token in the database.
