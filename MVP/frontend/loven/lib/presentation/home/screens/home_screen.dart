@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loven/core/res/theme/app_colors.dart'; // Fixed package import
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
@@ -12,14 +13,14 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({super.key, this.isGuest = false});
 
-void _goToSignup(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const SignupPage(),
-    ),
-  );
-}
+  void _goToSignup(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignupPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +30,15 @@ void _goToSignup(BuildContext context) {
       backgroundColor: theme.scaffoldBackgroundColor,
       drawer: HomeDrawer(isGuest: isGuest),
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: AppColors.primaryPurple, // Branded Indigo Deep Purple
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
+              icon: const Icon(
+                Icons.menu,
+                color: AppColors.primaryBlue, // White icons for dark header
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer()),
         ),
         title: Image.asset(
           'assets/images/loven-logo.png',
@@ -51,19 +51,11 @@ void _goToSignup(BuildContext context) {
               context.watch<ThemeBloc>().state == ThemeMode.light
                   ? Icons.nightlight_outlined
                   : Icons.light_mode_outlined,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+              color: AppColors.primaryBlue,
             ),
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
-          IconButton(
-            icon: Icon(
-              Icons.person_add_outlined,
-              color: theme.colorScheme.primary.withValues(alpha: 0.6),
-            ),
-            onPressed: () {
-              _goToSignup(context);
-            },
-          ),
+          // Condition: Only show Sign Up button for Guest Users`
         ],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
@@ -78,11 +70,8 @@ void _goToSignup(BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-
                   _buildSearchBar(theme),
-
                   const SizedBox(height: 30),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -91,13 +80,10 @@ void _goToSignup(BuildContext context) {
                       _buildCategoryCard(
                         context,
                         'My Collection',
-                        isRestricted: isGuest,
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 30),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 25,
@@ -110,32 +96,39 @@ void _goToSignup(BuildContext context) {
                       ),
                     ),
                   ),
-
                   SizedBox(
                     height: 320,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.only(left: 20),
-                      children: const [
-                        ArtCard(
-                          title: 'Sunset over Riyadh',
-                          price: '1,200',
-                          imageUrl: 'assets/images/art1.jpg',
+                      children: [
+                        GestureDetector(
+                          onTap: () => isGuest ? _goToSignup(context) : null,
+                          child: const ArtCard(
+                            title: 'Sunset over Riyadh',
+                            price: '1,200',
+                            imageUrl: 'assets/images/art1.jpg',
+                          ),
                         ),
-                        ArtCard(
-                          title: 'Modern Calligraphy',
-                          price: '850',
-                          imageUrl: 'assets/images/art2.jpg',
+                        GestureDetector(
+                          onTap: () => isGuest ? _goToSignup(context) : null,
+                          child: const ArtCard(
+                            title: 'Modern Calligraphy',
+                            price: '850',
+                            imageUrl: 'assets/images/art2.jpg',
+                          ),
                         ),
-                        ArtCard(
-                          title: 'Desert Silence',
-                          price: '2,100',
-                          imageUrl: 'assets/images/art3.jpg',
+                        GestureDetector(
+                          onTap: () => isGuest ? _goToSignup(context) : null,
+                          child: const ArtCard(
+                            title: 'Desert Silence',
+                            price: '2,100',
+                            imageUrl: 'assets/images/art3.jpg',
+                          ),
                         ),
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
                 ],
               ),
@@ -145,7 +138,6 @@ void _goToSignup(BuildContext context) {
               child: Text(state.message),
             );
           }
-
           return const Center(
             child: Text('Start exploring art!'),
           );
@@ -171,13 +163,13 @@ void _goToSignup(BuildContext context) {
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
             border: InputBorder.none,
             prefixIcon: Icon(
               Icons.tune,
               size: 20,
-              color: theme.colorScheme.primary,
+              color: AppColors.primaryBlue, // Branded icon color
             ),
             suffixIcon: const Icon(Icons.search),
           ),
@@ -188,35 +180,25 @@ void _goToSignup(BuildContext context) {
 
   Widget _buildCategoryCard(
     BuildContext context,
-    String title, {
-    bool isRestricted = false,
-  }) {
-    final theme = Theme.of(context);
-
-    return GestureDetector(
-      onTap: () {
-        if (isRestricted) {
-          _goToSignup(context);
-        }
-      },
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondary,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+    String title,
+  ) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        color: AppColors.primaryPurple, // Consistent Branding
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),

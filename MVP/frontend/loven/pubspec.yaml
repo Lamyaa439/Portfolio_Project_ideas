@@ -21,7 +21,7 @@ dependencies:
 # --- Localization & Bilingual support ---
   flutter_localizations:
     sdk: flutter
-  intl: 0.20.2
+  intl: ^0.20.2
 
   # --- UI & Styling ---
   flutter_svg: ^2.0.10+1
@@ -39,17 +39,17 @@ flutter:
   uses-material-design: true
 
   fonts:
-  - family: Almarai
-    fonts:
-      - asset: assets/fonts/Almarai-Regular.ttf
-      - asset: assets/fonts/Almarai-Bold.ttf
-        weight: 700
+   - family: Almarai
+     fonts:
+       - asset: assets/fonts/Almarai-Regular.ttf
+       - asset: assets/fonts/Almarai-Bold.ttf
+         weight: 700
 
-  - family: PT Serif
-    fonts:
-      - asset: assets/fonts/PTSerif-Regular.ttf
-      - asset: assets/fonts/PTSerif-Bold.ttf
-        weight: 700     
+   - family: PT Serif
+     fonts:
+       - asset: assets/fonts/PTSerif-Regular.ttf
+       - asset: assets/fonts/PTSerif-Bold.ttf
+         weight: 700     
         
   assets:
     - assets/images/ #For art pieces and backgrounds
