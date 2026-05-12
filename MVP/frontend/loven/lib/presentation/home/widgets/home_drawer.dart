@@ -142,8 +142,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
               iconColor: primaryIndigo,
               textColor: primaryIndigo,
               onTap: () {
-                // Navigate to your Login Screen here
-                // Navigator.pushNamed(context, '/login');
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SplashScreen(),
+                    ),
+                    (route) => false,
+                    );
               },
             )
           else
