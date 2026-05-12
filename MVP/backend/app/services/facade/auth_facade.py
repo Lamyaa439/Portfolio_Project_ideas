@@ -7,6 +7,7 @@ without cluttering the core service logic.
 
 from app.services.auth_service import register_user, login_user
 from app.external_services.notification_service import send_welcome_notification
+from app.persistence.repositories.user_repo import UserRepository
 
 class AuthFacade:
 
@@ -50,3 +51,24 @@ class AuthFacade:
         # The database update for the FCM token is now securely handled inside login_user!
         result, status_code = login_user(data)
         return result, status_code
+    
+    @staticmethod
+    def logout(user_id: str):
+        """
+        Manages the logout process.
+        Clears the FCM token to prevent push notifications to a logged-out device.
+        Args:
+            user_id (str): The ID of the user logging out.
+
+        Returns:
+            tuple: (response data, HTTP status code)
+        """
+        try:
+            # Instantiate the repository and clear the fcm token
+            user_repo = UserRepository()
+            user_repo.update_fcm_token(user_id, None)
+            
+            return {"message": "Logged out successfully and notifications disabled for this device."}, 200
+        except Exception as e:
+            print(f"Error during logout: {e}")
+            return {"error": "An internal error occurred during logout"}, 500
