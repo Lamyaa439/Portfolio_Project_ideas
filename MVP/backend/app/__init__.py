@@ -5,6 +5,9 @@ from config import Config
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
+# Global instance
+jwt = JWTManager()
+
 def create_app():
     app = Flask(__name__)
     
@@ -17,7 +20,7 @@ def create_app():
     db.init_app(app)
 
     # Initialize the JWT Manager with the app instance
-    jwt = JWTManager(app)
+    jwt.init_app(app)
 
     # Create database tables from SQLAlchemy models
     with app.app_context():
