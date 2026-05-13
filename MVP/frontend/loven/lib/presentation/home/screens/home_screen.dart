@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loven/core/res/theme/app_colors.dart'; // Fixed package import
+import 'package:loven/core/res/theme/app_colors.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
@@ -30,15 +30,16 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       drawer: HomeDrawer(isGuest: isGuest),
       appBar: AppBar(
-        backgroundColor: AppColors.primaryPurple, // Branded Indigo Deep Purple
+        backgroundColor: AppColors.primaryPurple,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-              icon: const Icon(
-                Icons.menu,
-                color: AppColors.primaryBlue, // White icons for dark header
-              ),
-              onPressed: () => Scaffold.of(context).openDrawer()),
+            icon: const Icon(
+              Icons.menu,
+              color: AppColors.primaryBlue,
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
         ),
         title: Image.asset(
           'assets/images/loven-logo.png',
@@ -55,96 +56,77 @@ class HomeScreen extends StatelessWidget {
             ),
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
-          // Condition: Only show Sign Up button for Guest Users`
         ],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else if (state is HomeLoaded) {
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   _buildSearchBar(theme),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildCategoryCard(context, 'Artists'),
-                      _buildCategoryCard(context, 'Top Artworks'),
-                      _buildCategoryCard(
-                        context,
-                        'My Collection',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 10,
-                    ),
+                  const SizedBox(height: 10),
+                  _buildCategories(state.categories),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: Text(
-                      'Featured Art',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Discover and Collect Art',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(
-                    height: 320,
-                    child: ListView(
+                    height: 350,
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 20),
-                      children: [
-                        GestureDetector(
-                          onTap: () => isGuest ? _goToSignup(context) : null,
-                          child: const ArtCard(
-                            title: 'Sunset over Riyadh',
-                            price: '1,200',
-                            imageUrl: 'assets/images/art1.jpg',
+                      padding: const EdgeInsets.only(left: 16),
+                      itemCount: state.artPieces.length,
+                      itemBuilder: (context, index) {
+                        final art = state.artPieces[index];
+                        return GestureDetector(
+                          onTap: () {
+                            if (isGuest) {
+                              _goToSignup(context);
+                            } else {
+                              print("Navigate to ${art['title']}");
+                            }
+                          },
+                          child: ArtCard(
+                            title: art['title'],
+                            artistName: "Artist #${art['artist_id']}",
+                            price: "${art['price']} SAR",
+                            imageUrl: art['image_url'],
+                            onActionPressed: () {
+                              if (isGuest) {
+                                _goToSignup(context);
+                              } else {
+                                print(
+                                    "User is logged in - Proceed with action");
+                              }
+                            },
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () => isGuest ? _goToSignup(context) : null,
-                          child: const ArtCard(
-                            title: 'Modern Calligraphy',
-                            price: '850',
-                            imageUrl: 'assets/images/art2.jpg',
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => isGuest ? _goToSignup(context) : null,
-                          child: const ArtCard(
-                            title: 'Desert Silence',
-                            price: '2,100',
-                            imageUrl: 'assets/images/art3.jpg',
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             );
-          } else if (state is HomeError) {
-            return Center(
-              child: Text(state.message),
-            );
           }
-          return const Center(
-            child: Text('Start exploring art!'),
-          );
+          if (state is HomeError) {
+            return Center(child: Text(state.message));
+          }
+          return const Center(child: Text('Start exploring art!'));
         },
       ),
     );
   }
+
+  // --- Helper Methods (Now properly inside the class) ---
 
   Widget _buildSearchBar(ThemeData theme) {
     return Padding(
@@ -157,19 +139,16 @@ class HomeScreen extends StatelessWidget {
         ),
         child: TextField(
           textAlign: TextAlign.right,
-          style: TextStyle(
-            color: theme.colorScheme.onSurface,
-          ),
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
               color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
             border: InputBorder.none,
-            prefixIcon: Icon(
+            prefixIcon: const Icon(
               Icons.tune,
               size: 20,
-              color: AppColors.primaryBlue, // Branded icon color
+              color: AppColors.primaryBlue,
             ),
             suffixIcon: const Icon(Icons.search),
           ),
@@ -178,28 +157,37 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(
-    BuildContext context,
-    String title,
-  ) {
+  Widget _buildCategories(List<String> categories) {
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: _buildCategoryCard(context, categories[index]),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard(BuildContext context, String title) {
     return Container(
-      width: 100,
-      height: 100,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: AppColors.primaryPurple, // Consistent Branding
-        borderRadius: BorderRadius.circular(15),
+        color: AppColors.primaryPurple,
+        borderRadius: BorderRadius.circular(25),
       ),
       child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),

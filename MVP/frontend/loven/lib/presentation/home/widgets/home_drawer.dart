@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../splash/splash_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/guest_settings_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
   final bool isGuest;
@@ -110,9 +111,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SettingsScreen()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => widget.isGuest
+                              ? const GuestSettingsScreen()
+                              : const SettingsScreen()),
+                    );
                   },
                 ),
 
