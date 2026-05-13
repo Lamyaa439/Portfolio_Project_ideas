@@ -16,25 +16,30 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          // Account Management (Only for logged-in users)
+
           _buildSectionHeader(theme, 'Account Management'),
           _buildSettingsTile(
             icon: Icons.email_outlined,
             title: 'Change Email',
-            onTap: () {/* TODO: Implement Email Change */},
+            onTap: () {},
           ),
           _buildSettingsTile(
             icon: Icons.lock_outline,
             title: 'Password',
-            onTap: () {/* TODO: Implement Password Change */},
+            onTap: () {},
           ),
           _buildSettingsTile(
             icon: Icons.delete_forever_outlined,
             title: 'Delete Account',
             textColor: Colors.red,
             iconColor: Colors.red,
-            onTap: () {/* TODO: Show Delete Confirmation Dialog */},
+            onTap: () {},
           ),
+
           const Divider(),
+
+          // APP PREFERENCES
           _buildSectionHeader(theme, 'App Preferences'),
           _buildSettingsTile(
             icon: Icons.language,
@@ -44,12 +49,6 @@ class SettingsScreen extends StatelessWidget {
           _buildSettingsTile(
             icon: Icons.notifications_none,
             title: 'Notifications',
-            onTap: () {/* Open Notification Settings */},
-          ),
-          _buildSettingsTile(
-            icon: Icons.dark_mode_outlined,
-            title: 'Theme Mode',
-            trailing: const Text('Light'),
             onTap: () {},
           ),
         ],
