@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../../data/datasources/auth_remote_data_source.dart';
 import 'auth_state.dart';
@@ -6,7 +7,8 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  final AuthRemoteDataSource _authRemoteDataSource = AuthRemoteDataSource();
+  final AuthRemoteDataSource _authRemoteDataSource =
+      AuthRemoteDataSource();
 
   Future<void> login({
     required String email,
@@ -15,13 +17,23 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     try {
+      // Get Firebase Cloud Messaging device token
+      final fcmToken =
+          await FirebaseMessaging.instance.getToken();
+
+      print("LOGIN FCM TOKEN: $fcmToken");
+
       await _authRemoteDataSource.login(
         email: email,
         password: password,
+        fcmToken: fcmToken,
       );
 
       emit(AuthSuccess());
+
     } catch (e) {
+      print("LOGIN ERROR: $e");
+
       emit(AuthFailure(_mapErrorMessage(e)));
     }
   }
@@ -35,15 +47,25 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     try {
+      // Get Firebase Cloud Messaging device token
+      final fcmToken =
+          await FirebaseMessaging.instance.getToken();
+
+      print("SIGNUP FCM TOKEN: $fcmToken");
+
       await _authRemoteDataSource.register(
         name: name,
         email: email,
         password: password,
         systemRole: systemRole,
+        fcmToken: fcmToken,
       );
 
       emit(AuthSuccess());
+
     } catch (e) {
+      print("SIGNUP ERROR: $e");
+
       emit(AuthFailure(_mapErrorMessage(e)));
     }
   }
@@ -68,6 +90,8 @@ class AuthCubit extends Cubit<AuthState> {
       return 'Please check your input';
     }
 
-    return 'Something went wrong';
+    // TEMPORARY:
+    // Show actual backend/Firebase errors while debugging
+    return errorText;
   }
 }
