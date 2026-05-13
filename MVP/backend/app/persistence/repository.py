@@ -49,9 +49,24 @@ class SQLAlchemyRepository(Repository):
             raise e
 
     def get(self, obj_id):
-        return self.model.query.get(obj_id)
+        """
+        Fetch an object by ID, ignoring soft-deleted records.
+        """
+        obj = self.model.query.get(obj_id)
+
+        # returns None if the record is logically deleted to prevent data leakage.
+        if obj and hasattr(obj, 'deleted_at') and obj.deleted_at is not None:
+            return None
+        return obj 
 
     def get_all(self):
+        """
+        Fetch all records, excluding soft-deleted ones.
+        """
+
+        # Dynamically filters out soft-deleted records if the model supports logical deletion.
+        if hasattr(self.model, 'deleted_at'):
+            return self.model.query.filter(self.model.deleted_at.is_(None)).all()
         return self.model.query.all()
 
     def update(self, obj_id, data):
@@ -104,8 +119,21 @@ class SQLAlchemyRepository(Repository):
         return False
 
     def get_by_attribute(self, attr_name, attr_value):
-        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
+        """
+        Dynamically filters the model by a specified attribute and value. 
+        Automatically applies a soft-delete constraint if supported, 
+        returning only the first active record.
+        """
+        query = self.model.query.filter(getattr(self.model, attr_name) == attr_value)
+        if hasattr(self.model, 'deleted_at'):
+            query = query.filter(self.model.deleted_at.is_(None))
+        return query.first()
     
     def get_all_by_attribute(self, attr_name, attr_value):
-        """Returns a list of all objects matching the attribute."""
-        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).all()
+        """
+        Returns a list of all matching objects, excluding soft-deleted ones.
+        """
+        query = self.model.query.filter(getattr(self.model, attr_name) == attr_value)
+        if hasattr(self.model, 'deleted_at'):
+            query = query.filter(self.model.deleted_at.is_(None))
+        return query.all()
