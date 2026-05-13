@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '335940956799',
     projectId: 'loven-24bdd',
     storageBucket: 'loven-24bdd.firebasestorage.app',
-    iosBundleId: 'com.example.loven',
+    iosBundleId: 'com.five.loven',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

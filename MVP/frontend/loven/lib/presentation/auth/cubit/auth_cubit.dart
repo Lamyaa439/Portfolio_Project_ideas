@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -7,8 +9,38 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  final AuthRemoteDataSource _authRemoteDataSource =
-      AuthRemoteDataSource();
+  final AuthRemoteDataSource _authRemoteDataSource = AuthRemoteDataSource();
+
+  Future<String?> _getFcmTokenSafely() async {
+    try {
+      // Ask iOS user for notification permission.
+      await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+        final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+
+        print("APNS TOKEN: $apnsToken");
+
+        if (apnsToken == null) {
+          print("APNS token is not ready yet. Skipping FCM token for now.");
+          return null;
+        }
+      }
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+
+      print("FCM TOKEN: $fcmToken");
+
+      return fcmToken;
+    } catch (e) {
+      print("FCM TOKEN ERROR: $e");
+      return null;
+    }
+  }
 
   Future<void> login({
     required String email,
@@ -17,9 +49,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     try {
-      // Get Firebase Cloud Messaging device token
-      final fcmToken =
-          await FirebaseMessaging.instance.getToken();
+      final fcmToken = await _getFcmTokenSafely();
 
       print("LOGIN FCM TOKEN: $fcmToken");
 
@@ -30,10 +60,8 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       emit(AuthSuccess());
-
     } catch (e) {
       print("LOGIN ERROR: $e");
-
       emit(AuthFailure(_mapErrorMessage(e)));
     }
   }
@@ -47,9 +75,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     try {
-      // Get Firebase Cloud Messaging device token
-      final fcmToken =
-          await FirebaseMessaging.instance.getToken();
+      final fcmToken = await _getFcmTokenSafely();
 
       print("SIGNUP FCM TOKEN: $fcmToken");
 
@@ -62,10 +88,8 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       emit(AuthSuccess());
-
     } catch (e) {
       print("SIGNUP ERROR: $e");
-
       emit(AuthFailure(_mapErrorMessage(e)));
     }
   }
@@ -90,8 +114,6 @@ class AuthCubit extends Cubit<AuthState> {
       return 'Please check your input';
     }
 
-    // TEMPORARY:
-    // Show actual backend/Firebase errors while debugging
     return errorText;
   }
 }
