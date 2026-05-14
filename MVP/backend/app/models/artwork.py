@@ -1,6 +1,6 @@
 from decimal import Decimal, InvalidOperation
 from app.extensions import db
-from app.models.BaseModel import BaseModel
+from app.models.base_model import BaseModel
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import validates
 
