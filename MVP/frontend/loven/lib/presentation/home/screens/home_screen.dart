@@ -87,28 +87,27 @@ class HomeScreen extends StatelessWidget {
                       itemCount: state.artPieces.length,
                       itemBuilder: (context, index) {
                         final art = state.artPieces[index];
-                        return GestureDetector(
-                          onTap: () {
+
+                        // We removed the GestureDetector here because the
+                        // updated ArtCard now handles its own onTap internally.
+                        return ArtCard(
+                          title: art['title'] ?? 'Untitled',
+                          artistName: art['artistName'] ??
+                              "Artist #${art['artist_id']}",
+                          // Ensure price is a string for the UI
+                          price: art['price']?.toString() ?? '0',
+                          imageUrl: art['image_url'] ?? '',
+                          // Pass the dynamic description from your backend/state
+                          description: art['description'] ??
+                              'Explore the story behind this unique piece of art.',
+                          isGuest: isGuest,
+                          onActionPressed: () {
                             if (isGuest) {
                               _goToSignup(context);
                             } else {
-                              print("Navigate to ${art['title']}");
+                              print("Action triggered for ${art['title']}");
                             }
                           },
-                          child: ArtCard(
-                            title: art['title'],
-                            artistName: "Artist #${art['artist_id']}",
-                            price: "${art['price']} SAR",
-                            imageUrl: art['image_url'],
-                            onActionPressed: () {
-                              if (isGuest) {
-                                _goToSignup(context);
-                              } else {
-                                print(
-                                    "User is logged in - Proceed with action");
-                              }
-                            },
-                          ),
                         );
                       },
                     ),
@@ -126,7 +125,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // --- Helper Methods (Now properly inside the class) ---
+  // --- Helper Methods ---
 
   Widget _buildSearchBar(ThemeData theme) {
     return Padding(
