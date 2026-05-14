@@ -1,3 +1,23 @@
+"""
+Persistence Layer: Generic Repository Pattern Implementation.
+
+This module defines the foundational database interaction logic using the Repository design pattern.
+It acts as the intermediary between the application's business logic (Service Layer) 
+and the database, ensuring strict separation of concerns and keeping the code DRY.
+
+Key Features:
+    - Defines a strict contract (ABC) for all database operations.
+    - Provides a generic SQLAlchemy implementation with automatic transaction 
+      management (commit/rollback) to prevent database locks or crashes.
+    - Built-in 'Soft Delete' awareness: Automatically filters out logically deleted 
+      records in queries if the underlying model supports the 'deleted_at' attribute.
+
+Classes:
+    - Repository (ABC): The abstract base interface defining the CRUD contract.
+    - SQLAlchemyRepository: The concrete, reusable SQLAlchemy implementation.
+
+"""
+
 from app.extensions import db
 from abc import ABC, abstractmethod
 
