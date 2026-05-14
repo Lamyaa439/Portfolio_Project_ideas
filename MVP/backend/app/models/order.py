@@ -1,65 +1,97 @@
+from app.extensions import db
+from app.models.base_model import BaseModel
+
+
 # =========================================================
 # Model: Order
+# =========================================================
 # Description:
 # Represents a customer order in the LOVEN application.
 #
 # Relationships:
 # - Belongs to one user
-# - Can contain many order_items
+# - Can contain many order items
 #
 # Purpose:
-# This model is used as a lightweight data container
-# between the repository, service, and API layers.
+# Stores order information inside the database
+# and inherits shared audit fields from BaseModel.
+#
+# Inherited from BaseModel:
+# - id
+# - created_at
+# - updated_at
+# - deleted_at
+# - soft_delete()
+# - restore()
 # =========================================================
 
-class Order:
-    def __init__(
-        self,
-        id=None,
-        user_id=None,
-        total_price=None,
-        status="pending",
-        created_at=None,
-    ):
-        # Unique identifier for the order
-        self.id = id
+class Order(BaseModel):
+    # Database table name
+    __tablename__ = "orders"
 
-        # References the user who placed the order
-        self.user_id = user_id
+    # Reference to the user who placed the order
+    user_id = db.Column(
+        db.UUID(as_uuid=True),
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
 
-        # Total cost of the order
-        self.total_price = total_price
+    # Total monetary value of the order
+    total_price = db.Column(
+        db.Numeric(10, 2),
+        nullable=False
+    )
 
-        # Current order status
-        # Example values:
-        # - pending
-        # - paid
-        # - shipped
-        # - delivered
-        self.status = status
-
-        # Timestamp when the order was created
-        self.created_at = created_at
+    # Current order status
+    # Example values:
+    # - pending
+    # - paid
+    # - shipped
+    # - delivered
+    status = db.Column(
+        db.String(50),
+        default="pending",
+        nullable=False
+    )
 
     def to_dict(self):
         """
-        Convert the Order object into a serializable dictionary.
+        Converts the Order object into a serializable dictionary.
 
         Returns:
             dict: Order data formatted for API responses.
         """
         return {
+            # Convert UUID values to strings for JSON serialization
             "id": str(self.id) if self.id else None,
+
+            # User associated with the order
             "user_id": str(self.user_id) if self.user_id else None,
+
+            # Convert Decimal values into float for API responses
             "total_price": (
                 float(self.total_price)
                 if self.total_price is not None
                 else None
             ),
+
+            # Current order state
             "status": self.status,
+
+            # Audit timestamps inherited from BaseModel
             "created_at": (
                 self.created_at.isoformat()
                 if self.created_at
+                else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat()
+                if self.updated_at
+                else None
+            ),
+            "deleted_at": (
+                self.deleted_at.isoformat()
+                if self.deleted_at
                 else None
             ),
         }

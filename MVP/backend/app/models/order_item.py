@@ -1,5 +1,10 @@
+from app.extensions import db
+from app.models.base_model import BaseModel
+
+
 # =========================================================
 # Model: OrderItem
+# =========================================================
 # Description:
 # Represents a single artwork item inside an order.
 #
@@ -8,49 +13,99 @@
 # - References one artwork
 #
 # Purpose:
-# This model acts as a lightweight data container
-# between the repository, service, and API layers.
+# Stores individual purchased artwork items
+# associated with a customer order.
+#
+# Inherited from BaseModel:
+# - id
+# - created_at
+# - updated_at
+# - deleted_at
+# - soft_delete()
+# - restore()
 # =========================================================
 
-class OrderItem:
-    def __init__(
-        self,
-        id=None,
-        order_id=None,
-        artwork_id=None,
-        quantity=None,
-        price=None,
-    ):
-        # Unique identifier for the order item
-        self.id = id
+class OrderItem(BaseModel):
+    # Database table name
+    __tablename__ = "order_items"
 
-        # References the parent order
-        self.order_id = order_id
+    # Reference to the parent order
+    order_id = db.Column(
+        db.UUID(as_uuid=True),
+        db.ForeignKey("orders.id"),
+        nullable=False
+    )
 
-        # References the purchased artwork
-        self.artwork_id = artwork_id
+    # Reference to the purchased artwork
+    artwork_id = db.Column(
+        db.UUID(as_uuid=True),
+        db.ForeignKey("artworks.id"),
+        nullable=False
+    )
 
-        # Number of artwork units purchased
-        self.quantity = quantity
+    # Quantity of artwork units purchased
+    quantity = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1
+    )
 
-        # Price of the artwork at purchase time
-        self.price = price
+    # Price of the artwork at purchase time
+    # Stored separately in case artwork prices change later
+    price = db.Column(
+        db.Numeric(10, 2),
+        nullable=False
+    )
 
     def to_dict(self):
         """
-        Convert the OrderItem object into a serializable dictionary.
+        Converts the OrderItem object into a serializable dictionary.
 
         Returns:
             dict: Order item data formatted for API responses.
         """
         return {
+            # Convert UUID values into strings for JSON serialization
             "id": str(self.id) if self.id else None,
-            "order_id": str(self.order_id) if self.order_id else None,
-            "artwork_id": str(self.artwork_id) if self.artwork_id else None,
+
+            # Parent order reference
+            "order_id": (
+                str(self.order_id)
+                if self.order_id
+                else None
+            ),
+
+            # Purchased artwork reference
+            "artwork_id": (
+                str(self.artwork_id)
+                if self.artwork_id
+                else None
+            ),
+
+            # Number of purchased units
             "quantity": self.quantity,
+
+            # Convert Decimal values into float for API responses
             "price": (
                 float(self.price)
                 if self.price is not None
+                else None
+            ),
+
+            # Audit timestamps inherited from BaseModel
+            "created_at": (
+                self.created_at.isoformat()
+                if self.created_at
+                else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat()
+                if self.updated_at
+                else None
+            ),
+            "deleted_at": (
+                self.deleted_at.isoformat()
+                if self.deleted_at
                 else None
             ),
         }

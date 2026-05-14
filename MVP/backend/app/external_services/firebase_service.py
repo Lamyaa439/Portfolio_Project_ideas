@@ -67,7 +67,7 @@ def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
     message = messaging.Message(
         notification=messaging.Notification(
             title="Welcome to LOVEN! 🎨 ",
-            body= f"Hi {user_name}, we're happy you are here!!",
+            body= f"Hi {user_name}, we're happy you're here!!",
         ),
         data={
             "type":"welcome_alert",
@@ -83,6 +83,56 @@ def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
         return True
     except Exception as e:
         print(f"FCM Error: Dispatch failed: {e}")
+        return False
+    
+def send_order_status_notification(
+    fcm_token: str,
+    user_name: str,
+    order_id: str,
+    status: str
+) -> bool:
+    """
+    Sends an order status update push notification to the user.
+
+    Args:
+        fcm_token (str): The user's FCM device token.
+        user_name (str): The user's name.
+        order_id (str): The order ID.
+        status (str): The updated order status.
+
+    Returns:
+        bool: True if sent successfully, False otherwise.
+    """
+
+    # Exit early if no token is available
+    if not fcm_token:
+        print("No token provided. Skipping order notification.")
+        return False
+
+    # Build the Firebase Cloud Messaging payload
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title="Order Update from LOVEN 🎨",
+            body=f"Hi {user_name}, your order #{order_id} is now {status}.",
+        ),
+        data={
+            "type": "order_status_update",
+            "action": "open_order_details",
+            "order_id": str(order_id),
+            "status": status,
+        },
+        token=fcm_token,
+    )
+
+    # Attempt to send the notification
+    try:
+        message_id = messaging.send(message)
+        print(f"Order notification sent. ID: {message_id}")
+        return True
+
+    # Handle Firebase sending errors gracefully
+    except Exception as e:
+        print(f"FCM Error: Order notification failed: {e}")
         return False
     
 # ==========================================
@@ -110,3 +160,4 @@ def delete_cloud_file(file_path: str) -> bool:
     except Exception as e:
         print(f"FCS Error: Deletion failed: {e}")
         return False
+    

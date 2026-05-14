@@ -6,8 +6,8 @@ from app.persistence.repositories.order_repo import (
     update_order_status,
 )
 
-from app.external_services.notification_service import (
-    send_order_shipped_notification,
+from app.external_services.firebase_service import (
+    send_order_status_notification,
 )
 
 
@@ -256,10 +256,19 @@ def change_order_status(order_id, status):
         buyer_fcm_token = "BUYER_FCM_TOKEN"
 
         # Dispatch shipment notification
-        send_order_shipped_notification(
+        send_order_status_notification(
             fcm_token=buyer_fcm_token,
+            
+            # Temporary placeholder until buyer data
+            # is fetched from the database
+            user_name="Customer",
+            
+            # Order being updated
             order_id=str(order[0]),
-        )
+            
+            # Current shipment state
+            status="shipped",
+            )
 
     return {
         "message": "Order status updated successfully",
