@@ -1,13 +1,17 @@
 """
-Firebase Notification Service.
-Handles sending FCM push notifications securely.
+Firebase Integration Service.
+Handles Cloud Messaging (FCM) for notifications and Cloud Storage (FCS) 
+for media management.
 """
 
 import firebase_admin
-from firebase_admin import credentials, messaging
+from firebase_admin import credentials, messaging, storage
 import os
 
+
+# Configuration: Use environment variables for security with local fallbacks
 SERVICE_ACCOUNT_KEY = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebaseKey.json")
+STORAGE_BUCKET_NAME = os.getenv("FIREBASE_STORAGE_BUCKET", "loven-88b0a.appspot.com")
 
 def initialize_firebase():
     """
@@ -23,17 +27,24 @@ def initialize_firebase():
         try:
             # Load the service account credentials
             cred = credentials.Certificate(SERVICE_ACCOUNT_KEY)
+            
             # Initialize the Firebase application with the credentials
-            firebase_admin.initialize_app(cred)
+            firebase_admin.initialize_app(cred, {
+                'storageBucket': STORAGE_BUCKET_NAME
+            })
             # Log successful initialization for server monitoring
-            print("Firebase Admin SDK initialized successfully.")
+            print("Firebase SDK: Successfully initialized (FCM + Storage).")
         except Exception as e: 
             # Catch and log any initialization errors gracefully
-            print(f"Failed to initialize Firebase: {e}")
+            print(f"Firebase SDK: Initialization failed: {e}")
 
 
 # Auto-initialize Firebase when this module is imported
 initialize_firebase()
+
+# ==========================================
+# 1. Cloud Messaging (Notifications)
+# ==========================================
 
 def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
     """
@@ -71,6 +82,31 @@ def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
         print(f"Welcome notification sent. ID: {message_id}")
         return True
     except Exception as e:
-        print(f"Could not send welcome notification: {e}")
+        print(f"FCM Error: Dispatch failed: {e}")
         return False
     
+# ==========================================
+# 2. Cloud Storage (Media Management)
+# ==========================================
+def delete_cloud_file(file_path: str) -> bool:
+    """
+    Removes a physical file from the cloud bucket to prevent orphaned storage.
+    
+    Args:
+        file_path: The specific path/name of the file in the bucket.
+    """
+    if not file_path:
+        return False
+
+    try:
+        bucket = storage.bucket()
+        blob = bucket.blob(file_path)
+        
+        if blob.exists():
+            blob.delete()
+            print(f"FCS Success: Deleted {file_path}")
+            return True
+        return False
+    except Exception as e:
+        print(f"FCS Error: Deletion failed: {e}")
+        return False
