@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../splash/splash_screen.dart';
+import '../screens/settings_screen.dart';
+import '../screens/guest_settings_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
   final bool isGuest;
@@ -106,7 +108,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   context,
                   icon: Icons.settings_outlined,
                   title: 'Settings',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => widget.isGuest
+                              ? const GuestSettingsScreen()
+                              : const SettingsScreen()),
+                    );
+                  },
                 ),
 
                 _buildSectionHeader(context, 'SUPPORT'),
@@ -142,8 +153,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
               iconColor: primaryIndigo,
               textColor: primaryIndigo,
               onTap: () {
-                // Navigate to your Login Screen here
-                // Navigator.pushNamed(context, '/login');
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SplashScreen(),
+                  ),
+                  (route) => false,
+                );
               },
             )
           else

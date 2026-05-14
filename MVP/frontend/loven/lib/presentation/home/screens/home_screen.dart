@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loven/core/res/theme/app_colors.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
@@ -9,7 +10,17 @@ import '../../auth/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
   final bool isGuest;
+
   const HomeScreen({super.key, this.isGuest = false});
+
+  void _goToSignup(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignupPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +30,21 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       drawer: HomeDrawer(isGuest: isGuest),
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: AppColors.primaryPurple,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+              color: AppColors.primaryBlue,
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
-        title: Image.asset('assets/images/loven-logo.png', height: 40),
+        title: Image.asset(
+          'assets/images/loven-logo.png',
+          height: 40,
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -38,23 +52,9 @@ class HomeScreen extends StatelessWidget {
               context.watch<ThemeBloc>().state == ThemeMode.light
                   ? Icons.nightlight_outlined
                   : Icons.light_mode_outlined,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+              color: AppColors.primaryBlue,
             ),
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.person_add_outlined,
-              color: theme.colorScheme.primary.withValues(alpha: 0.6),
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignupPage(),
-                ),
-              );
-            },
           ),
         ],
       ),
@@ -67,71 +67,65 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   _buildSearchBar(theme),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildCategoryCard(context, 'Artists'),
-                      _buildCategoryCard(context, 'Top Artworks'),
-                      _buildCategoryCard(
-                        context,
-                        'My Collection',
-                        isRestricted: isGuest,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 10,
-                    ),
+                  const SizedBox(height: 10),
+                  _buildCategories(state.categories),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: Text(
-                      'Featured Art',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Discover and Collect Art',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(
-                    height: 320,
-                    child: ListView(
+                    height: 350,
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 20),
-                      children: const [
-                        ArtCard(
-                          title: 'Sunset over Riyadh',
-                          price: '1,200',
-                          imageUrl: 'assets/images/art1.jpg',
-                        ),
-                        ArtCard(
-                          title: 'Modern Calligraphy',
-                          price: '850',
-                          imageUrl: 'assets/images/art2.jpg',
-                        ),
-                        ArtCard(
-                          title: 'Desert Silence',
-                          price: '2,100',
-                          imageUrl: 'assets/images/art3.jpg',
-                        ),
-                      ],
+                      padding: const EdgeInsets.only(left: 16),
+                      itemCount: state.artPieces.length,
+                      itemBuilder: (context, index) {
+                        final art = state.artPieces[index];
+
+                        // We removed the GestureDetector here because the
+                        // updated ArtCard now handles its own onTap internally.
+                        return ArtCard(
+                          title: art['title'] ?? 'Untitled',
+                          artistName: art['artistName'] ??
+                              "Artist #${art['artist_id']}",
+                          // Ensure price is a string for the UI
+                          price: art['price']?.toString() ?? '0',
+                          imageUrl: art['image_url'] ?? '',
+                          // Pass the dynamic description from your backend/state
+                          description: art['description'] ??
+                              'Explore the story behind this unique piece of art.',
+                          isGuest: isGuest,
+                          onActionPressed: () {
+                            if (isGuest) {
+                              _goToSignup(context);
+                            } else {
+                              print("Action triggered for ${art['title']}");
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             );
-          } else if (state is HomeError) {
+          }
+          if (state is HomeError) {
             return Center(child: Text(state.message));
           }
-
           return const Center(child: Text('Start exploring art!'));
         },
       ),
     );
   }
+
+  // --- Helper Methods ---
 
   Widget _buildSearchBar(ThemeData theme) {
     return Padding(
@@ -144,17 +138,16 @@ class HomeScreen extends StatelessWidget {
         ),
         child: TextField(
           textAlign: TextAlign.right,
-          style: TextStyle(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
             border: InputBorder.none,
-            prefixIcon: Icon(
+            prefixIcon: const Icon(
               Icons.tune,
               size: 20,
-              color: theme.colorScheme.primary,
+              color: AppColors.primaryBlue,
             ),
             suffixIcon: const Icon(Icons.search),
           ),
@@ -163,43 +156,37 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(
-    BuildContext context,
-    String title, {
-    bool isRestricted = false,
-  }) {
-    final theme = Theme.of(context);
-
-    return GestureDetector(
-      onTap: () {
-        if (isRestricted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SignupPage(),
-            ),
+  Widget _buildCategories(List<String> categories) {
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: _buildCategoryCard(context, categories[index]),
           );
-        }
-      },
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondary,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+        },
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard(BuildContext context, String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: AppColors.primaryPurple,
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Center(
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),

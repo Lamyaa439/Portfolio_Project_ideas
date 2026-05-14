@@ -1,7 +1,7 @@
 import os
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
-
+from datetime import timedelta
 """
 This file connects the Flask app to the database.
 """
@@ -40,3 +40,9 @@ class Config:
     HOST = os.getenv("HOST", "0.0.0.0")
     # 3- read the port from .env then convert it to int
     PORT = int(os.getenv("PORT", "5000"))
+
+    # ---- flask-jwt-extended settings ------
+    JWT_SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
+
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)))
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", 7)))
