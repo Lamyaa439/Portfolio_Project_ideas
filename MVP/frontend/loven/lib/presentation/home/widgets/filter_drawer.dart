@@ -125,7 +125,11 @@ class _FilterSheetState extends State<FilterSheet> {
                     fontSize: 12,
                     color: theme.colorScheme.onSurface.withOpacity(0.6))),
             value: _showWorkshopsOnly,
+<<<<<<< HEAD
             activeColor: AppColors.primaryPurple,
+=======
+            activeThumbColor: AppColors.primaryPurple,
+>>>>>>> LOVEN-1-Artist-Profile
             onChanged: (bool value) {
               setState(() => _showWorkshopsOnly = value);
             },
