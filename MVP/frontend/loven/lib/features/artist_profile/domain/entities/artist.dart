@@ -1,3 +1,5 @@
+import 'artwork.dart';
+
 class Artist {
   final String id;
   final String userId;
@@ -6,6 +8,7 @@ class Artist {
   final String? city;
   final String? profileImageUrl;
   final String? shippingPolicy;
+  final List<Artwork> artworks;
 
   const Artist({
     required this.id,
@@ -15,5 +18,6 @@ class Artist {
     this.city,
     this.profileImageUrl,
     this.shippingPolicy,
+    this.artworks = const [],
   });
 }

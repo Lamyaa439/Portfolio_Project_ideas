@@ -9,48 +9,64 @@ class ArtistHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Avatar
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: const Color(0xFFC2410C),
-            backgroundImage: artist.profileImageUrl != null
-                ? NetworkImage(artist.profileImageUrl!)
-                : null,
-            child: artist.profileImageUrl == null
-                ? Text(
-                    artist.displayName.isNotEmpty ? artist.displayName[0] : '?',
-                    style: const TextStyle(
-                      fontSize: 40,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+          // صورة دائرية
+          Container(
+            width: 110,
+            height: 110,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFB8A8E8),
+                  Color(0xFF8B7AB8),
+                ],
+              ),
+            ),
+            child: artist.profileImageUrl != null
+                ? ClipOval(
+                    child: Image.network(
+                      artist.profileImageUrl!,
+                      fit: BoxFit.cover,
                     ),
                   )
-                : null,
+                : Center(
+                    child: Text(
+                      artist.displayName.isNotEmpty
+                          ? artist.displayName[0]
+                          : '?',
+                      style: const TextStyle(
+                        fontSize: 42,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(height: 16),
 
-          // Name
+          // اسم الفنان
           Text(
             artist.displayName,
             style: const TextStyle(
-              fontSize: 26,
+              fontSize: 22,
               fontWeight: FontWeight.w600,
               color: Color(0xFF1A1A1A),
             ),
           ),
 
-          // City
+          // المدينة
           if (artist.city != null) ...[
             const SizedBox(height: 4),
             Text(
               artist.city!,
               style: const TextStyle(
                 fontSize: 14,
-                color: Color(0xFF6B6B6B),
+                color: Color(0xFF8E8E93),
               ),
             ),
           ],

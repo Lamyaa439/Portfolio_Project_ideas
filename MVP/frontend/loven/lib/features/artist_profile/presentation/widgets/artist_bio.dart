@@ -12,14 +12,28 @@ class ArtistBio extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Text(
-        bio!,
-        style: const TextStyle(
-          fontSize: 14,
-          height: 1.7,
-          color: Color(0xFF6B6B6B),
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'نبذة',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1A1A1A),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            bio!,
+            style: const TextStyle(
+              fontSize: 14,
+              height: 1.7,
+              color: Color(0xFF6B6B6B),
+            ),
+          ),
+        ],
       ),
     );
   }
