@@ -41,48 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBfmcziUr2yG1Lgv-zE8rUMzmgUdKIvEt8',
-    appId: '1:335940956799:web:42ff64b3e26fd83809854a',
-    messagingSenderId: '335940956799',
-    projectId: 'loven-24bdd',
-    authDomain: 'loven-24bdd.firebaseapp.com',
-    storageBucket: 'loven-24bdd.firebasestorage.app',
-    measurementId: 'G-XSWGLVYJ56',
+    apiKey: 'AIzaSyD6fK5pOxN3lsaVmX_72iopNEP-vBV6GTI',
+    appId: '1:168795837419:web:e72fdb855b92091c83bfae',
+    messagingSenderId: '168795837419',
+    projectId: 'loven-88b0a',
+    authDomain: 'loven-88b0a.firebaseapp.com',
+    storageBucket: 'loven-88b0a.firebasestorage.app',
+    measurementId: 'G-3BP243NL77',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDQBXB-zyRQlSjYmo-ZMwqnQfHqqgLHmxA',
-    appId: '1:335940956799:android:84c50c59633eca1909854a',
-    messagingSenderId: '335940956799',
-    projectId: 'loven-24bdd',
-    storageBucket: 'loven-24bdd.firebasestorage.app',
+    apiKey: 'AIzaSyAGR1gxZYnbvPedCDnFWhTRm3WsoW0MZx8',
+    appId: '1:168795837419:android:5a7fe42628ad489183bfae',
+    messagingSenderId: '168795837419',
+    projectId: 'loven-88b0a',
+    storageBucket: 'loven-88b0a.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCfFsma666wtqwf4i17D2zNMuNqUZB-Q-s',
-    appId: '1:335940956799:ios:71029cf8bb09934a09854a',
-    messagingSenderId: '335940956799',
-    projectId: 'loven-24bdd',
-    storageBucket: 'loven-24bdd.firebasestorage.app',
+    apiKey: 'AIzaSyAIxxB9MYnUiSUsdTeSqwE5L_n7VDe9Cu8',
+    appId: '1:168795837419:ios:565adff1e9f3cbca83bfae',
+    messagingSenderId: '168795837419',
+    projectId: 'loven-88b0a',
+    storageBucket: 'loven-88b0a.firebasestorage.app',
     iosBundleId: 'com.five.loven',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCfFsma666wtqwf4i17D2zNMuNqUZB-Q-s',
-    appId: '1:335940956799:ios:71029cf8bb09934a09854a',
-    messagingSenderId: '335940956799',
-    projectId: 'loven-24bdd',
-    storageBucket: 'loven-24bdd.firebasestorage.app',
+    apiKey: 'AIzaSyAIxxB9MYnUiSUsdTeSqwE5L_n7VDe9Cu8',
+    appId: '1:168795837419:ios:dd247876f084c99083bfae',
+    messagingSenderId: '168795837419',
+    projectId: 'loven-88b0a',
+    storageBucket: 'loven-88b0a.firebasestorage.app',
     iosBundleId: 'com.example.loven',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBfmcziUr2yG1Lgv-zE8rUMzmgUdKIvEt8',
-    appId: '1:335940956799:web:e3dfac4982d95fce09854a',
-    messagingSenderId: '335940956799',
-    projectId: 'loven-24bdd',
-    authDomain: 'loven-24bdd.firebaseapp.com',
-    storageBucket: 'loven-24bdd.firebasestorage.app',
-    measurementId: 'G-XBE2KS24QJ',
+    apiKey: 'AIzaSyD6fK5pOxN3lsaVmX_72iopNEP-vBV6GTI',
+    appId: '1:168795837419:web:bfa7f6c3a9a6e07e83bfae',
+    messagingSenderId: '168795837419',
+    projectId: 'loven-88b0a',
+    authDomain: 'loven-88b0a.firebaseapp.com',
+    storageBucket: 'loven-88b0a.firebasestorage.app',
+    measurementId: 'G-K4EJCTVZ66',
   );
 }

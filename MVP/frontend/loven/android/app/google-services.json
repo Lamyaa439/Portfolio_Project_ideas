@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "335940956799",
-    "project_id": "loven-24bdd",
-    "storage_bucket": "loven-24bdd.firebasestorage.app"
+    "project_number": "168795837419",
+    "project_id": "loven-88b0a",
+    "storage_bucket": "loven-88b0a.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:335940956799:android:4040b8b0400b706e09854a",
-        "android_client_info": {
-          "package_name": "com.example.flutter_app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDQBXB-zyRQlSjYmo-ZMwqnQfHqqgLHmxA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:335940956799:android:84c50c59633eca1909854a",
+        "mobilesdk_app_id": "1:168795837419:android:5a7fe42628ad489183bfae",
         "android_client_info": {
           "package_name": "com.example.loven"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDQBXB-zyRQlSjYmo-ZMwqnQfHqqgLHmxA"
+          "current_key": "AIzaSyAGR1gxZYnbvPedCDnFWhTRm3WsoW0MZx8"
         }
       ],
       "services": {
