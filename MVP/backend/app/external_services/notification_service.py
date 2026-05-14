@@ -56,7 +56,7 @@ def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
     message = messaging.Message(
         notification=messaging.Notification(
             title="Welcome to LOVEN! 🎨 ",
-            body= f"Hi {user_name}, we happy you are here!!",
+            body= f"Hi {user_name}, we're happy you are here!!",
         ),
         data={
             "type":"welcome_alert",
@@ -74,3 +74,47 @@ def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
         print(f"Could not send welcome notification: {e}")
         return False
     
+def send_order_shipped_notification(
+    fcm_token: str,
+    order_id: str,
+) -> bool:
+    """
+    Sends a push notification to the buyer when
+    an artist ships the order.
+
+    Args:
+        fcm_token (str): Buyer's FCM device token.
+        order_id (str): Shipped order ID.
+
+    Returns:
+        bool: True if notification sent successfully.
+    """
+
+    # Exit early if no token exists
+    if not fcm_token:
+        print("No token provided. Skipping shipment notification.")
+        return False
+
+    # Construct notification payload
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title="Your order has been shipped! 📦",
+            body=f"Order #{order_id} is on its way.",
+        ),
+        data={
+            "type": "order_shipped",
+            "order_id": order_id,
+            "action": "open_orders_screen",
+        },
+        token=fcm_token,
+    )
+
+    # Attempt notification delivery
+    try:
+        message_id = messaging.send(message)
+        print(f"Shipment notification sent. ID: {message_id}")
+        return True
+
+    except Exception as e:
+        print(f"Could not send shipment notification: {e}")
+        return False
