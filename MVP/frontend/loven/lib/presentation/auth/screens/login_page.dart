@@ -42,15 +42,15 @@ class _LoginPageState extends State<LoginPage> {
         );
   }
 
-void _goToGuestHome() {
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const HomeScreen(isGuest: true),
-    ),
-    (route) => false,
-  );
-}
+  void _goToGuestHome() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(isGuest: true),
+      ),
+      (route) => false,
+    );
+  }
 
   void _goToLoggedInHome() {
     Navigator.pushAndRemoveUntil(
@@ -123,7 +123,6 @@ void _goToGuestHome() {
                     child: Column(
                       children: [
                         const SizedBox(height: 80),
-
                         Center(
                           child: Image.asset(
                             'assets/images/loven-logo.png',
@@ -131,9 +130,7 @@ void _goToGuestHome() {
                             fit: BoxFit.contain,
                           ),
                         ),
-
                         const SizedBox(height: 12),
-
                         const Text(
                           'Welcome back to LOVEN!',
                           style: TextStyle(
@@ -142,9 +139,7 @@ void _goToGuestHome() {
                             color: Color(0xFFB39DDB),
                           ),
                         ),
-
                         const SizedBox(height: 6),
-
                         const Text(
                           'Login to continue',
                           style: TextStyle(
@@ -152,9 +147,7 @@ void _goToGuestHome() {
                             fontSize: 14,
                           ),
                         ),
-
                         const SizedBox(height: 32),
-
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
@@ -177,11 +170,11 @@ void _goToGuestHome() {
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 const SizedBox(height: 8),
-
                                 TextFormField(
                                   controller: emailController,
                                   keyboardType: TextInputType.emailAddress,
-                                  decoration: inputDecoration('Type your email'),
+                                  decoration:
+                                      inputDecoration('Type your email'),
                                   enabled: !isLoading,
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
@@ -195,15 +188,12 @@ void _goToGuestHome() {
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 24),
-
                                 const Text(
                                   'Password',
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 const SizedBox(height: 8),
-
                                 TextFormField(
                                   controller: passwordController,
                                   obscureText: obscurePassword,
@@ -239,9 +229,7 @@ void _goToGuestHome() {
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 16),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -262,36 +250,17 @@ void _goToGuestHome() {
                                     ),
                                   ],
                                 ),
-
                                 const SizedBox(height: 40),
-
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: isLoading ? null : _login,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color(0xFFEDE7F6),
-                                      foregroundColor: Colors.black,
-                                      disabledBackgroundColor:
-                                          const Color(0xFFEDE7F6),
-                                      disabledForegroundColor: Colors.black,
-                                      elevation: 0,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 16,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
                                     child: isLoading
                                         ? const Text('Logging in...')
                                         : const Text('Login'),
                                   ),
                                 ),
-
                                 const SizedBox(height: 28),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -305,8 +274,7 @@ void _goToGuestHome() {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       SignupPage(
-                                                    fromGuest:
-                                                        widget.fromGuest,
+                                                    fromGuest: widget.fromGuest,
                                                   ),
                                                 ),
                                               );
@@ -315,8 +283,7 @@ void _goToGuestHome() {
                                         'Sign up!',
                                         style: TextStyle(
                                           color: Colors.red,
-                                          decoration:
-                                              TextDecoration.underline,
+                                          decoration: TextDecoration.underline,
                                         ),
                                       ),
                                     ),
@@ -330,7 +297,6 @@ void _goToGuestHome() {
                     ),
                   ),
                 ),
-
                 Positioned(
                   top: 16,
                   right: 16,
