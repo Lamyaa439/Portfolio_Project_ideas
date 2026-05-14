@@ -56,7 +56,7 @@ def send_welcome_notification(fcm_token: str, user_name: str) -> bool:
     message = messaging.Message(
         notification=messaging.Notification(
             title="Welcome to LOVEN! 🎨 ",
-            body= f"Hi {user_name}, we happy you are here!!",
+            body= f"Hi {user_name}, we're happy you are here!!",
         ),
         data={
             "type":"welcome_alert",
