@@ -1,3 +1,23 @@
+"""
+Persistence Layer: Generic Repository Pattern Implementation.
+
+This module defines the foundational database interaction logic using the Repository design pattern.
+It acts as the intermediary between the application's business logic (Service Layer) 
+and the database, ensuring strict separation of concerns and keeping the code DRY.
+
+Key Features:
+    - Defines a strict contract (ABC) for all database operations.
+    - Provides a generic SQLAlchemy implementation with automatic transaction 
+      management (commit/rollback) to prevent database locks or crashes.
+    - Built-in 'Soft Delete' awareness: Automatically filters out logically deleted 
+      records in queries if the underlying model supports the 'deleted_at' attribute.
+
+Classes:
+    - Repository (ABC): The abstract base interface defining the CRUD contract.
+    - SQLAlchemyRepository: The concrete, reusable SQLAlchemy implementation.
+
+"""
+
 from app.extensions import db
 from abc import ABC, abstractmethod
 
@@ -49,9 +69,24 @@ class SQLAlchemyRepository(Repository):
             raise e
 
     def get(self, obj_id):
-        return self.model.query.get(obj_id)
+        """
+        Fetch an object by ID, ignoring soft-deleted records.
+        """
+        obj = self.model.query.get(obj_id)
+
+        # returns None if the record is logically deleted to prevent data leakage.
+        if obj and hasattr(obj, 'deleted_at') and obj.deleted_at is not None:
+            return None
+        return obj 
 
     def get_all(self):
+        """
+        Fetch all records, excluding soft-deleted ones.
+        """
+
+        # Dynamically filters out soft-deleted records if the model supports logical deletion.
+        if hasattr(self.model, 'deleted_at'):
+            return self.model.query.filter(self.model.deleted_at.is_(None)).all()
         return self.model.query.all()
 
     def update(self, obj_id, data):
@@ -104,8 +139,21 @@ class SQLAlchemyRepository(Repository):
         return False
 
     def get_by_attribute(self, attr_name, attr_value):
-        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
+        """
+        Dynamically filters the model by a specified attribute and value. 
+        Automatically applies a soft-delete constraint if supported, 
+        returning only the first active record.
+        """
+        query = self.model.query.filter(getattr(self.model, attr_name) == attr_value)
+        if hasattr(self.model, 'deleted_at'):
+            query = query.filter(self.model.deleted_at.is_(None))
+        return query.first()
     
     def get_all_by_attribute(self, attr_name, attr_value):
-        """Returns a list of all objects matching the attribute."""
-        return self.model.query.filter(getattr(self.model, attr_name) == attr_value).all()
+        """
+        Returns a list of all matching objects, excluding soft-deleted ones.
+        """
+        query = self.model.query.filter(getattr(self.model, attr_name) == attr_value)
+        if hasattr(self.model, 'deleted_at'):
+            query = query.filter(self.model.deleted_at.is_(None))
+        return query.all()

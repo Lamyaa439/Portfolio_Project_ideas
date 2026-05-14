@@ -18,7 +18,7 @@ dependencies:
   # -- Networking & Backend connection ---
   http: ^1.2.0
 
-# --- Localization & Bilingual support ---
+  # --- Localization & Bilingual support ---
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
