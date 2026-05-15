@@ -69,64 +69,64 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SizedBox.expand(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeTransition(
-                    opacity: fadeAnimation,
-                    child: ScaleTransition(
-                      scale: scaleAnimation,
-                      child: Image.asset(
-                        'assets/images/loven-logo.png',
-                        width: 180,
-                        fit: BoxFit.contain,
+          backgroundColor: Colors.white,
+          body: SizedBox.expand(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FadeTransition(
+                        opacity: fadeAnimation,
+                        child: ScaleTransition(
+                          scale: scaleAnimation,
+                          child: Image.asset(
+                            'assets/images/loven-logo.png',
+                            width: 180,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 800),
-                    opacity: _showWelcome ? 1.0 : 0.0,
-                    child: _buildWelcomeActions(),
-                  ),
-                  const SizedBox(height: 100),
-                ],
-              ),
-            ),
-            if (_showWelcome)
-              Positioned(
-                bottom: 40,
-                child: FadeTransition(
-                  opacity: fadeAnimation,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const HomeScreen(isGuest: true)),
-                      );
-                    },
-                    child: Text(
-                      "Browse as Guest",
-                      style: TextStyle(
-                        color: secondaryPurple.withOpacity(0.7),
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 800),
+                        opacity: _showWelcome ? 1.0 : 0.0,
+                        child: _buildWelcomeActions(),
                       ),
-                    ),
+                      const SizedBox(height: 100),
+                    ],
                   ),
                 ),
-              ),
-          ],
-        ),
-      ),
-    );
+                if (_showWelcome)
+                  Positioned(
+                    bottom: 40,
+                    child: FadeTransition(
+                      opacity: fadeAnimation,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const HomeScreen(isGuest: true)),
+                          );
+                        },
+                        child: Text(
+                          "Browse as Guest",
+                          style: TextStyle(
+                            color: secondaryPurple.withOpacity(0.7),
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
   }
 
   Widget _buildWelcomeActions() {
@@ -161,7 +161,8 @@ class _SplashScreenState extends State<SplashScreen>
           ElevatedButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage(fromGuest: true)),
+              MaterialPageRoute(
+                  builder: (context) => const LoginPage(fromGuest: true)),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryDeepPurple,
@@ -180,7 +181,8 @@ class _SplashScreenState extends State<SplashScreen>
           OutlinedButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SignupPage(fromGuest: true)),
+              MaterialPageRoute(
+                  builder: (context) => const SignupPage(fromGuest: true)),
             ),
             style: OutlinedButton.styleFrom(
               fixedSize: const Size(260, 55),

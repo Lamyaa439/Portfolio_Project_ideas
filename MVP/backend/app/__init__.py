@@ -1,25 +1,28 @@
 from flask import Flask
 from app.api.v1.auth import auth_bp
+from app.api.v1.orders import order_bp
 from app.extensions import db
 from config import Config
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
-# Global instance
+# Global JWT instance
 jwt = JWTManager()
+
 
 def create_app():
     app = Flask(__name__)
-    
+
+    # Enable CORS for API routes
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    # Load application configuration from the Config class (including SECRET_KEY)
+    # Load application configuration
     app.config.from_object(Config)
 
-    # Initialize the database instance with the application context
+    # Initialize database
     db.init_app(app)
 
-    # Initialize the JWT Manager with the app instance
+    # Initialize JWT manager
     jwt.init_app(app)
 
     # Create database tables from SQLAlchemy models
@@ -29,10 +32,22 @@ def create_app():
 
     @app.route("/")
     def home():
+        """
+        Health check route.
+        """
         return {"message": "LOVEN on Air!"}
 
-    app.register_blueprint(auth_bp, url_prefix='/api/v1')
+    # =========================================================
+    # Register API Blueprints
+    # =========================================================
 
+    # Authentication routes
+    app.register_blueprint(auth_bp, url_prefix="/api/v1")
+
+    # Order management routes
+    app.register_blueprint(order_bp, url_prefix="/api/v1/orders")
+
+    # Print all registered routes
     print(app.url_map)
 
     return app

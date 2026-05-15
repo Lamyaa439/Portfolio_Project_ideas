@@ -22,23 +22,16 @@ class ThemeBloc extends Cubit<ThemeMode> {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Firebase before running the app
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Foreground notification listener
+  // Listen for foreground Firebase push notifications
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print(
-      "FOREGROUND MESSAGE TITLE: ${message.notification?.title}",
-    );
-
-    print(
-      "FOREGROUND MESSAGE BODY: ${message.notification?.body}",
-    );
-
-    print(
-      "FOREGROUND MESSAGE DATA: ${message.data}",
-    );
+    print("FOREGROUND MESSAGE TITLE: ${message.notification?.title}");
+    print("FOREGROUND MESSAGE BODY: ${message.notification?.body}");
+    print("FOREGROUND MESSAGE DATA: ${message.data}");
   });
 
   runApp(const LovenApp());
@@ -54,9 +47,12 @@ class LovenApp extends StatelessWidget {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
+
+        // Provides app-wide theme switching
         BlocProvider<ThemeBloc>(
           create: (context) => ThemeBloc(),
         ),
+
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
         ),
@@ -66,6 +62,8 @@ class LovenApp extends StatelessWidget {
           return MaterialApp(
             title: 'LOVEN',
             debugShowCheckedModeBanner: false,
+
+            // Bilingual support: English and Arabic
             locale: const Locale('en', 'US'),
             supportedLocales: const [
               Locale('en', 'US'),
@@ -76,9 +74,12 @@ class LovenApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
+
+            // App theme configuration
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
+
             home: const SplashScreen(),
           );
         },

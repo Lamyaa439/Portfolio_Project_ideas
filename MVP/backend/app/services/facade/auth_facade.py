@@ -6,7 +6,7 @@ without cluttering the core service logic.
 """
 
 from app.services.auth_service import register_user, login_user
-from app.external_services.notification_service import send_welcome_notification
+from app.external_services.firebase_service import send_welcome_notification
 from app.persistence.repositories.user_repo import UserRepository
 
 class AuthFacade:
