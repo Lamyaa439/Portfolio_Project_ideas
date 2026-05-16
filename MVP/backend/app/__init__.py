@@ -1,3 +1,4 @@
+from app.api.v1.artworks import artwork_bp
 from flask import Flask
 from app.api.v1.auth import auth_bp
 from app.api.v1.orders import order_bp
@@ -45,8 +46,7 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
 
     # Order management routes
-    app.register_blueprint(order_bp, url_prefix="/api/v1/orders")
-
+app.register_blueprint(artwork_bp, url_prefix="/api/v1/artworks")
     # Print all registered routes
     print(app.url_map)
 
