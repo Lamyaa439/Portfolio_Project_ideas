@@ -24,13 +24,11 @@ class Cart(BaseModel):
     )
 
     # Connects the cart to its items (One-to-Many).
-    # 'dynamic' allows smart searching and sorting of items inside the cart.
-    # 'delete-orphan' automatically deletes any item removed from the cart.
+    # lazy="select" enables joinedload in CartRepository (dynamic loaders cannot).
     items = db.relationship(
         "CartItem",
-        # Back Reference
-        backref=db.backref("cart", lazy=True), # ربط المنتجات بالسلة وربط السلة بالمنتجات
-        lazy="dynamic",
+        backref=db.backref("cart", lazy=True),
+        lazy="select",
         cascade="all, delete-orphan",
     )
 
