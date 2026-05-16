@@ -25,11 +25,12 @@ class Cart(BaseModel):
 
     # Connects the cart to its items (One-to-Many).
     # lazy="select" enables joinedload in CartRepository (dynamic loaders cannot).
+    # lazy="select" return a list , while dynamic return query
     items = db.relationship(
         "CartItem",
         backref=db.backref("cart", lazy=True),
         lazy="select",
-        cascade="all, delete-orphan",
+        cascade="all, delete-orphan", # إذا حذفت السلة نحذف جميع المنتجات المرتبطة بها في قاعدة البيانات
     )
 
     # Connect the cart to user (One-to-One).
