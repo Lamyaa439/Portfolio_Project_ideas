@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/artist_profile_cubit.dart';
 import '../bloc/artist_profile_state.dart';
 import '../widgets/artist_header.dart';
 import '../widgets/artist_bio.dart';
@@ -32,84 +30,86 @@ class ArtistProfileScreen extends StatelessWidget {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF1A1A1A)),
         ),
-        body: BlocBuilder<ArtistProfileCubit, ArtistProfileState>(
-          builder: (context, state) {
-            if (state is ArtistProfileLoading ||
-                state is ArtistProfileInitial) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF8B7AB8),
-                ),
-              );
-            }
-
-            if (state is ArtistProfileError) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        size: 50,
-                        color: Color(0xFF8E8E93),
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        'حدث خطأ',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        state.message,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read<ArtistProfileCubit>()
-                              .getArtist(artistId);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1A1A1A),
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text('إعادة المحاولة'),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            if (state is ArtistProfileLoaded) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ArtistHeader(artist: state.artist),
-                    ArtistBio(bio: state.artist.bio),
-                    ArtistShippingPolicy(
-                      shippingPolicy: state.artist.shippingPolicy,
-                    ),
-                    ArtworksGrid(artworks: state.artist.artworks),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              );
-            }
-
-            return const SizedBox.shrink();
-          },
+        body: Column(
+          children: [],
         ),
+        // body: BlocBuilder<ArtistProfileCubit, ArtistProfileState>(
+        // builder: (context, state) {
+        //   if (state is ArtistProfileLoading ||
+        //       state is ArtistProfileInitial) {
+        //     return const Center(
+        //       child: CircularProgressIndicator(
+        //         color: Color(0xFF8B7AB8),
+        //       ),
+        //     );
+        //   }
+
+        //   if (state is ArtistProfileError) {
+        //     return Center(
+        //       child: Padding(
+        //         padding: const EdgeInsets.all(24),
+        //         child: Column(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: [
+        //             const Icon(
+        //               Icons.error_outline,
+        //               size: 50,
+        //               color: Color(0xFF8E8E93),
+        //             ),
+        //             const SizedBox(height: 12),
+        //             const Text(
+        //               'حدث خطأ',
+        //               style: TextStyle(
+        //                 fontSize: 16,
+        //                 fontWeight: FontWeight.w600,
+        //               ),
+        //             ),
+        //             const SizedBox(height: 8),
+        //             Text(
+        //               state.message,
+        //               textAlign: TextAlign.center,
+        //               style: const TextStyle(
+        //                 fontSize: 13,
+        //                 color: Color(0xFF8E8E93),
+        //               ),
+        //             ),
+        //             const SizedBox(height: 16),
+        //             ElevatedButton(
+        //               onPressed: () {
+        //                 context
+        //                     .read<ArtistProfileCubit>()
+        //                     .getArtist(artistId);
+        //               },
+        //               style: ElevatedButton.styleFrom(
+        //                 backgroundColor: const Color(0xFF1A1A1A),
+        //                 foregroundColor: Colors.white,
+        //               ),
+        //               child: const Text('إعادة المحاولة'),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     );
+        //   }
+
+        //   if (state is ArtistProfileLoaded) {
+        //     return SingleChildScrollView(
+        //       child: Column(
+        //         children: [
+        //           ArtistHeader(artist: state.artist),
+        //           ArtistBio(bio: state.artist.bio),
+        //           ArtistShippingPolicy(
+        //             shippingPolicy: state.artist.shippingPolicy,
+        //           ),
+        //           ArtworksGrid(artworks: state.artist.artworks),
+        //           const SizedBox(height: 24),
+        //         ],
+        //       ),
+        //     );
+        //   }
+
+        //   return const SizedBox.shrink();
+        // },
       ),
     );
   }

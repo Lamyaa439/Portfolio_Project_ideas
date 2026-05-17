@@ -125,7 +125,7 @@ class _FilterSheetState extends State<FilterSheet> {
                     fontSize: 12,
                     color: theme.colorScheme.onSurface.withOpacity(0.6))),
             value: _showWorkshopsOnly,
-            activeColor: AppColors.primaryPurple,
+            activeThumbColor: AppColors.primaryPurple,
             onChanged: (bool value) {
               setState(() => _showWorkshopsOnly = value);
             },

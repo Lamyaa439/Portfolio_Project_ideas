@@ -25,37 +25,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      drawer: HomeDrawer(isGuest: isGuest),
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: theme.colorScheme.primary,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        title: Image.asset(
-          'assets/images/loven-logo.png',
-          height: 40,
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(
-              context.watch<ThemeBloc>().state == ThemeMode.light
-                  ? Icons.nightlight_outlined
-                  : Icons.light_mode_outlined,
-              color: theme.colorScheme.primary,
-            ),
-            onPressed: () => context.read<ThemeBloc>().toggleTheme(),
-          ),
-        ],
-      ),
-      body: BlocBuilder<HomeBloc, HomeState>(
+    return Container(
+      // backgroundColor: theme.scaffoldBackgroundColor,
+      // drawer: HomeDrawer(isGuest: isGuest),
+
+      child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
             return const Center(child: CircularProgressIndicator());
