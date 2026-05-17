@@ -1,11 +1,12 @@
 from flask import Flask
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+
 from app.api.v1.auth import auth_bp
 from app.api.v1.carts import carts_bp
 from app.api.v1.orders import order_bp
 from app.extensions import db
 from config import Config
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
 
 # Global JWT instance
 jwt = JWTManager()
@@ -55,7 +56,10 @@ def create_app():
 
     # Order management routes
     app.register_blueprint(order_bp, url_prefix="/api/v1/orders")
-
+    
+    # Artwork discovery routes
+    app.register_blueprint(artwork_bp, url_prefix="/api/v1/artworks")
+    
     # Print all registered routes
     print(app.url_map)
 
