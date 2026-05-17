@@ -42,11 +42,13 @@ class _SignupPageState extends State<SignupPage> {
   void _signup() {
     if (!_formKey.currentState!.validate()) return;
 
+    final theme = Theme.of(context);
+
     if (!acceptedTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Please accept the terms and privacy policy'),
-          backgroundColor: Colors.redAccent,
+          backgroundColor: theme.colorScheme.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -64,7 +66,7 @@ class _SignupPageState extends State<SignupPage> {
         );
   }
 
-  InputDecoration inputDecoration(String hint) {
+  InputDecoration inputDecoration(String hint, ThemeData theme) {
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(
@@ -72,7 +74,7 @@ class _SignupPageState extends State<SignupPage> {
         fontSize: 14,
       ),
       filled: true,
-      fillColor: const Color(0xFFEAEAEA),
+      fillColor: theme.colorScheme.surfaceContainerHighest,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide.none,
@@ -84,15 +86,20 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-void _goToGuestHome() {
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const HomeScreen(isGuest: true),
-    ),
-    (route) => false,
-  );
-}
+  void _handleCloseAction() {
+    if (widget.fromGuest) {
+      // return back to the current position
+      Navigator.pop(context);
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(isGuest: true),
+        ),
+        (route) => false,
+      );
+    }
+  }
 
   void _goToLoggedInHome() {
     Navigator.pushAndRemoveUntil(
@@ -106,6 +113,8 @@ void _goToGuestHome() {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
@@ -122,7 +131,7 @@ void _goToGuestHome() {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.redAccent,
+              backgroundColor: theme.colorScheme.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -137,7 +146,7 @@ void _goToGuestHome() {
         return Directionality(
           textDirection: TextDirection.ltr,
           child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: theme.scaffoldBackgroundColor,
             body: Stack(
               children: [
                 SafeArea(
@@ -145,7 +154,6 @@ void _goToGuestHome() {
                     child: Column(
                       children: [
                         const SizedBox(height: 60),
-
                         Center(
                           child: Image.asset(
                             'assets/images/loven-logo.png',
@@ -153,39 +161,33 @@ void _goToGuestHome() {
                             fit: BoxFit.contain,
                           ),
                         ),
-
                         const SizedBox(height: 12),
-
-                        const Text(
+                        Text(
                           'Create your LOVEN account',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFFB39DDB),
+                            color: theme.colorScheme.primary,
                           ),
                         ),
-
                         const SizedBox(height: 6),
-
-                        const Text(
+                        Text(
                           'Join as a customer or artist',
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
                           ),
                         ),
-
                         const SizedBox(height: 32),
-
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 32,
                             vertical: 44,
                           ),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF5F5F5),
-                            borderRadius: BorderRadius.vertical(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerLow,
+                            borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(40),
                             ),
                           ),
@@ -194,13 +196,14 @@ void _goToGuestHome() {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Full Name', style: TextStyle(fontSize: 16)),
+                                const Text('Full Name',
+                                    style: TextStyle(fontSize: 16)),
                                 const SizedBox(height: 8),
-
                                 TextFormField(
                                   controller: nameController,
                                   enabled: !isLoading,
-                                  decoration: inputDecoration('Type your full name'),
+                                  decoration: inputDecoration(
+                                      'Type your full name', theme),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Name is required';
@@ -208,17 +211,16 @@ void _goToGuestHome() {
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 20),
-
-                                const Text('Email', style: TextStyle(fontSize: 16)),
+                                const Text('Email',
+                                    style: TextStyle(fontSize: 16)),
                                 const SizedBox(height: 8),
-
                                 TextFormField(
                                   controller: emailController,
                                   enabled: !isLoading,
                                   keyboardType: TextInputType.emailAddress,
-                                  decoration: inputDecoration('Type your email'),
+                                  decoration:
+                                      inputDecoration('Type your email', theme),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Email is required';
@@ -231,17 +233,17 @@ void _goToGuestHome() {
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 20),
-
-                                const Text('Password', style: TextStyle(fontSize: 16)),
+                                const Text('Password',
+                                    style: TextStyle(fontSize: 16)),
                                 const SizedBox(height: 8),
-
                                 TextFormField(
                                   controller: passwordController,
                                   enabled: !isLoading,
                                   obscureText: obscurePassword,
-                                  decoration: inputDecoration('Type your password').copyWith(
+                                  decoration: inputDecoration(
+                                          'Type your password', theme)
+                                      .copyWith(
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         obscurePassword
@@ -252,7 +254,8 @@ void _goToGuestHome() {
                                           ? null
                                           : () {
                                               setState(() {
-                                                obscurePassword = !obscurePassword;
+                                                obscurePassword =
+                                                    !obscurePassword;
                                               });
                                             },
                                     ),
@@ -269,22 +272,24 @@ void _goToGuestHome() {
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 20),
-
-                                const Text('Role', style: TextStyle(fontSize: 16)),
+                                const Text('Role',
+                                    style: TextStyle(fontSize: 16)),
                                 const SizedBox(height: 8),
-
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFEAEAEA),
+                                    color: theme
+                                        .colorScheme.surfaceContainerHighest,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       value: selectedRole,
                                       isExpanded: true,
+                                      dropdownColor: theme
+                                          .colorScheme.surfaceContainerHighest,
                                       items: const [
                                         DropdownMenuItem(
                                           value: 'customer',
@@ -305,14 +310,13 @@ void _goToGuestHome() {
                                     ),
                                   ),
                                 ),
-
                                 const SizedBox(height: 24),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Checkbox(
                                       value: acceptedTerms,
+                                      activeColor: theme.colorScheme.primary,
                                       onChanged: isLoading
                                           ? null
                                           : (value) {
@@ -324,27 +328,31 @@ void _goToGuestHome() {
                                     Flexible(
                                       child: RichText(
                                         text: TextSpan(
-                                          style: const TextStyle(
-                                            color: Colors.black,
+                                          style: TextStyle(
+                                            color: theme.colorScheme.onSurface,
                                             fontSize: 12,
                                           ),
                                           children: [
-                                            const TextSpan(text: 'I agree to the '),
+                                            const TextSpan(
+                                                text: 'I agree to the '),
                                             WidgetSpan(
                                               child: GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                      builder: (context) => const TermsPage(),
+                                                      builder: (context) =>
+                                                          const TermsPage(),
                                                     ),
                                                   );
                                                 },
-                                                child: const Text(
+                                                child: Text(
                                                   'terms and conditions',
                                                   style: TextStyle(
-                                                    color: Colors.red,
-                                                    decoration: TextDecoration.underline,
+                                                    color: theme
+                                                        .colorScheme.primary,
+                                                    decoration: TextDecoration
+                                                        .underline,
                                                     fontSize: 12,
                                                   ),
                                                 ),
@@ -362,11 +370,13 @@ void _goToGuestHome() {
                                                     ),
                                                   );
                                                 },
-                                                child: const Text(
+                                                child: Text(
                                                   'privacy policy',
                                                   style: TextStyle(
-                                                    color: Colors.red,
-                                                    decoration: TextDecoration.underline,
+                                                    color: theme
+                                                        .colorScheme.primary,
+                                                    decoration: TextDecoration
+                                                        .underline,
                                                     fontSize: 12,
                                                   ),
                                                 ),
@@ -378,20 +388,23 @@ void _goToGuestHome() {
                                     ),
                                   ],
                                 ),
-
                                 const SizedBox(height: 36),
-
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: isLoading ? null : _signup,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFEDE7F6),
-                                      foregroundColor: Colors.black,
-                                      disabledBackgroundColor: const Color(0xFFEDE7F6),
-                                      disabledForegroundColor: Colors.black,
+                                      backgroundColor:
+                                          theme.colorScheme.primaryContainer,
+                                      foregroundColor:
+                                          theme.colorScheme.onPrimaryContainer,
+                                      disabledBackgroundColor:
+                                          theme.colorScheme.surfaceContainerLow,
+                                      disabledForegroundColor:
+                                          theme.colorScheme.onSurfaceVariant,
                                       elevation: 0,
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30),
                                       ),
@@ -401,13 +414,16 @@ void _goToGuestHome() {
                                         : const Text('Create Account'),
                                   ),
                                 ),
-
                                 const SizedBox(height: 24),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text('Already have an account? '),
+                                    Text(
+                                      'Already have an account? ',
+                                      style: TextStyle(
+                                          color: theme
+                                              .colorScheme.onSurfaceVariant),
+                                    ),
                                     GestureDetector(
                                       onTap: isLoading
                                           ? null
@@ -415,16 +431,17 @@ void _goToGuestHome() {
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => LoginPage(
+                                                  builder: (context) =>
+                                                      LoginPage(
                                                     fromGuest: widget.fromGuest,
                                                   ),
                                                 ),
                                               );
                                             },
-                                      child: const Text(
+                                      child: Text(
                                         'Login',
                                         style: TextStyle(
-                                          color: Colors.red,
+                                          color: theme.colorScheme.primary,
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
@@ -439,18 +456,17 @@ void _goToGuestHome() {
                     ),
                   ),
                 ),
-
                 Positioned(
                   top: 16,
                   right: 16,
                   child: SafeArea(
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
                         size: 28,
-                        color: Colors.black,
+                        color: theme.colorScheme.onSurface,
                       ),
-                      onPressed: _goToGuestHome,
+                      onPressed: isLoading ? null : _handleCloseAction,
                     ),
                   ),
                 ),

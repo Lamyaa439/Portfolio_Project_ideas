@@ -1,10 +1,15 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+<<<<<<< HEAD
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../../data/datasources/auth_remote_data_source.dart';
+=======
+>>>>>>> 0e70ee52608e0fe6715612d521d59dab470d2c56
 import 'auth_state.dart';
+import '../../../data/datasources/auth_remote_data_source.dart';
+import '../../../core/storage/token_storage.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
@@ -91,6 +96,17 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       print("SIGNUP ERROR: $e");
       emit(AuthFailure(_mapErrorMessage(e)));
+    }
+  }
+
+  Future<void> logout() async {
+    emit(AuthLoading());
+    try {
+      await TokenStorage().clearToken();
+
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthInitial());
     }
   }
 
