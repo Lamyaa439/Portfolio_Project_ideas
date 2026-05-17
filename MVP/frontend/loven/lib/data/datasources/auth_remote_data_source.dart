@@ -15,7 +15,8 @@ class AuthRemoteDataSource {
     required String name,
     required String email,
     required String password,
-    required String systemRole
+    required String systemRole,
+    String? fcmToken,
   }) async {
     final response = await http.post(
       Uri.parse(ApiConstants.register),
@@ -27,8 +28,12 @@ class AuthRemoteDataSource {
         'email': email,
         'password': password,
         'system_role': systemRole,
+        'fcm_token': fcmToken,
       }),
     );
+
+    print("REGISTER STATUS: ${response.statusCode}");
+    print("REGISTER BODY: ${response.body}");
 
     final data = jsonDecode(response.body);
 
@@ -51,6 +56,7 @@ class AuthRemoteDataSource {
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,
+    String? fcmToken,
   }) async {
     final response = await http.post(
       Uri.parse(ApiConstants.login),
@@ -60,8 +66,12 @@ class AuthRemoteDataSource {
       body: jsonEncode({
         'email': email,
         'password': password,
+        'fcm_token': fcmToken,
       }),
     );
+
+    print("LOGIN STATUS: ${response.statusCode}");
+    print("LOGIN BODY: ${response.body}");
 
     final data = jsonDecode(response.body);
 
