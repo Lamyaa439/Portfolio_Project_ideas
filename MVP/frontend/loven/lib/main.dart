@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
+import 'features/navigation/cubit/navigation_bar_cubit.dart';
 import 'core/res/theme/app_theme.dart'; // Importing the theme file
-import 'presentation/splash/splash_screen.dart';
 import 'presentation/auth/cubit/auth_cubit.dart';
+import 'core/router/app_router.dart'; // Importing the router configuration
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
@@ -25,6 +26,9 @@ class LovenApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<NavigationBarCubit>(
+          create: (context) => NavigationBarCubit(),
+        ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
@@ -38,7 +42,7 @@ class LovenApp extends StatelessWidget {
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
+          return MaterialApp.router(
             title: 'LOVEN',
             debugShowCheckedModeBanner: false,
 
@@ -54,12 +58,11 @@ class LovenApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-
             theme: AppTheme.lightTheme, // Applying the custom theme
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
-
-            home: const SplashScreen(),
+            routerConfig: router,
+            // home: const SplashScreen(),
           );
         },
       ),

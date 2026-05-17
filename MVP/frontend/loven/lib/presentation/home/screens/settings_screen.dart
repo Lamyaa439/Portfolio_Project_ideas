@@ -8,13 +8,13 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings', style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.primaryPurple,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: ListView(
+    return Container(
+      // appBar: AppBar(
+      //   title: const Text('Settings', style: TextStyle(color: Colors.white)),
+      //   backgroundColor: AppColors.primaryPurple,
+      //   iconTheme: const IconThemeData(color: Colors.white),
+      // ),
+      child: ListView(
         children: [
           // Account Management (Only for logged-in users)
 
