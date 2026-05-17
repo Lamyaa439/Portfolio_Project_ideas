@@ -5,6 +5,8 @@ from flask_jwt_extended import JWTManager
 from app.api.v1.auth import auth_bp
 from app.api.v1.orders import order_bp
 from app.api.v1.artworks import artwork_bp
+from app.api.v1.feedback import feedback_bp
+from app.api.v1.reports import report_bp
 from app.extensions import db
 from config import Config
 
@@ -48,10 +50,16 @@ def create_app():
 
     # Order management routes
     app.register_blueprint(order_bp, url_prefix="/api/v1/orders")
-    
-    # Artwork discovery routes
+
+    # Artwork Discovery routes
     app.register_blueprint(artwork_bp, url_prefix="/api/v1/artworks")
     
+    # Feedback routes
+    app.register_blueprint(feedback_bp, url_prefix="/api/v1/feedback")
+    
+    # Reports routes
+    app.register_blueprint(report_bp, url_prefix="/api/v1/reports")
+
     # Print all registered routes
     print(app.url_map)
 
