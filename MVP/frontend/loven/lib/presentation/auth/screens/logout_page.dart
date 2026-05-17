@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
-import '../../../core/storage/token_storage.dart';
 
 class LogoutPage extends StatelessWidget {
   const LogoutPage({super.key});
@@ -63,6 +62,7 @@ class LogoutPage extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+      ),
       ],
     );
   }

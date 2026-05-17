@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../../data/datasources/auth_remote_data_source.dart';
 import 'auth_state.dart';
-import '../../../data/datasources/auth_remote_data_source.dart';
 import '../../../core/storage/token_storage.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -99,7 +98,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     emit(AuthLoading());
     try {
-      await TokenStorage().clearToken();
+      await TokenStorage().clearAccessToken();
 
       emit(AuthInitial());
     } catch (e) {

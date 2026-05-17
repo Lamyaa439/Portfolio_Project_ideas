@@ -38,7 +38,7 @@ class AuthRemoteDataSource {
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
-      await _tokenStorage.saveToken(
+      await _tokenStorage.saveAccessToken(
         data['access_token'],
       );
 
@@ -76,7 +76,7 @@ class AuthRemoteDataSource {
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      await _tokenStorage.saveToken(
+      await _tokenStorage.saveAccessToken(
         data['access_token'],
       );
 
@@ -96,6 +96,6 @@ class AuthRemoteDataSource {
       Uri.parse(ApiConstants.logout),
     );
 
-    await _tokenStorage.clearToken();
+    await _tokenStorage.clearAccessToken();
   }
 }

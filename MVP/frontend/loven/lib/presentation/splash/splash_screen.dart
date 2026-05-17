@@ -69,64 +69,64 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: Colors.white,
-          body: SizedBox.expand(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FadeTransition(
-                        opacity: fadeAnimation,
-                        child: ScaleTransition(
-                          scale: scaleAnimation,
-                          child: Image.asset(
-                            'assets/images/loven-logo.png',
-                            width: 180,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 800),
-                        opacity: _showWelcome ? 1.0 : 0.0,
-                        child: _buildWelcomeActions(),
-                      ),
-                      const SizedBox(height: 100),
-                    ],
-                  ),
-                ),
-                if (_showWelcome)
-                  Positioned(
-                    bottom: 40,
-                    child: FadeTransition(
-                      opacity: fadeAnimation,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const HomeScreen(isGuest: true)),
-                          );
-                        },
-                        child: Text(
-                          "Browse as Guest",
-                          style: TextStyle(
-                            color: secondaryPurple.withOpacity(0.7),
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
+      backgroundColor: Colors.white,
+      body: SizedBox.expand(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FadeTransition(
+                    opacity: fadeAnimation,
+                    child: ScaleTransition(
+                      scale: scaleAnimation,
+                      child: Image.asset(
+                        'assets/images/loven-logo.png',
+                        width: 180,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
-              ],
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 800),
+                    opacity: _showWelcome ? 1.0 : 0.0,
+                    child: _buildWelcomeActions(),
+                  ),
+                  const SizedBox(height: 100),
+                ],
+              ),
             ),
-          ),
-        );
+            if (_showWelcome)
+              Positioned(
+                bottom: 40,
+                child: FadeTransition(
+                  opacity: fadeAnimation,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const HomeScreen(isGuest: true)),
+                      );
+                    },
+                    child: Text(
+                      "Browse as Guest",
+                      style: TextStyle(
+                        color: secondaryPurple.withOpacity(0.7),
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildWelcomeActions() {

@@ -10,6 +10,10 @@ import 'presentation/home/bloc/home_event.dart';
 import 'core/res/theme/app_theme.dart';
 import 'presentation/splash/splash_screen.dart';
 import 'presentation/auth/cubit/auth_cubit.dart';
+import 'data/datasources/cart_remote_datasource.dart';
+import 'data/datasources/artist_profile_remote_datasource.dart';
+import 'presentation/cart/cubit/cart_cubit.dart';
+import 'presentation/artist_profile/cubit/artist_profile_cubit.dart';
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
@@ -47,14 +51,21 @@ class LovenApp extends StatelessWidget {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
-
-        // Provides app-wide theme switching
         BlocProvider<ThemeBloc>(
           create: (context) => ThemeBloc(),
         ),
-
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
+        ),
+        BlocProvider<CartCubit>(
+          create: (context) => CartCubit(
+            CartRemoteDataSource(),
+          ),
+        ),
+        BlocProvider<ArtistProfileCubit>(
+          create: (context) => ArtistProfileCubit(
+            ArtistProfileRemoteDataSource(),
+          ),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
