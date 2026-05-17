@@ -30,8 +30,6 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       drawer: HomeDrawer(isGuest: isGuest),
       appBar: AppBar(
-        backgroundColor: AppColors.primaryPurple,
-        elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(
