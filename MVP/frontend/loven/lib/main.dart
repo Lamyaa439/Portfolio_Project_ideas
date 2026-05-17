@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'firebase_options.dart';
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
-import 'core/res/theme/app_theme.dart'; // Importing the theme file
+import 'core/res/theme/app_theme.dart';
 import 'presentation/splash/splash_screen.dart';
 import 'presentation/auth/cubit/auth_cubit.dart';
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
   ThemeBloc() : super(ThemeMode.light);
+
   void toggleTheme() =>
       emit(state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
 }
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase before running the app
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Listen for foreground Firebase push notifications
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("FOREGROUND MESSAGE TITLE: ${message.notification?.title}");
+    print("FOREGROUND MESSAGE BODY: ${message.notification?.body}");
+    print("FOREGROUND MESSAGE DATA: ${message.data}");
+  });
+
   runApp(const LovenApp());
 }
 
@@ -28,10 +47,12 @@ class LovenApp extends StatelessWidget {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
-        // Providing ThemeBloc at the top level
+
+        // Provides app-wide theme switching
         BlocProvider<ThemeBloc>(
           create: (context) => ThemeBloc(),
         ),
+
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
         ),
@@ -42,9 +63,8 @@ class LovenApp extends StatelessWidget {
             title: 'LOVEN',
             debugShowCheckedModeBanner: false,
 
-            // --- Bilingual Support ---
-            // I added this so user can sweitch between English and Arabic :)
-            locale: const Locale('en', 'US'), // defualte Lan
+            // Bilingual support: English and Arabic
+            locale: const Locale('en', 'US'),
             supportedLocales: const [
               Locale('en', 'US'),
               Locale('ar', 'SA'),
@@ -55,8 +75,8 @@ class LovenApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
 
-            // theme Configuration
-            theme: AppTheme.lightTheme, // Applying the custom theme
+            // App theme configuration
+            theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
 
