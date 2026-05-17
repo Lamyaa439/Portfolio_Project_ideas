@@ -62,17 +62,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  InputDecoration inputDecoration(String hint) {
+  InputDecoration inputDecoration(String hint, ThemeData theme) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(
-        color: Colors.grey,
+      hintStyle: TextStyle(
+        color: theme.colorScheme.outline,
         fontSize: 14,
       ),
       filled: true,
-      fillColor: const Color(0xFFEAEAEA),
+      fillColor: theme.colorScheme.surfaceContainerHigh,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
       ),
       contentPadding: const EdgeInsets.symmetric(
@@ -84,6 +84,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
@@ -100,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.redAccent,
+              backgroundColor: theme.colorScheme.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -115,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
         return Directionality(
           textDirection: TextDirection.ltr,
           child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: theme.colorScheme.surface,
             body: Stack(
               children: [
                 SafeArea(
@@ -131,19 +133,19 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        const Text(
+                        Text(
                           'Welcome back to LOVEN!',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFFB39DDB),
+                            color: theme.colorScheme.primary,
                           ),
                         ),
                         const SizedBox(height: 6),
-                        const Text(
+                        Text(
                           'Login to continue',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: theme.colorScheme.onSurfaceVariant,
                             fontSize: 14,
                           ),
                         ),
@@ -154,8 +156,8 @@ class _LoginPageState extends State<LoginPage> {
                             horizontal: 32,
                             vertical: 48,
                           ),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF5F5F5),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerLow,
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(40),
                             ),
@@ -174,8 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: emailController,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration:
-                                      inputDecoration('Type your email'),
+                                      inputDecoration('Type your email', theme),
                                   enabled: !isLoading,
+                                  style: TextStyle(
+                                      color: theme.colorScheme.onSurface),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Email is required';
@@ -198,14 +202,18 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: passwordController,
                                   obscureText: obscurePassword,
                                   enabled: !isLoading,
+                                  style: TextStyle(
+                                      color: theme.colorScheme.onSurface),
                                   decoration: inputDecoration(
-                                    'Type your password',
-                                  ).copyWith(
+                                          'Type your password', theme)
+                                      .copyWith(
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         obscurePassword
                                             ? Icons.visibility_off
                                             : Icons.visibility,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
                                       ),
                                       onPressed: isLoading
                                           ? null
@@ -230,41 +238,95 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                 ),
                                 const SizedBox(height: 16),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                      value: rememberPassword,
-                                      onChanged: isLoading
-                                          ? null
-                                          : (value) {
-                                              setState(() {
-                                                rememberPassword =
-                                                    value ?? false;
-                                              });
-                                            },
+                                InkWell(
+                                  onTap: isLoading
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            rememberPassword =
+                                                !rememberPassword;
+                                          });
+                                        },
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0,
                                     ),
-                                    const Text(
-                                      'Remember me',
-                                      style: TextStyle(fontSize: 11),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: Checkbox(
+                                            value: rememberPassword,
+                                            visualDensity:
+                                                VisualDensity.compact,
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            onChanged: isLoading
+                                                ? null
+                                                : (value) {
+                                                    setState(() {
+                                                      rememberPassword =
+                                                          value ?? false;
+                                                    });
+                                                  },
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Remember me',
+                                          style: TextStyle(fontSize: 11),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                                 const SizedBox(height: 40),
                                 SizedBox(
                                   width: double.infinity,
+                                  height: 48,
                                   child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          theme.colorScheme.primary,
+                                      foregroundColor:
+                                          theme.colorScheme.onPrimary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
                                     onPressed: isLoading ? null : _login,
                                     child: isLoading
-                                        ? const Text('Logging in...')
-                                        : const Text('Login'),
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color:
+                                                  theme.colorScheme.onPrimary,
+                                            ),
+                                          )
+                                        // ? const Text('Logging in...')
+                                        : const Text(
+                                            'Login',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16),
+                                          ),
                                   ),
                                 ),
                                 const SizedBox(height: 28),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text("Don't have an account? "),
+                                    Text(
+                                      "Don't have an account? ",
+                                      style: TextStyle(
+                                          color: theme
+                                              .colorScheme.onSurfaceVariant),
+                                    ),
                                     GestureDetector(
                                       onTap: isLoading
                                           ? null
@@ -274,15 +336,16 @@ class _LoginPageState extends State<LoginPage> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       SignupPage(
-                                                    fromGuest: widget.fromGuest,
-                                                  ),
+                                                          fromGuest:
+                                                              widget.fromGuest),
                                                 ),
                                               );
                                             },
-                                      child: const Text(
+                                      child: Text(
                                         'Sign up!',
                                         style: TextStyle(
-                                          color: Colors.red,
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.bold,
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
@@ -302,12 +365,20 @@ class _LoginPageState extends State<LoginPage> {
                   right: 16,
                   child: SafeArea(
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
                         size: 28,
-                        color: Colors.black,
+                        color: theme.colorScheme.onSurface,
                       ),
-                      onPressed: _goToGuestHome,
+                      onPressed: widget.fromGuest
+                          ? _goToGuestHome
+                          : () {
+                              if (Navigator.of(context).canPop()) {
+                                Navigator.of(context).pop();
+                              } else {
+                                _goToGuestHome();
+                              }
+                            },
                     ),
                   ),
                 ),
