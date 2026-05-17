@@ -11,27 +11,95 @@ class AppTheme {
           primary: AppColors.primaryBlue,
           secondary: AppColors.deepPurple,
           surface: AppColors.backgroundGrey,
+          brightness: Brightness.light,
         ),
         scaffoldBackgroundColor: Colors.white,
+
+        // Bilingual Configuration
         textTheme: const TextTheme(
-          displayLarge:
-              TextStyle(fontFamily: 'PT Serif', fontWeight: FontWeight.bold),
-          titleMedium:
-              TextStyle(fontFamily: 'Almarai', fontWeight: FontWeight.bold),
-          bodyMedium: TextStyle(fontFamily: 'Almarai', fontSize: 16),
+          displayLarge: TextStyle(
+              fontFamily: 'PT Serif',
+              fontFamilyFallback: ['Almarai'],
+              fontWeight: FontWeight.bold,
+              fontSize: 32,
+              color: Colors.black),
+          titleLarge: TextStyle(
+            fontFamily: 'PT Serif',
+            fontFamilyFallback: ['Almarai'],
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.black,
+          ),
+          titleMedium: TextStyle(
+              fontFamily: 'Almarai',
+              fontFamilyFallback: ['PT Serif'],
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.black),
+          bodyMedium: TextStyle(
+            fontFamily: 'Almarai',
+            fontFamilyFallback: ['PT Serif'],
+            fontSize: 16,
+            color: Colors.black87,
+          ),
         ),
+
+        // elevated button theme
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEDE7F6),
-            foregroundColor: Colors.black,
-            disabledBackgroundColor: const Color(0xFFEDE7F6),
-            disabledForegroundColor: Colors.black,
+            backgroundColor: AppColors.primaryBlue,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: AppColors.backgroundGrey,
+            disabledForegroundColor: Colors.black38,
             elevation: 0,
             padding: const EdgeInsets.symmetric(
               vertical: 16,
+              horizontal: 24,
+            ),
+            textStyle: const TextStyle(
+              fontFamily: 'Almarai',
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+
+        // Outlined button theme
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.primaryBlue,
+            side: const BorderSide(color: AppColors.primaryBlue, width: 1.5),
+            padding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 24,
+            ),
+            textStyle: const TextStyle(
+              fontFamily: 'Almarai',
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+
+        // Txet button style
+
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.deepPurple,
+            textStyle: const TextStyle(
+              fontFamily: 'Almarai',
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 16,
             ),
           ),
         ));
@@ -45,6 +113,58 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         brightness: Brightness.dark,
         seedColor: AppColors.primaryBlue,
+        primary: AppColors.primaryPurple,
+        surface: const Color(0xFF18181B),
+      ),
+      scaffoldBackgroundColor: const Color(0xFF18181B),
+
+      // Mirroring button implementations for Dark Mode
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryPurple,
+          foregroundColor: const Color(0xFF18181B),
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 24,
+          ),
+          textStyle: const TextStyle(
+            fontFamily: 'Almarai',
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primaryPurple,
+          side: const BorderSide(color: AppColors.primaryPurple, width: 1.5),
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 24,
+          ),
+          textStyle: const TextStyle(
+            fontFamily: 'Almarai',
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primaryPurple,
+          textStyle: const TextStyle(
+            fontFamily: 'Almarai',
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
       ),
     );
   }
