@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../data/datasources/auth_remote_data_source.dart';
 import 'auth_state.dart';
+import '../../../data/datasources/auth_remote_data_source.dart';
+import '../../../core/storage/token_storage.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
@@ -45,6 +45,17 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthSuccess());
     } catch (e) {
       emit(AuthFailure(_mapErrorMessage(e)));
+    }
+  }
+
+  Future<void> logout() async {
+    emit(AuthLoading());
+    try {
+      await TokenStorage().clearToken();
+
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthInitial());
     }
   }
 

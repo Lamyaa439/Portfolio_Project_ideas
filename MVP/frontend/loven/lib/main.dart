@@ -55,6 +55,7 @@ class LovenApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
 
+            // theme Configuration
             theme: AppTheme.lightTheme, // Applying the custom theme
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,

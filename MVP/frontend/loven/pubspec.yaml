@@ -28,7 +28,7 @@ dependencies:
   google_fonts: ^8.1.0
   flutter_secure_storage: ^10.0.0
 
-  flutter_native_splash: ^2.3.1
+  flutter_native_splash: ^2.4.7
   flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
@@ -36,19 +36,21 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
 
+# Configuration for Flutter Native 
 flutter_native_splash:
-  background_image: "assets/images/splash_image.png"
+  color: "#F9F6F0"
+  fullscreen: false
 
   android_12:
-    color: "#27272A"
+    color: "#F9F6F0"
 
 flutter_launcher_icons:
-  image_path_android: "assets/images/logo.png"
-  image_path_ios: "assets/images/logo.png"
+  image_path_android: "assets/images/loven-logo.png"
+  image_path_ios: "assets/images/loven-logo.png"
   android: true
   ios: true
-  adaptive_icon_background: "assets/images/logo.png"
-  adaptive_icon_foreground: "assets/images/logo.png"
+  adaptive_icon_background: "assets/images/loven-logo.png"
+  adaptive_icon_foreground: "assets/images/loven-logo.png"
   # --- Flutter Specific Configuration ---
   # --- It must be at the very edge ---
 flutter:
