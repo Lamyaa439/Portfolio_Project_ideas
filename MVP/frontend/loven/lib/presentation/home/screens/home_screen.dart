@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loven/core/res/theme/app_colors.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
@@ -43,12 +42,11 @@ class HomeScreen extends StatelessWidget {
                   _buildSearchBar(theme),
                   const SizedBox(height: 10),
                   _buildCategories(state.categories),
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Text(
                       'Discover and Collect Art',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleLarge,
                     ),
                   ),
                   SizedBox(
@@ -109,19 +107,19 @@ class HomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
         ),
         child: TextField(
-          textAlign: TextAlign.right,
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
               color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
             border: InputBorder.none,
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.tune,
               size: 20,
-              color: AppColors.primaryBlue,
+              color: theme.colorScheme.primary,
             ),
-            suffixIcon: const Icon(Icons.search),
+            suffixIcon: Icon(Icons.search,
+                color: theme.colorScheme.onSurface.withOpacity(0.6)),
           ),
         ),
       ),
@@ -146,19 +144,20 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(BuildContext context, String title) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: AppColors.primaryPurple,
+        color: theme.colorScheme.secondary.withOpacity(0.15),
         borderRadius: BorderRadius.circular(25),
       ),
       child: Center(
         child: Text(
           title,
-          style: const TextStyle(
-            fontSize: 14,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: theme.colorScheme.secondary,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
           ),
         ),
       ),
