@@ -291,3 +291,32 @@ def update_order_status(
     db.session.commit()
 
     return result.fetchone()
+
+# =========================================================
+# Get buyer notification info
+# =========================================================
+
+def get_buyer_notification_info(buyer_id):
+    """
+    Retrieve the buyer name and Firebase token used for
+    shipment notifications.
+
+    The order service uses this after an order is marked
+    as shipped so the notification goes to the real buyer
+    instead of using a hardcoded placeholder token.
+    """
+
+    query = text("""
+        SELECT
+            name,
+            fcm_token
+        FROM users
+        WHERE id = :buyer_id
+          AND is_active = true
+    """)
+
+    result = db.session.execute(query, {
+        "buyer_id": buyer_id,
+    })
+
+    return result.fetchone()

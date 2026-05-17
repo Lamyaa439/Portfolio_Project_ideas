@@ -4,11 +4,13 @@ from app.persistence.repositories.order_repo import (
     get_orders_by_buyer,
     get_incoming_orders_by_artist,
     update_order_status,
+    get_buyer_notification_info,
 )
 
 from app.external_services.firebase_service import (
     send_order_status_notification,
 )
+
 
 # =========================================================
 # Service: Order Service
@@ -55,7 +57,6 @@ def create_user_order(data):
     )
 
     order_id = order[0]
-
     created_items = []
 
     # =====================================================
@@ -211,30 +212,34 @@ def change_order_status(
 
     if status == "shipped":
 
-        buyer_fcm_token = "BUYER_FCM_TOKEN"
-
-        send_order_status_notification(
-            fcm_token=buyer_fcm_token,
-            user_name="Customer",
-            order_id=str(order[0]),
-            status="shipped",
+        buyer_info = get_buyer_notification_info(
+            buyer_id=order[1]
         )
 
-    return {
-        "message": "Order status updated successfully",
-        "order": {
-            "id": str(order[0]),
-            "buyer_id": str(order[1]),
-            "subtotal": float(order[2]),
-            "shipping_fee": float(order[3]),
-            "total_amount": float(order[4]),
-            "status": order[5],
-            "shipping_company": order[6],
-            "tracking_number": order[7],
-            "created_at": (
-                order[8].isoformat()
-                if order[8]
-                else None
-            ),
-        },
-    }, 200
+        if buyer_info and buyer_info[1]:
+            
+            send_order_status_notification(
+                fcm_token=buyer_info[1],
+                user_name=buyer_info[0] or "Customer",
+                order_id=str(order[0]),
+                status="shipped",
+            )
+            
+            return {
+                "message": "Order status updated successfully",
+                "order": {
+                    "id": str(order[0]),
+                    "buyer_id": str(order[1]),
+                    "subtotal": float(order[2]),
+                    "shipping_fee": float(order[3]),
+                    "total_amount": float(order[4]),
+                    "status": order[5],
+                    "shipping_company": order[6],
+                    "tracking_number": order[7],
+                    "created_at": (
+                        order[8].isoformat()
+                        if order[8]
+                        else None
+                    ),
+                },
+            }, 200
