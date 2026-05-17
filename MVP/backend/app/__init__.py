@@ -6,6 +6,9 @@ from app.api.v1.auth import auth_bp
 from app.api.v1.artists_profiles import artist_profiles_bp
 from app.api.v1.carts import carts_bp
 from app.api.v1.orders import order_bp
+from app.api.v1.artworks import artwork_bp
+from app.api.v1.feedback import feedback_bp
+from app.api.v1.reports import report_bp
 from app.extensions import db
 from config import Config
 
@@ -35,6 +38,10 @@ def create_app():
         from app.models.artwork import Artwork
         from app.models.cart import Cart
         from app.models.cart_item import CartItem
+        from app.models.order import Order
+        from app.models.order_item import OrderItem
+        from app.models.feedback import Feedback
+        from app.models.report import Report
 
         db.create_all()
 
@@ -64,6 +71,12 @@ def create_app():
     # Artwork discovery routes
     app.register_blueprint(artwork_bp, url_prefix="/api/v1/artworks")
     
+    # Feedback routes
+    app.register_blueprint(feedback_bp, url_prefix="/api/v1/feedback")
+    
+    # Reports routes
+    app.register_blueprint(report_bp, url_prefix="/api/v1/reports")
+
     # Print all registered routes
     print(app.url_map)
 
