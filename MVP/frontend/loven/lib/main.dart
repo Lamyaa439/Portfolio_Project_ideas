@@ -7,11 +7,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
 import 'core/res/theme/app_theme.dart';
 
-import 'presentation/splash/splash_screen.dart';
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
-
+import 'features/navigation/cubit/navigation_bar_cubit.dart';
+import 'core/res/theme/app_theme.dart'; // Importing the theme file
+import 'core/res/theme/app_theme.dart';
+import 'presentation/splash/splash_screen.dart';
 import 'features/authentication/presentation/cubit/auth_cubit.dart';
+import 'core/router/app_router.dart'; // Importing the router configuration
 
 import 'features/cart/data/repositories/cart_repository.dart';
 import 'features/cart/data/datasources/cart_remote_datasource.dart';
@@ -78,6 +81,9 @@ class LovenApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<NavigationBarCubit>(
+          create: (context) => NavigationBarCubit(),
+        ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc()..add(FetchHomeData()),
         ),
@@ -117,7 +123,7 @@ class LovenApp extends StatelessWidget {
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
+          return MaterialApp.router(
             title: 'LOVEN',
             debugShowCheckedModeBanner: false,
             locale: const Locale('en', 'US'),
@@ -130,10 +136,11 @@ class LovenApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            theme: AppTheme.lightTheme,
+            theme: AppTheme.lightTheme, // Applying the custom theme
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
-            home: const SplashScreen(),
+            routerConfig: router,
+            // home: const SplashScreen(),
           );
         },
       ),
