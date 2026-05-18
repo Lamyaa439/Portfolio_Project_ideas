@@ -45,7 +45,7 @@ class ArtistRepository {
   /// `GET /artist-profiles/me`
   Future<ArtistModel> getMyProfile() async {
     // Step 1: Read token from secure storage.
-    final token = await _tokenStorage.getToken();
+    final token = await _tokenStorage.getAccessToken();
 
     // Step 2: Fail immediately if the user is not logged in.
     if (token == null || token.isEmpty) {
@@ -72,7 +72,7 @@ class ArtistRepository {
     String? shippingPolicy,
   }) async {
     // Step 1: Ensure we have a token (same guard as getMyProfile).
-    final token = await _tokenStorage.getToken();
+    final token = await _tokenStorage.getAccessToken();
 
     if (token == null || token.isEmpty) {
       throw Exception('Unauthorized: No token found. Please log in.');
@@ -113,7 +113,7 @@ class ArtistRepository {
     int? quantityAvailable,
   }) async {
     // 1) Token validation: Ensure a JWT is present before sending protected requests.
-    final token = await _tokenStorage.getToken();
+    final token = await _tokenStorage.getAccessToken();
 
     if (token == null || token.isEmpty) {
       throw Exception('Unauthorized: No token found. Please log in.');

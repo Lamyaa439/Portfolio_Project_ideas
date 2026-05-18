@@ -3,16 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'firebase_options.dart';
-import 'core/res/theme/app_theme.dart';
 
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
 import 'features/navigation/cubit/navigation_bar_cubit.dart';
 import 'core/res/theme/app_theme.dart'; // Importing the theme file
-import 'core/res/theme/app_theme.dart';
-import 'presentation/splash/splash_screen.dart';
 import 'features/authentication/presentation/cubit/auth_cubit.dart';
 import 'core/router/app_router.dart'; // Importing the router configuration
 
@@ -92,7 +88,7 @@ class LovenApp extends StatelessWidget {
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
         ),
-        BlocProvider<CartCubit>(
+        BlocProvider<ArtistProfileCubit>(
           create: (context) => ArtistProfileCubit(
             ArtistRepository(),
             ),

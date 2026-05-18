@@ -4,7 +4,7 @@ import 'package:loven/features/cart/data/repositories/cart_repository.dart';
 import 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  final CartRepository _repository;;
+  final CartRepository _repository;
 
   CartCubit(this._repository) : super(CartInitial());
 
@@ -25,7 +25,7 @@ class CartCubit extends Cubit<CartState> {
     int quantity = 1,
   }) async {
     try {
-      await _repository.addCartItem(
+      await _repository.addToCart(
         artworkId: artworkId,
         quantity: quantity,
       );
