@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loven/presentation/splash/splash_screen.dart';
-import 'package:loven/presentation/auth/screens/signup_page.dart';
+import 'package:loven/features/authentication/presentation/screens/signup_page.dart';
 import 'package:loven/features/navigation/screen/navigation_screen.dart';
 
 bool isUserBrowsingAsGuest = true;
