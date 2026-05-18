@@ -17,22 +17,21 @@ import 'features/authentication/presentation/cubit/auth_cubit.dart';
 import 'core/router/app_router.dart'; // Importing the router configuration
 
 import 'features/cart/data/repositories/cart_repository.dart';
-import 'features/cart/data/datasources/cart_remote_datasource.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
 
-import 'features/artist_profile/data/datasources/artist_profile_remote_datasource.dart';
+import 'features/artist_profile/data/repositories/artist_repository.dart';
 import 'features/artist_profile/presentation/cubit/artist_profile_cubit.dart';
 
 import 'features/artwork/data/datasources/artwork_remote_datasource.dart';
 import 'features/artwork/presentation/cubit/artwork_cubit.dart';
 
-import 'features/order/data/datasources/order_remote_datasource.dart';
+import 'features/order/data/repositories/order_repository.dart';
 import 'features/order/presentation/cubit/order_cubit.dart';
 
-import 'features/feedback/data/datasources/feedback_remote_datasource.dart';
+import 'features/feedback/data/repositories/feedback_repository.dart';
 import 'features/feedback/presentation/cubit/feedback_cubit.dart';
 
-import 'features/report/data/datasources/report_remote_datasource.dart';
+import 'features/report/data/repositories/report_repository.dart';
 import 'features/report/presentation/cubit/report_cubit.dart';
 
 class ThemeBloc extends Cubit<ThemeMode> {
@@ -94,12 +93,15 @@ class LovenApp extends StatelessWidget {
           create: (context) => AuthCubit(),
         ),
         BlocProvider<CartCubit>(
-          create: (context) => CartCubit(
-            CartRepository(
-              CartRemoteDataSource(),
+          create: (context) => ArtistProfileCubit(
+            ArtistRepository(),
             ),
           ),
-        ),
+        BlocProvider<CartCubit>(
+          create: (context) => CartCubit(
+            CartRepository(),
+            ),
+          ),
         BlocProvider<ArtworkCubit>(
           create: (context) => ArtworkCubit(
             ArtworkRemoteDataSource(),
@@ -107,19 +109,19 @@ class LovenApp extends StatelessWidget {
         ),
         BlocProvider<OrderCubit>(
           create: (context) => OrderCubit(
-            OrderRemoteDataSource(),
+            OrderRepository(),
+            ),
           ),
-        ),
         BlocProvider<FeedbackCubit>(
           create: (context) => FeedbackCubit(
-            FeedbackRemoteDataSource(),
+            FeedbackRepository(),
+            ),
           ),
-        ),
         BlocProvider<ReportCubit>(
           create: (context) => ReportCubit(
-            ReportRemoteDataSource(),
+            ReportRepository(),
+            ),
           ),
-        ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {

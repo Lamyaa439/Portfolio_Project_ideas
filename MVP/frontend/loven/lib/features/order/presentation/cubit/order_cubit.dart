@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:loven/features/order/data/datasources/order_remote_datasource.dart';
+import 'package:loven/features/order/data/repositories/order_repository.dart';
 import 'order_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
-  final OrderRemoteDataSource _remoteDataSource;
+  final OrderRepository _repository;
 
-  OrderCubit(this._remoteDataSource) : super(OrderInitial());
+  OrderCubit(this._repository) : super(OrderInitial());
 
   Future<void> createOrder({
     required String buyerId,
@@ -18,7 +18,7 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderLoading());
 
     try {
-      final order = await _remoteDataSource.createOrder(
+      final order = await _repository.createOrder(
         buyerId: buyerId,
         subtotal: subtotal,
         shippingFee: shippingFee,
@@ -36,7 +36,7 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderLoading());
 
     try {
-      final data = await _remoteDataSource.getMyOrders();
+      final data = await _repository.getMyOrders();
 
       emit(OrdersLoaded(data['orders'] ?? data['data'] ?? []));
     } catch (e) {
@@ -50,7 +50,7 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderLoading());
 
     try {
-      final data = await _remoteDataSource.getBuyerOrders(
+      final data = await _repository.getBuyerOrders(
         buyerId: buyerId,
       );
 
@@ -66,7 +66,7 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderLoading());
 
     try {
-      final data = await _remoteDataSource.getArtistOrders(
+      final data = await _repository.getArtistOrders(
         artistProfileId: artistProfileId,
       );
 
@@ -83,7 +83,7 @@ class OrderCubit extends Cubit<OrderState> {
     emit(OrderLoading());
 
     try {
-      final order = await _remoteDataSource.updateOrderStatus(
+      final order = await _repository.updateOrderStatus(
         orderId: orderId,
         status: status,
       );

@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:loven/features/feedback/data/datasources/feedback_remote_datasource.dart';
+import 'package:loven/features/feedback/data/repositories/feedback_repository.dart';
 import 'feedback_state.dart';
 
 class FeedbackCubit extends Cubit<FeedbackState> {
-  final FeedbackRemoteDataSource _remoteDataSource;
+  final FeedbackRepository _repository;
 
-  FeedbackCubit(this._remoteDataSource) : super(FeedbackInitial());
+  FeedbackCubit(this._repository) : super(FeedbackInitial());
 
   Future<void> submitFeedback({
     required String message,
@@ -15,7 +15,7 @@ class FeedbackCubit extends Cubit<FeedbackState> {
     emit(FeedbackLoading());
 
     try {
-      await _remoteDataSource.submitFeedback(
+      await _repository.submitFeedback(
         message: message,
         subject: subject,
       );

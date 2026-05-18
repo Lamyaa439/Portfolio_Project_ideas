@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'package:loven/features/authentication/data/datasources/auth_remote_data_source.dart';
 import 'package:loven/features/authentication/data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 import 'package:loven/core/storage/token_storage.dart';
@@ -11,7 +10,7 @@ import 'package:loven/core/storage/token_storage.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  final AuthRepository _authRepository = AuthRepository(AuthRemoteDataSource());
+  final AuthRepository _authRepository = AuthRepository();
 
   Future<String?> _getFcmTokenSafely() async {
     try {

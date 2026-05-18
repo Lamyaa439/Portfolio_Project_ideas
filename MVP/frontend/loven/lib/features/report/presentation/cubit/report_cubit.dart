@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:loven/features/report/data/datasources/report_remote_datasource.dart';
+import 'package:loven/features/report/data/repositories/report_repository.dart';
 import 'report_state.dart';
 
 class ReportCubit extends Cubit<ReportState> {
-  final ReportRemoteDataSource _remoteDataSource;
+  final ReportRepository _reportRepository;
 
-  ReportCubit(this._remoteDataSource) : super(ReportInitial());
+  ReportCubit(this._reportRepository) : super(ReportInitial());
 
   Future<void> submitReport({
     required String targetType,
@@ -17,7 +17,7 @@ class ReportCubit extends Cubit<ReportState> {
     emit(ReportLoading());
 
     try {
-      await _remoteDataSource.submitReport(
+      await _reportRepository.submitReport(
         targetType: targetType,
         targetId: targetId,
         reason: reason,
