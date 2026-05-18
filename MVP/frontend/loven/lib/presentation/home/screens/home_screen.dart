@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
+import '../bloc/home_event.dart';
+
 import '../widgets/art_card.dart';
 import '../widgets/home_drawer.dart';
-import '../../../main.dart';
+
 import 'package:loven/features/authentication/presentation/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,23 +17,17 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, this.isGuest = false});
 
   void _goToSignup(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignupPage(),
-      ),
-    );
+    context.push('/signup?fromGuest=true');
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      // backgroundColor: theme.scaffoldBackgroundColor,
-      // drawer: HomeDrawer(isGuest: isGuest),
-
-      child: BlocBuilder<HomeBloc, HomeState>(
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      drawer: HomeDrawer(isGuest: isGuest),
+      body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -39,9 +37,10 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  _buildSearchBar(theme),
+                  _buildSearchBar(theme, context), // Pass Context
                   const SizedBox(height: 10),
-                  _buildCategories(state.categories),
+                  _buildCategories(context, state.categories,
+                      state.selectedCategory), // Pass Active selection
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -51,36 +50,36 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 350,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 16),
-                      itemCount: state.artPieces.length,
-                      itemBuilder: (context, index) {
-                        final art = state.artPieces[index];
+                    child: state.artPieces.isEmpty
+                        ? const Center(
+                            child: Text("No pieces found matching filters."))
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.only(left: 16),
+                            itemCount: state.artPieces.length,
+                            itemBuilder: (context, index) {
+                              final art = state.artPieces[index];
 
-                        // We removed the GestureDetector here because the
-                        // updated ArtCard now handles its own onTap internally.
-                        return ArtCard(
-                          title: art['title'] ?? 'Untitled',
-                          artistName: art['artistName'] ??
-                              "Artist #${art['artist_id']}",
-                          // Ensure price is a string for the UI
-                          price: art['price']?.toString() ?? '0',
-                          imageUrl: art['image_url'] ?? '',
-                          // Pass the dynamic description from your backend/state
-                          description: art['description'] ??
-                              'Explore the story behind this unique piece of art.',
-                          isGuest: isGuest,
-                          onActionPressed: () {
-                            if (isGuest) {
-                              _goToSignup(context);
-                            } else {
-                              print("Action triggered for ${art['title']}");
-                            }
-                          },
-                        );
-                      },
-                    ),
+                              return ArtCard(
+                                title: art['title'] ?? 'Untitled',
+                                artistName: art['artistName'] ??
+                                    "Artist #${art['artist_id']}",
+                                price: art['price']?.toString() ?? '0',
+                                imageUrl: art['image_url'] ?? '',
+                                description: art['description'] ??
+                                    'Explore the story behind this unique piece of art.',
+                                isGuest: isGuest,
+                                onActionPressed: () {
+                                  if (isGuest) {
+                                    _goToSignup(context);
+                                  } else {
+                                    print(
+                                        "Action triggered for ${art['title']}");
+                                  }
+                                },
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
@@ -97,7 +96,7 @@ class HomeScreen extends StatelessWidget {
 
   // --- Helper Methods ---
 
-  Widget _buildSearchBar(ThemeData theme) {
+  Widget _buildSearchBar(ThemeData theme, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -107,6 +106,9 @@ class HomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
         ),
         child: TextField(
+          onChanged: (text) {
+            context.read<HomeBloc>().add(FilterArtworks(searchText: text));
+          },
           decoration: InputDecoration(
             hintText: 'Search art, artists, categories...',
             hintStyle: TextStyle(
@@ -126,7 +128,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategories(List<String> categories) {
+  Widget _buildCategories(
+      BuildContext context, List<String> categories, String selectedCategory) {
     return SizedBox(
       height: 60,
       child: ListView.builder(
@@ -134,30 +137,43 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: categories.length,
         itemBuilder: (context, index) {
+          final categoryName = categories[index];
+          final isSelected = categoryName == selectedCategory;
+
           return Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: _buildCategoryCard(context, categories[index]),
+            child: _buildCategoryCard(context, categoryName, isSelected),
           );
         },
       ),
     );
   }
 
-  Widget _buildCategoryCard(BuildContext context, String title) {
+  Widget _buildCategoryCard(
+      BuildContext context, String title, bool isSelected) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.secondary.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Center(
-        child: Text(
-          title,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: theme.colorScheme.secondary,
-            fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        context.read<HomeBloc>().add(FilterArtworks(category: title));
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? theme.colorScheme.secondary
+              : theme.colorScheme.secondary.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: isSelected
+                  ? theme.colorScheme.onSecondary
+                  : theme.colorScheme.secondary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

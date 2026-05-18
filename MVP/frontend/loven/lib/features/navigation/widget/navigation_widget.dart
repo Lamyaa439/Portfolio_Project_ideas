@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loven/features/navigation/cubit/navigation_bar_cubit.dart';
@@ -9,6 +11,9 @@ class NavigationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkTheme = theme.brightness == Brightness.dark;
+
     return BlocBuilder<NavigationBarCubit, NavigationBarState>(
       builder: (context, state) {
         return BottomNavigationBar(
@@ -22,8 +27,8 @@ class NavigationWidget extends StatelessWidget {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.search),
-              label: 'Search',
+              icon: const Icon(Icons.shopping_cart),
+              label: 'Cart',
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person),
