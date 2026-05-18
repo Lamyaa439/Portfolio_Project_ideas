@@ -15,6 +15,36 @@ class AppTheme {
         ),
         scaffoldBackgroundColor: Colors.white,
 
+        // light global icon theme
+        iconTheme: const IconThemeData(
+          color: AppColors.primaryBlue,
+          size: 24,
+        ),
+
+        // light bottom navigation bar theme
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: AppColors.primaryBlue,
+          unselectedItemColor: Colors.black38,
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+
+          // Clean icon sizing using correct parameter targets
+          selectedIconTheme: IconThemeData(size: 24),
+          unselectedIconTheme: IconThemeData(size: 24),
+
+          selectedLabelStyle: TextStyle(
+            fontFamily: 'Almarai',
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontFamily: 'Almarai',
+            fontWeight: FontWeight.normal,
+            fontSize: 11,
+          ),
+        ),
+
         // Bilingual Configuration
         textTheme: const TextTheme(
           displayLarge: TextStyle(
@@ -87,8 +117,7 @@ class AppTheme {
           ),
         ),
 
-        // Txet button style
-
+        // Text button style
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             foregroundColor: AppColors.deepPurple,
@@ -117,6 +146,36 @@ class AppTheme {
         surface: const Color(0xFF18181B),
       ),
       scaffoldBackgroundColor: const Color(0xFF18181B),
+
+      // Dark theme icon
+      iconTheme: const IconThemeData(
+        color: AppColors.primaryPurple,
+        size: 24,
+      ),
+
+      // Dark bottom navigation bar theme
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFF18181B),
+        selectedItemColor: AppColors.primaryPurple,
+        unselectedItemColor: Colors.white38,
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+
+        // Clean icon sizing using correct parameter targets
+        selectedIconTheme: IconThemeData(size: 24),
+        unselectedIconTheme: IconThemeData(size: 24),
+
+        selectedLabelStyle: TextStyle(
+          fontFamily: 'Almarai',
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontFamily: 'Almarai',
+          fontWeight: FontWeight.normal,
+          fontSize: 11,
+        ),
+      ),
 
       // Mirroring button implementations for Dark Mode
       elevatedButtonTheme: ElevatedButtonThemeData(

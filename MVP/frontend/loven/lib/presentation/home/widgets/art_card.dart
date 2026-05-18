@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loven/core/res/theme/app_colors.dart';
-import 'package:loven/presentation/home/screens/art_details_screen.dart';
 
 class ArtCard extends StatelessWidget {
   final String title;
@@ -26,26 +26,14 @@ class ArtCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (!isGuest) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ArtDetailsScreen(
-                artItem: {
-                  'title': title,
-                  'price': price,
-                  'imageUrl': imageUrl,
-                  'artistName': artistName,
-                  'description': description,
-                  'id': title,
-                },
-              ),
-            ),
-          );
-        } else {
-          // Redirects guest to signup/login instead of showing the SnackBar
-          onActionPressed();
-        }
+        context.push('/art-details', extra: {
+          'title': title,
+          'price': price,
+          'imageUrl': imageUrl,
+          'artistName': artistName,
+          'description': description,
+          'id': title,
+        });
       },
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -90,16 +78,29 @@ class ArtCard extends StatelessWidget {
                         child: IconButton(
                           icon: const Icon(Icons.favorite_border,
                               color: Colors.red),
-                          onPressed: onActionPressed,
+                          onPressed: () {
+                            // 🎯 If a guest taps favorite, send them to login/signup
+                            if (isGuest) {
+                              context.push('/auth');
+                            } else {
+                              onActionPressed();
+                            }
+                          },
                         ),
                       ),
                       const SizedBox(height: 8),
                       CircleAvatar(
                         backgroundColor: Colors.white70,
                         child: IconButton(
-                          icon: Icon(Icons.add_shopping_cart,
+                          icon: const Icon(Icons.add_shopping_cart,
                               color: AppColors.primaryBlue),
-                          onPressed: onActionPressed,
+                          onPressed: () {
+                            if (isGuest) {
+                              context.push('/auth');
+                            } else {
+                              onActionPressed();
+                            }
+                          },
                         ),
                       ),
                     ],

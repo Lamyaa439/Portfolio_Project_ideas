@@ -9,8 +9,11 @@ import '../cubit/navigation_bar_cubit.dart';
 import '../widget/navigation_widget.dart';
 
 class NavigationScreen extends StatelessWidget {
+  final bool isGuest;
+
   const NavigationScreen({
     super.key,
+    this.isGuest = false,
   });
 
   bool? get isDarkTheme => null;
@@ -19,15 +22,7 @@ class NavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: AppColors.primaryBlue,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
+        automaticallyImplyLeading: false,
         title: Image.asset(
           'assets/images/loven-logo.png',
           height: 40,
@@ -39,7 +34,6 @@ class NavigationScreen extends StatelessWidget {
               context.watch<ThemeBloc>().state == ThemeMode.light
                   ? Icons.nightlight_outlined
                   : Icons.light_mode_outlined,
-              color: AppColors.primaryBlue,
             ),
             onPressed: () => context.read<ThemeBloc>().toggleTheme(),
           ),
@@ -54,6 +48,20 @@ class NavigationScreen extends StatelessWidget {
           children: [
             HomeScreen(), // Assuming you have a HomeScreen defined
             SettingsScreen(),
+            // here you can place page link to other pages
+            // such as:
+            // ArtistProfileScreen(),
+            // CartScreen(),
+
+            isGuest
+                ? const Center(
+                    child: Text('Guest Mode: Sign in to view profiles'))
+                : const ArtistProfileScreen(artistId: 'test_artist_123'),
+
+            isGuest
+                ? const Center(
+                    child: Text('Guest Mode: Sign in to view your cart'))
+                : const Center(child: Text('Cart Content Coming Soon')),
           ],
         );
       }),
