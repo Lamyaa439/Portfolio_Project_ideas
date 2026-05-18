@@ -1,18 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:loven/features/cart/data/datasources/cart_remote_datasource.dart';
+import 'package:loven/features/cart/data/repositories/cart_repository.dart';
 import 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  final CartRemoteDataSource _remoteDataSource;
+  final CartRepository _repository;;
 
-  CartCubit(this._remoteDataSource) : super(CartInitial());
+  CartCubit(this._repository) : super(CartInitial());
 
   Future<void> getCart() async {
     emit(CartLoading());
 
     try {
-      final cart = await _remoteDataSource.getCart();
+      final cart = await _repository.getCart();
 
       emit(CartLoaded(cart));
     } catch (e) {
@@ -25,7 +25,7 @@ class CartCubit extends Cubit<CartState> {
     int quantity = 1,
   }) async {
     try {
-      await _remoteDataSource.addCartItem(
+      await _repository.addCartItem(
         artworkId: artworkId,
         quantity: quantity,
       );
@@ -41,7 +41,7 @@ class CartCubit extends Cubit<CartState> {
     required int quantity,
   }) async {
     try {
-      await _remoteDataSource.updateCartItem(
+      await _repository.updateCartItem(
         itemId: itemId,
         quantity: quantity,
       );
@@ -56,7 +56,7 @@ class CartCubit extends Cubit<CartState> {
     required String itemId,
   }) async {
     try {
-      await _remoteDataSource.removeCartItem(
+      await _repository.removeCartItem(
         itemId: itemId,
       );
 
@@ -68,7 +68,7 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> clearCart() async {
     try {
-      await _remoteDataSource.clearCart();
+      await _repository.clearCart();
 
       await getCart();
     } catch (e) {

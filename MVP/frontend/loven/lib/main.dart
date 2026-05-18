@@ -13,6 +13,7 @@ import 'presentation/home/bloc/home_event.dart';
 
 import 'features/authentication/presentation/cubit/auth_cubit.dart';
 
+import 'features/cart/data/repositories/cart_repository.dart';
 import 'features/cart/data/datasources/cart_remote_datasource.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
 
@@ -88,12 +89,9 @@ class LovenApp extends StatelessWidget {
         ),
         BlocProvider<CartCubit>(
           create: (context) => CartCubit(
-            CartRemoteDataSource(),
-          ),
-        ),
-        BlocProvider<ArtistProfileCubit>(
-          create: (context) => ArtistProfileCubit(
-            ArtistProfileRemoteDataSource(),
+            CartRepository(
+              CartRemoteDataSource(),
+            ),
           ),
         ),
         BlocProvider<ArtworkCubit>(

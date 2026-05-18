@@ -4,13 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:loven/features/authentication/data/datasources/auth_remote_data_source.dart';
+import 'package:loven/features/authentication/data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 import 'package:loven/core/storage/token_storage.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  final AuthRemoteDataSource _authRemoteDataSource = AuthRemoteDataSource();
+  final AuthRepository _authRepository = AuthRepository(AuthRemoteDataSource());
 
   Future<String?> _getFcmTokenSafely() async {
     try {
@@ -54,7 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       print("LOGIN FCM TOKEN: $fcmToken");
 
-      await _authRemoteDataSource.login(
+      await _authRepository.login(
         email: email,
         password: password,
         fcmToken: fcmToken,
@@ -80,7 +81,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       print("SIGNUP FCM TOKEN: $fcmToken");
 
-      await _authRemoteDataSource.register(
+      await _authRepository.register(
         name: name,
         email: email,
         password: password,
@@ -98,7 +99,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     emit(AuthLoading());
     try {
-      await _authRemoteDataSource.logout();
+      await _authRepository.logout();
       emit(AuthInitial());
     } catch (e) {
       await TokenStorage().clearAccessToken();
