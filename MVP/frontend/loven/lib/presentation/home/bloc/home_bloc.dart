@@ -46,60 +46,55 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     },
   ];
 
+  final List<String> _categoryTags = [
+    'All',
+    'Oil Painting',
+    'Calligraphy',
+    'Photography',
+    'Digital Art'
+  ];
+
   HomeBloc() : super(HomeLoading()) {
-    // 1. Existing Initial Fetch
+    // Initial Fetch
     on<FetchHomeData>((event, emit) async {
       emit(HomeLoading());
       try {
-        await Future.delayed(const Duration(seconds: 2));
-        final randomSuggestions =
-            List<Map<String, dynamic>>.from(_artworksTable)..shuffle();
+        await Future.delayed(const Duration(seconds: 1));
 
         emit(HomeLoaded(
-          categories: ['New Arrivals', 'Trending', 'Local Artists'],
-          artPieces: randomSuggestions,
+          allArtworks: _artworksTable,
+          categories: _categoryTags,
+          artPieces: _artworksTable,
         ));
       } catch (e) {
         emit(HomeError("Failed to fetch from PostgreSQL backend"));
       }
     });
 
-    // 2. NEW: Filtering and Search Logic
-    on<FilterArtworks>((event, emit) async {
-      emit(HomeLoading()); // Show loader while filtering
-      try {
-        await Future.delayed(
-            const Duration(milliseconds: 500)); // Simulate logic delay
+    // In-Memory Filter Action
+    on<FilterArtworks>((event, emit) {
+      if (state is! HomeLoaded) return;
 
-        final filteredList = _artworksTable.where((art) {
-          // Check Search Text (matches "sunset" in image_a36675.png)
-          final matchesSearch = event.searchText == null ||
-              art['title']
-                  .toLowerCase()
-                  .contains(event.searchText!.toLowerCase());
+      final currentState = state as HomeLoaded;
 
-          // Check Category
-          final matchesCategory = event.category == null ||
-              event.category == 'All' ||
-              art['category'] == event.category;
+      final search = event.searchText ?? currentState.searchQuery;
+      final category = event.category ?? currentState.selectedCategory;
 
-          // Check Price Range
-          final matchesPrice = art['price'] >= (event.minPrice ?? 0) &&
-              art['price'] <= (event.maxPrice ?? double.infinity);
+      final filteredList = currentState.allArtworks.where((art) {
+        final matchesSearch = search.isEmpty ||
+            art['title'].toLowerCase().contains(search.toLowerCase());
 
-          return matchesSearch && matchesCategory && matchesPrice;
-        }).toList();
+        final matchesCategory =
+            category == 'All' || art['category'] == category;
 
-        emit(HomeLoaded(
-          // Change labels based on if it's a search or a category filter
-          categories: event.searchText != null
-              ? ['Search Results']
-              : ['Filtered Results'],
-          artPieces: filteredList,
-        ));
-      } catch (e) {
-        emit(HomeError("Failed to apply filters"));
-      }
+        return matchesSearch && matchesCategory;
+      }).toList();
+
+      emit(currentState.copyWith(
+        artPieces: filteredList,
+        searchQuery: search,
+        selectedCategory: category,
+      ));
     });
   }
 }

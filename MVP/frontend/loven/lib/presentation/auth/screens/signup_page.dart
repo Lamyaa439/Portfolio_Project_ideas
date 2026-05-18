@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:loven/core/router/app_router.dart';
 import 'terms_page.dart';
 import 'privacy_policy_page.dart';
-import '../../home/screens/home_screen.dart';
 import 'login_page.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -87,28 +88,21 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _handleCloseAction() {
-    if (widget.fromGuest) {
-      // return back to the current position
-      Navigator.pop(context);
+    // 🎯 Use GoRouter pop or return home cleanly to maintain router history control
+    if (context.canPop()) {
+      context.pop();
     } else {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(isGuest: true),
-        ),
-        (route) => false,
-      );
+      context.go('/');
     }
   }
 
   void _goToLoggedInHome() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-      (route) => false,
-    );
+    // 🎯 BREAK THE GUEST LOOP:
+    // Flip the dynamic global boolean to false before triggering redirection
+    isUserBrowsingAsGuest = false;
+
+    // Use GoRouter to rebuild navigation context cleanly from the root state
+    context.go('/');
   }
 
   @override
@@ -428,6 +422,7 @@ class _SignupPageState extends State<SignupPage> {
                                       onTap: isLoading
                                           ? null
                                           : () {
+                                              // GoRouter target parameter forwarding context values
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(

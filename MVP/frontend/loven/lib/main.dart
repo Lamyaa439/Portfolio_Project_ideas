@@ -8,11 +8,11 @@ import 'firebase_options.dart';
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
 import 'features/navigation/cubit/navigation_bar_cubit.dart';
-import 'core/res/theme/app_theme.dart'; // Importing the theme file
+import 'core/res/theme/app_theme.dart';
 import 'core/res/theme/app_theme.dart';
 import 'presentation/splash/splash_screen.dart';
 import 'presentation/auth/cubit/auth_cubit.dart';
-import 'core/router/app_router.dart'; // Importing the router configuration
+import 'core/router/app_router.dart';
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
