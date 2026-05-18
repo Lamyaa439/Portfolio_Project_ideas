@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/artist_profile_cubit.dart';
-import '../bloc/artist_profile_state.dart';
+import 'package:loven/features/artist_profile/presentation/cubit/artist_profile_cubit.dart';
+import 'package:loven/features/artist_profile/presentation/cubit/artist_profile_state.dart';
 import '../widgets/artist_header.dart';
 import '../widgets/artist_bio.dart';
 import '../widgets/artist_shipping_policy.dart';

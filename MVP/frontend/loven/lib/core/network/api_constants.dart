@@ -9,27 +9,26 @@ class ApiConstants {
   // Authentication
   // =====================================================
 
-  static const String register = '$baseUrl/register';
-  static const String login = '$baseUrl/login';
-  static const String refresh = '$baseUrl/refresh';
-  static const String logout = '$baseUrl/logout';
+  static const String register = '$baseUrl/auth/register';
+  static const String login = '$baseUrl/auth/login';
+  static const String refresh = '$baseUrl/auth/refresh';
+  static const String logout = '$baseUrl/auth/logout';
 
   // =====================================================
   // Artist Profiles
-  // Current backend routes are mounted directly on /api/v1
   // =====================================================
 
-  static const String createArtistProfile = '$baseUrl';
-  static const String myArtistProfile = '$baseUrl/me';
-  static const String artistProfiles = '$baseUrl';
-  static const String artistProfileByName = '$baseUrl/by-name';
+  static const String createArtistProfile = '$baseUrl/artist-profiles';
+  static const String myArtistProfile = '$baseUrl/artist-profiles/me';
+  static const String artistProfiles = '$baseUrl/artist-profiles';
+  static const String artistProfileByName = '$baseUrl/artist-profiles/by-name';
 
   // =====================================================
   // Cart
   // =====================================================
 
-  static const String cart = '$baseUrl';
-  static const String cartItems = '$baseUrl/items';
+  static const String cart = '$baseUrl/carts';
+  static const String cartItems = '$baseUrl/carts/items';
 
   // =====================================================
   // Orders

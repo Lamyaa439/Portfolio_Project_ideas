@@ -2,18 +2,18 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../core/network/api_constants.dart';
-import '../../core/storage/token_storage.dart';
+import 'package:loven/core/network/api_constants.dart';
+import 'package:loven/core/storage/token_storage.dart';
 
 class ArtistProfileRemoteDataSource {
   final TokenStorage _tokenStorage = TokenStorage();
 
   Future<Map<String, dynamic>> createProfile({
     required String displayName,
-    String? city,
-    String? bio,
-    String? shippingPolicy,
+    required String bio,
+    required String city,
     String? profileImageUrl,
+    String? shippingPolicy,
   }) async {
     final token = await _tokenStorage.getAccessToken();
 
@@ -25,20 +25,14 @@ class ArtistProfileRemoteDataSource {
       },
       body: jsonEncode({
         'display_name': displayName,
-        if (city != null) 'city': city,
-        if (bio != null) 'bio': bio,
-        if (shippingPolicy != null) 'shipping_policy': shippingPolicy,
-        if (profileImageUrl != null) 'profile_image_url': profileImageUrl,
+        'bio': bio,
+        'city': city,
+        'profile_image_url': profileImageUrl,
+        'shipping_policy': shippingPolicy,
       }),
     );
 
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to create artist profile');
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> getMyProfile() async {
@@ -51,21 +45,15 @@ class ArtistProfileRemoteDataSource {
       },
     );
 
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to load artist profile');
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> updateMyProfile({
     String? displayName,
-    String? city,
     String? bio,
-    String? shippingPolicy,
+    String? city,
     String? profileImageUrl,
+    String? shippingPolicy,
   }) async {
     final token = await _tokenStorage.getAccessToken();
 
@@ -76,21 +64,15 @@ class ArtistProfileRemoteDataSource {
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-        if (displayName != null) 'display_name': displayName,
-        if (city != null) 'city': city,
-        if (bio != null) 'bio': bio,
-        if (shippingPolicy != null) 'shipping_policy': shippingPolicy,
-        if (profileImageUrl != null) 'profile_image_url': profileImageUrl,
+        'display_name': displayName,
+        'bio': bio,
+        'city': city,
+        'profile_image_url': profileImageUrl,
+        'shipping_policy': shippingPolicy,
       }),
     );
 
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to update artist profile');
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> deleteMyProfile() async {
@@ -103,111 +85,60 @@ class ArtistProfileRemoteDataSource {
       },
     );
 
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to delete artist profile');
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> listProfiles({
     int limit = 20,
     int offset = 0,
   }) async {
-    final uri = Uri.parse(ApiConstants.artistProfiles).replace(
+    final uri = Uri.parse(
+      ApiConstants.artistProfiles,
+    ).replace(
       queryParameters: {
-        'limit': limit.toString(),
-        'offset': offset.toString(),
+        'limit': '$limit',
+        'offset': '$offset',
       },
     );
 
     final response = await http.get(uri);
 
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to load artist profiles');
-  }
-
-  Future<Map<String, dynamic>> getProfileByDisplayName({
-    required String displayName,
-  }) async {
-    final response = await http.get(
-      Uri.parse('${ApiConstants.artistProfileByName}/$displayName'),
-    );
-
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to load artist profile');
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> getProfileById({
     required String profileId,
   }) async {
     final response = await http.get(
-      Uri.parse('${ApiConstants.artistProfiles}/$profileId'),
+      Uri.parse(
+        '${ApiConstants.artistProfiles}/$profileId',
+      ),
     );
 
-    final data = jsonDecode(response.body);
+    return jsonDecode(response.body);
+  }
 
-    if (response.statusCode == 200) {
-      return data;
-    }
+  Future<Map<String, dynamic>> getProfileByDisplayName({
+    required String displayName,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+        '${ApiConstants.artistProfileByName}/$displayName',
+      ),
+    );
 
-    throw Exception(data['error'] ?? 'Failed to load artist profile');
+    return jsonDecode(response.body);
   }
 
   Future<Map<String, dynamic>> listProfileArtworks({
     required String profileId,
-    int limit = 20,
-    int offset = 0,
-    String status = 'available',
-  }) async {
-    final uri = Uri.parse(
-      '${ApiConstants.artistProfiles}/$profileId/artworks',
-    ).replace(
-      queryParameters: {
-        'limit': limit.toString(),
-        'offset': offset.toString(),
-        'status': status,
-      },
-    );
-
-    final response = await http.get(uri);
-
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to load artist artworks');
-  }
-
-  Future<Map<String, dynamic>> countProfileArtworks({
-    required String profileId,
   }) async {
     final response = await http.get(
       Uri.parse(
-        '${ApiConstants.artistProfiles}/$profileId/artworks/count',
+        '${ApiConstants.artistProfiles}/$profileId/artworks',
       ),
     );
 
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      return data;
-    }
-
-    throw Exception(data['error'] ?? 'Failed to count artist artworks');
+    return jsonDecode(response.body);
   }
 }

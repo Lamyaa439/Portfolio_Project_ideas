@@ -5,7 +5,7 @@ import '../bloc/home_state.dart';
 import '../widgets/art_card.dart';
 import '../widgets/home_drawer.dart';
 import '../../../main.dart';
-import '../../auth/screens/signup_page.dart';
+import 'package:loven/features/authentication/presentation/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
   final bool isGuest;
