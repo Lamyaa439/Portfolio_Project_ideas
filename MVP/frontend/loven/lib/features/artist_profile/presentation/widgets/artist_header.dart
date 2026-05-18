@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/artist.dart';
+import '../../data/models/artist_model.dart';
 
 class ArtistHeader extends StatelessWidget {
-  final Artist artist;
+  final ArtistModel artist;
 
   const ArtistHeader({super.key, required this.artist});
 
@@ -36,8 +36,8 @@ class ArtistHeader extends StatelessWidget {
                   )
                 : Center(
                     child: Text(
-                      artist.displayName.isNotEmpty
-                          ? artist.displayName[0]
+                      artist.name.isNotEmpty
+                          ? artist.name[0]
                           : '?',
                       style: const TextStyle(
                         fontSize: 42,
@@ -51,7 +51,7 @@ class ArtistHeader extends StatelessWidget {
 
           // اسم الفنان
           Text(
-            artist.displayName,
+            artist.name,
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w600,

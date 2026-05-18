@@ -54,6 +54,7 @@ class NavigationScreen extends StatelessWidget {
           children: [
             HomeScreen(), // Assuming you have a HomeScreen defined
             SettingsScreen(),
+            ArtistProfileScreen(),
           ],
         );
       }),

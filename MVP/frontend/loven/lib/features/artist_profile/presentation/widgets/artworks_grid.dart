@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/artwork.dart';
+import '../../data/models/artist_model.dart';
 
 class ArtworksGrid extends StatelessWidget {
-  final List<Artwork> artworks;
+  final List<ArtworkModel> artworks;
 
   const ArtworksGrid({super.key, required this.artworks});
 
@@ -14,7 +14,7 @@ class ArtworksGrid extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'أعمالي الفنية',
+            'My Artworks',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -27,7 +27,7 @@ class ArtworksGrid extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 24),
                 child: Text(
-                  'لا توجد أعمال بعد',
+                  'No artworks yet',
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF8E8E93),
@@ -57,7 +57,7 @@ class ArtworksGrid extends StatelessWidget {
 }
 
 class _ArtworkCard extends StatelessWidget {
-  final Artwork artwork;
+  final ArtworkModel artwork;
 
   const _ArtworkCard({required this.artwork});
 
@@ -82,14 +82,14 @@ class _ArtworkCard extends StatelessWidget {
                   topLeft: Radius.circular(14),
                   topRight: Radius.circular(14),
                 ),
-                image: artwork.imageUrl != null
+                image: artwork.artworkImageUrl != null
                     ? DecorationImage(
-                        image: NetworkImage(artwork.imageUrl!),
+                        image: NetworkImage(artwork.artworkImageUrl!),
                         fit: BoxFit.cover,
                       )
                     : null,
               ),
-              child: artwork.imageUrl == null
+              child: artwork.artworkImageUrl == null
                   ? const Center(
                       child: Icon(
                         Icons.image_outlined,
@@ -118,7 +118,7 @@ class _ArtworkCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${artwork.price.toStringAsFixed(0)} ر.س',
+                  '${(artwork.price ?? 0).toStringAsFixed(0)} ر.س',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,

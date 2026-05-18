@@ -1,3 +1,5 @@
+import 'package:loven/features/artist_profile/data/models/artist_model.dart';
+
 abstract class ArtistProfileState {}
 
 class ArtistProfileInitial extends ArtistProfileState {}
@@ -5,21 +7,9 @@ class ArtistProfileInitial extends ArtistProfileState {}
 class ArtistProfileLoading extends ArtistProfileState {}
 
 class ArtistProfileLoaded extends ArtistProfileState {
-  final Map<String, dynamic> profile;
+  final ArtistModel artist;
 
-  ArtistProfileLoaded(this.profile);
-}
-
-class ArtistProfilesLoaded extends ArtistProfileState {
-  final List<dynamic> profiles;
-
-  ArtistProfilesLoaded(this.profiles);
-}
-
-class ArtistProfileArtworksLoaded extends ArtistProfileState {
-  final List<dynamic> artworks;
-
-  ArtistProfileArtworksLoaded(this.artworks);
+  ArtistProfileLoaded(this.artist);
 }
 
 class ArtistProfileSuccess extends ArtistProfileState {
