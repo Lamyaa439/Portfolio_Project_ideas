@@ -30,7 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void> _logout() async {
-    await TokenStorage().clearToken();
+    await TokenStorage().clearAccessToken();
     if (!mounted) return;
     Navigator.pushAndRemoveUntil(
       context,

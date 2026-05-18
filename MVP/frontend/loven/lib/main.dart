@@ -14,6 +14,15 @@ import 'data/datasources/cart_remote_datasource.dart';
 import 'data/datasources/artist_profile_remote_datasource.dart';
 import 'presentation/cart/cubit/cart_cubit.dart';
 import 'presentation/artist_profile/cubit/artist_profile_cubit.dart';
+import 'data/datasources/artwork_remote_datasource.dart';
+import 'data/datasources/order_remote_datasource.dart';
+import 'data/datasources/feedback_remote_datasource.dart';
+import 'data/datasources/report_remote_datasource.dart';
+
+import 'presentation/artwork/cubit/artwork_cubit.dart';
+import 'presentation/order/cubit/order_cubit.dart';
+import 'presentation/feedback/cubit/feedback_cubit.dart';
+import 'presentation/report/cubit/report_cubit.dart';
 
 // Simple Cubit to manage theme switching logic
 class ThemeBloc extends Cubit<ThemeMode> {
@@ -65,6 +74,26 @@ class LovenApp extends StatelessWidget {
         BlocProvider<ArtistProfileCubit>(
           create: (context) => ArtistProfileCubit(
             ArtistProfileRemoteDataSource(),
+          ),
+        ),
+        BlocProvider<ArtworkCubit>(
+          create: (context) => ArtworkCubit(
+            ArtworkRemoteDataSource(),
+          ),
+        ),
+        BlocProvider<OrderCubit>(
+          create: (context) => OrderCubit(
+            OrderRemoteDataSource(),
+          ),
+        ),
+        BlocProvider<FeedbackCubit>(
+          create: (context) => FeedbackCubit(
+            FeedbackRemoteDataSource(),
+          ),
+        ),
+        BlocProvider<ReportCubit>(
+          create: (context) => ReportCubit(
+            ReportRemoteDataSource(),
           ),
         ),
       ],

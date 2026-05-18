@@ -58,11 +58,11 @@ class LogoutPage extends StatelessWidget {
           child: Text(
             'Log out',
             style: TextStyle(
-            color: theme.colorScheme.error,
-            fontWeight: FontWeight.w600,
+              color: theme.colorScheme.error,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
       ],
     );
   }
