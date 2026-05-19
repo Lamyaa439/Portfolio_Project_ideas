@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
+<<<<<<< HEAD
 
 import 'presentation/home/bloc/home_bloc.dart';
 import 'presentation/home/bloc/home_event.dart';
@@ -29,6 +30,16 @@ import 'features/feedback/presentation/cubit/feedback_cubit.dart';
 
 import 'features/report/data/repositories/report_repository.dart';
 import 'features/report/presentation/cubit/report_cubit.dart';
+=======
+import 'features/home/controller/bloc/home_bloc.dart';
+import 'features/home/controller/bloc/home_event.dart';
+import 'features/navigation/controller/cubit/navigation_bar_cubit.dart';
+import 'core/res/theme/app_theme.dart';
+import 'core/res/theme/app_theme.dart';
+import 'features/splash/splash_screen.dart';
+import 'features/auth/controller/cubit/auth_cubit.dart';
+import 'core/router/app_router.dart';
+>>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939
 
 class ThemeBloc extends Cubit<ThemeMode> {
   ThemeBloc() : super(ThemeMode.light);
