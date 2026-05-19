@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loven/core/res/theme/app_colors.dart';
 import 'package:loven/features/artist_profile/view/screens/artist_profile_screen.dart';
 import 'package:loven/features/home/View/Screens/home_screen.dart';
 import 'package:loven/features/home/View/Screens/settings_screen.dart';
@@ -49,17 +48,10 @@ class NavigationScreen extends StatelessWidget {
             const HomeScreen(),
             const SettingsScreen(),
             isGuest
-<<<<<<< HEAD
             ? const Center(
               child: Text('Guest Mode: Sign in to view profiles'),
             )
             : const ArtistProfileScreen(),
-=======
-                ? const Center(
-                    child: Text('Guest Mode: Sign in to view profiles'))
-                : const ArtistProfileScreen(),
-
->>>>>>> 5e80c84ab2be9c53f9eab75439806b21ed770041
             isGuest
             ? const Center(
               child: Text('Guest Mode: Sign in to view your cart'),

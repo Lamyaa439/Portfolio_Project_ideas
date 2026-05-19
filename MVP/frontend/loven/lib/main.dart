@@ -19,8 +19,8 @@ import 'features/auth/controller/cubit/auth_cubit.dart';
 import 'features/cart/data/repositories/cart_repository.dart';
 import 'features/cart/controller/cubit/cart_cubit.dart';
 
-import 'features/artist_profile/data/repositories/artist_repository.dart';
-import 'features/artist_profile/controller/cubit/artist_profile_cubit.dart';
+import 'features/artist_profile/model/artist_repository.dart';
+import 'features/artist_profile/controller/artist_profile_cubit.dart';
 
 import 'features/artwork/data/repositories/artwork_repository.dart';
 import 'features/artwork/controller/cubit/artwork_cubit.dart';
@@ -79,7 +79,7 @@ class LovenApp extends StatelessWidget {
         ),
         BlocProvider<ArtistProfileCubit>(
           create: (context) => ArtistProfileCubit(
-            ArtistRepository(),
+            repository: ArtistRepository(),
           ),
         ),
         BlocProvider<CartCubit>(

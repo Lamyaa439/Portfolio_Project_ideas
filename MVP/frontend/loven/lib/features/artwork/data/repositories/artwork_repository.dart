@@ -23,14 +23,22 @@ class ArtworkRepository {
 
     if (response.statusCode == 200) {
       if (data is List) return data;
-      if (data['artworks'] is List) return data['artworks'];
+
+      if (data['artworks'] is List) {
+        return data['artworks'];
+      }
+
       return [];
     }
 
-    throw Exception(data['error'] ?? 'Failed to load artworks');
+    throw Exception(
+      data['error'] ?? 'Failed to load artworks',
+    );
   }
 
-  Future<Map<String, dynamic>> getArtworkById(String artworkId) async {
+  Future<Map<String, dynamic>> getArtworkById(
+    String artworkId,
+  ) async {
     final token = await _tokenStorage.getAccessToken();
 
     final response = await http.get(
@@ -47,6 +55,88 @@ class ArtworkRepository {
       return data;
     }
 
-    throw Exception(data['error'] ?? 'Failed to load artwork');
+    throw Exception(
+      data['error'] ?? 'Failed to load artwork',
+    );
   }
+  
+  Future<Map<String, dynamic>> listPublicArtworks({
+    int limit = 20,
+    int offset = 0,
+    String status = 'available',
+  }) async {
+    final artworks = await getArtworks();
+    return {'artworks': artworks};
+  }
+  
+  Future<Map<String, dynamic>> searchArtworks({
+    required String query,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final artworks = await getArtworks();
+    return {'artworks': artworks};
+  }
+  
+  Future<Map<String, dynamic>> listMyArtworks({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final artworks = await getArtworks();
+    return {'artworks': artworks};
+  }
+  
+  Future<Map<String, dynamic>> getArtwork({
+    required String artworkId,
+    }) async {
+      return await getArtworkById(artworkId);
+    }
+
+  Future<Map<String, dynamic>> createArtwork({
+    required String title,
+    String? description,
+    double? price,
+    String? imageUrl,
+    String? category,
+    String? medium,
+    String? dimensions,
+  }) async {
+    return {
+      'title': title,
+      'description': description,
+      'price': price,
+      'image_url': imageUrl,
+      'category': category,
+      'medium': medium,
+      'dimensions': dimensions,
+    };
+  }
+
+  Future<Map<String, dynamic>> updateArtwork({
+    required String artworkId,
+    String? title,
+    String? description,
+    double? price,
+    String? imageUrl,
+    String? category,
+    String? medium,
+    String? dimensions,
+    String? status,
+  }) async {
+    return {
+      'artwork_id': artworkId,
+      'title': title,
+      'description': description,
+      'price': price,
+      'image_url': imageUrl,
+      'category': category,
+      'medium': medium,
+      'dimensions': dimensions,
+      'status': status,
+    };
+  }
+
+  Future<void> deleteArtwork({
+    required String artworkId,
+  }) async {}
 }

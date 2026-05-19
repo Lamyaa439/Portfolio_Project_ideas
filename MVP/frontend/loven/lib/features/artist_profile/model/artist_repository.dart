@@ -199,7 +199,7 @@ class ArtistRepository {
   /// Step 1 of every protected route: read JWT from secure storage.
   /// Step 2: fail fast — Flask would return 401 anyway, but this gives a clear app error.
   Future<String> _requireToken() async {
-    final token = await _tokenStorage.getToken();
+    final token = await _tokenStorage.getAccessToken();
     if (token == null || token.isEmpty) {
       throw Exception('Unauthorized: No token found. Please log in.');
     }

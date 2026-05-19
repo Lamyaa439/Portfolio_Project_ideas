@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:loven/features/splash/splash_screen.dart';
 import 'package:loven/features/auth/view/screens/signup_page.dart';
-import 'package:loven/features/navigation/view/Screens/navigation_screen.dart';
-import 'package:loven/features/artist_profile/View/Screens/artist_profile_screen.dart';
+import 'package:loven/features/navigation/view/screens/navigation_screen.dart';
+import 'package:loven/features/artist_profile/view/screens/artist_profile_screen.dart';
 
 bool isUserBrowsingAsGuest = true;
 
