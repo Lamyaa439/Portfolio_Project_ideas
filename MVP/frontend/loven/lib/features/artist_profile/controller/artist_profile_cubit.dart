@@ -55,6 +55,42 @@ class ArtistProfileCubit extends Cubit<ArtistProfileState> {
     }
   }
 
+  /// Public profile page — no JWT; uses profile UUID from the route.
+  Future<void> fetchPublicArtistProfile(String artistProfileId) async {
+    emit(
+      state.copyWith(
+        status: ArtistProfileStatus.loading,
+        clearErrorMessage: true,
+      ),
+    );
+
+    try {
+      final results = await Future.wait<dynamic>([
+        _repository.getArtistById(artistProfileId),
+        _repository.listArtworksForProfile(artistProfileId),
+      ]);
+
+      final artist = results[0] as ArtistModel;
+      final artworks = results[1] as List<ArtworkModel>;
+
+      emit(
+        state.copyWith(
+          status: ArtistProfileStatus.success,
+          artist: artist,
+          artworks: artworks,
+          clearErrorMessage: true,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: ArtistProfileStatus.error,
+          errorMessage: _safeErrorMessage(e),
+        ),
+      );
+    }
+  }
+
   /// PATCHes editable profile fields, then merges the new [ArtistModel] into state.
   ///
   /// [artworks] are intentionally untouched so the grid does not flicker/reload.

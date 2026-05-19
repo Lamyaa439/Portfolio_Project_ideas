@@ -8,23 +8,57 @@ import '../../model/artist_repository.dart';
 import '../widgets/artist_header_widget.dart';
 import '../widgets/artwork_grid_widget.dart';
 
-/// Logged-in artist profile screen — uses global [ThemeData] from [AppTheme].
+/// Artist profile screen — uses global [ThemeData] from [AppTheme].
+///
+/// When [artistProfileId] is null, loads the logged-in artist (`/my-profile`).
+/// When set, loads a public profile (`/artist/:artistId`).
 class ArtistProfileScreen extends StatelessWidget {
-  const ArtistProfileScreen({super.key});
+  const ArtistProfileScreen({
+    super.key,
+    this.artistProfileId,
+  });
+
+  /// `null` → own profile; non-null → public profile UUID from GoRouter.
+  final String? artistProfileId;
+
+  bool get _isPublicView => artistProfileId != null;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ArtistProfileCubit(
-        repository: ArtistRepository(),
-      )..fetchMyProfileData(),
-      child: const _ArtistProfileBody(),
+      create: (_) {
+        final cubit = ArtistProfileCubit(repository: ArtistRepository());
+        if (_isPublicView) {
+          cubit.fetchPublicArtistProfile(artistProfileId!);
+        } else {
+          cubit.fetchMyProfileData();
+        }
+        return cubit;
+      },
+      child: _ArtistProfileBody(
+        isPublicView: _isPublicView,
+        artistProfileId: artistProfileId,
+      ),
     );
   }
 }
 
 class _ArtistProfileBody extends StatelessWidget {
-  const _ArtistProfileBody();
+  const _ArtistProfileBody({
+    required this.isPublicView,
+    this.artistProfileId,
+  });
+
+  final bool isPublicView;
+  final String? artistProfileId;
+
+  /// Returns a [Future] so [RefreshIndicator.onRefresh] can await the reload.
+  Future<void> _reload(ArtistProfileCubit cubit) {
+    if (isPublicView && artistProfileId != null) {
+      return cubit.fetchPublicArtistProfile(artistProfileId!);
+    }
+    return cubit.fetchMyProfileData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +72,7 @@ class _ArtistProfileBody extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'My Profile',
+          isPublicView ? 'Artist Profile' : 'My Profile',
           style: theme.textTheme.titleMedium,
         ),
         iconTheme: IconThemeData(color: colorScheme.onSurface),
@@ -65,7 +99,11 @@ class _ArtistProfileBody extends StatelessWidget {
             case ArtistProfileStatus.initial:
             case ArtistProfileStatus.loading:
               if (state.artist != null) {
-                return _SuccessContent(state: state);
+                return _SuccessContent(
+                  state: state,
+                  isPublicView: isPublicView,
+                  onRefresh: () => _reload(context.read<ArtistProfileCubit>()),
+                );
               }
               return Center(
                 child: CircularProgressIndicator(
@@ -77,15 +115,21 @@ class _ArtistProfileBody extends StatelessWidget {
               if (state.artist == null) {
                 return _ErrorView(
                   message: state.errorMessage ?? 'An unexpected error occurred',
-                  onRetry: () => context
-                      .read<ArtistProfileCubit>()
-                      .fetchMyProfileData(),
+                  onRetry: () => _reload(context.read<ArtistProfileCubit>()),
                 );
               }
-              return _SuccessContent(state: state);
+              return _SuccessContent(
+                state: state,
+                isPublicView: isPublicView,
+                onRefresh: () => _reload(context.read<ArtistProfileCubit>()),
+              );
 
             case ArtistProfileStatus.success:
-              return _SuccessContent(state: state);
+              return _SuccessContent(
+                state: state,
+                isPublicView: isPublicView,
+                onRefresh: () => _reload(context.read<ArtistProfileCubit>()),
+              );
           }
         },
       ),
@@ -94,9 +138,15 @@ class _ArtistProfileBody extends StatelessWidget {
 }
 
 class _SuccessContent extends StatelessWidget {
-  const _SuccessContent({required this.state});
+  const _SuccessContent({
+    required this.state,
+    required this.isPublicView,
+    required this.onRefresh,
+  });
 
   final ArtistProfileState state;
+  final bool isPublicView;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +155,7 @@ class _SuccessContent extends StatelessWidget {
 
     return RefreshIndicator(
       color: AppColors.deepPurple,
-      onRefresh: () =>
-          context.read<ArtistProfileCubit>().fetchMyProfileData(),
+      onRefresh: onRefresh,
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
@@ -123,7 +172,7 @@ class _SuccessContent extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Text(
-                'My Artworks',
+                isPublicView ? 'Artworks' : 'My Artworks',
                 style: theme.textTheme.titleMedium,
               ),
             ),
