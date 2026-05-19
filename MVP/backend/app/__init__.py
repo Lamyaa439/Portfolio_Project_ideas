@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-
+from app.api.v1.verification_requests import verification_requests_bp
 from app.api.v1.auth import auth_bp
 from app.api.v1.artists_profiles import artist_profiles_bp
 from app.api.v1.carts import carts_bp
@@ -35,7 +35,7 @@ def create_app():
         from app.models.artwork import Artwork
         from app.models.cart import Cart
         from app.models.cart_item import CartItem
-
+from app.models.verification_request import VerificationRequest
         db.create_all()
 
     @app.route("/")
@@ -63,7 +63,8 @@ def create_app():
 
     # Artwork discovery routes
     app.register_blueprint(artwork_bp, url_prefix="/api/v1/artworks")
-    
+    # Verification request routes
+app.register_blueprint(verification_requests_bp, url_prefix="/api/v1")
     # Print all registered routes
     print(app.url_map)
 
