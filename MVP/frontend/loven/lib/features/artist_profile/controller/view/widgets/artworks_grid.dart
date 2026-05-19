@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/artwork.dart';
+import '../../../domain/entities/artwork.dart';
 
 class ArtworksGrid extends StatelessWidget {
   final List<Artwork> artworks;

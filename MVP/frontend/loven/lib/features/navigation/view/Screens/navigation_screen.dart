@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loven/core/res/theme/app_colors.dart';
-import 'package:loven/features/artist_profile/presentation/screens/artist_profile_screen.dart';
+import 'package:loven/features/artist_profile/controller/view/screens/artist_profile_screen.dart';
 import 'package:loven/features/home/View/Screens/home_screen.dart';
 import 'package:loven/features/home/View/Screens/settings_screen.dart';
 import '../../../../main.dart';

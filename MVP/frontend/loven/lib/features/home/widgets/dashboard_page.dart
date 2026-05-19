@@ -103,8 +103,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         ? Colors.white10
                         : Colors.black.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(20),
-                    blurDelta: const Offset(
-                        0, 0), // If backed by backing backdrop filter
                   ),
                   child: Row(
                     children: [
@@ -202,7 +200,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                           child: Icon(
                             Icons.chat_bubble_outline_rounded,
-                            color: isDarkMode ? Colors.whiteAmd : primaryIndigo,
+                            color: isDarkMode ? Colors.white : primaryIndigo,
                             size: 24,
                           ),
                         ),

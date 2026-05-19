@@ -10,9 +10,9 @@ import '../View/guest_settings_screen.dart';
 
 import '../../../features/artist_profile/data/datasources/artist_remote_datasource.dart';
 import '../../../features/artist_profile/data/repositories/artist_repository_impl.dart';
-import '../../../features/artist_profile/presentation/bloc/artist_profile_bloc.dart';
-import '../../../features/artist_profile/presentation/bloc/artist_profile_event.dart';
-import '../../../features/artist_profile/presentation/screens/artist_profile_screen.dart';
+import '../../artist_profile/controller/bloc/artist_profile_bloc.dart';
+import '../../artist_profile/controller/bloc/artist_profile_event.dart';
+import '../../artist_profile/controller/view/screens/artist_profile_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
   final bool isGuest;

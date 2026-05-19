@@ -25,4 +25,10 @@ class ArtistMockDataSource implements ArtistRemoteDataSource {
       ],
     );
   }
+
+  @override
+  Future<ArtistModel> getMyArtistProfile() {
+    // TODO: implement getMyArtistProfile
+    throw UnimplementedError();
+  }
 }

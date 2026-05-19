@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/artist.dart';
+import '../../../domain/entities/artist.dart';
 
 class ArtistHeader extends StatelessWidget {
   final Artist artist;
