@@ -1,18 +1,10 @@
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-<<<<<<<< HEAD:MVP/frontend/loven/lib/features/authentication/presentation/cubit/auth_cubit.dart
-import 'package:loven/features/authentication/data/repositories/auth_repository.dart';
+import 'package:loven/features/auth/data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 import 'package:loven/core/storage/token_storage.dart';
-========
-import '../../data/datasources/auth_remote_data_source.dart';
-import 'auth_state.dart';
-import '../../data/datasources/auth_remote_data_source.dart';
-import '../../../../core/storage/token_storage.dart';
->>>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939:MVP/frontend/loven/lib/features/auth/controller/cubit/auth_cubit.dart
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());

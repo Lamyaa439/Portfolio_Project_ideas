@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD:MVP/frontend/loven/lib/presentation/splash/splash_screen.dart
-import '../home/screens/home_screen.dart';
-import 'package:loven/features/authentication/presentation/screens/login_page.dart';
-import 'package:loven/features/authentication/presentation/screens/signup_page.dart';
-=======
+
 import '../home/View/Screens/home_screen.dart';
 import '../auth/view/screens/login_page.dart';
 import '../auth/view/screens/signup_page.dart';
->>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939:MVP/frontend/loven/lib/features/splash/splash_screen.dart
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:loven/features/artwork/data/datasources/artwork_remote_datasource.dart';
+import 'package:loven/features/artwork/data/repositories/artwork_repository.dart';
 import 'artwork_state.dart';
 
 class ArtworkCubit extends Cubit<ArtworkState> {
-  final ArtworkRemoteDataSource _remoteDataSource;
+  final ArtworkRepository _repository;
 
-  ArtworkCubit(this._remoteDataSource) : super(ArtworkInitial());
+  ArtworkCubit(this._repository) : super(ArtworkInitial());
 
   Future<void> listPublicArtworks({
     int limit = 20,
@@ -16,7 +16,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      final data = await _remoteDataSource.listPublicArtworks(
+      final data = await _repository.listPublicArtworks(
         limit: limit,
         offset: offset,
         status: status,
@@ -36,7 +36,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      final data = await _remoteDataSource.searchArtworks(
+      final data = await _repository.searchArtworks(
         query: query,
         limit: limit,
         offset: offset,
@@ -55,7 +55,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      final data = await _remoteDataSource.listMyArtworks(
+      final data = await _repository.listMyArtworks(
         limit: limit,
         offset: offset,
       );
@@ -72,7 +72,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      final artwork = await _remoteDataSource.getArtwork(
+      final artwork = await _repository.getArtwork(
         artworkId: artworkId,
       );
 
@@ -94,7 +94,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      final artwork = await _remoteDataSource.createArtwork(
+      final artwork = await _repository.createArtwork(
         title: title,
         description: description,
         price: price,
@@ -124,7 +124,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      final artwork = await _remoteDataSource.updateArtwork(
+      final artwork = await _repository.updateArtwork(
         artworkId: artworkId,
         title: title,
         description: description,
@@ -148,7 +148,7 @@ class ArtworkCubit extends Cubit<ArtworkState> {
     emit(ArtworkLoading());
 
     try {
-      await _remoteDataSource.deleteArtwork(
+      await _repository.deleteArtwork(
         artworkId: artworkId,
       );
 

@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-<<<<<<< HEAD:MVP/frontend/loven/lib/presentation/home/screens/home_screen.dart
 
-import '../bloc/home_bloc.dart';
-import '../bloc/home_state.dart';
-import '../bloc/home_event.dart';
-
-=======
 import '../../controller/bloc/home_bloc.dart';
 import '../../controller/bloc/home_state.dart';
 import '../../controller/bloc/home_event.dart';
->>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939:MVP/frontend/loven/lib/features/home/View/Screens/home_screen.dart
+
 import '../widgets/art_card.dart';
 import '../../widgets/home_drawer.dart';
-
-import 'package:loven/features/authentication/presentation/screens/signup_page.dart';
 
 class HomeScreen extends StatelessWidget {
   final bool isGuest;

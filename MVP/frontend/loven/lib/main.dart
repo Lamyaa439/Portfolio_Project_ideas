@@ -3,51 +3,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'firebase_options.dart';
-<<<<<<< HEAD
 
-import 'presentation/home/bloc/home_bloc.dart';
-import 'presentation/home/bloc/home_event.dart';
-import 'features/navigation/cubit/navigation_bar_cubit.dart';
-import 'core/res/theme/app_theme.dart'; // Importing the theme file
-import 'features/authentication/presentation/cubit/auth_cubit.dart';
-import 'core/router/app_router.dart'; // Importing the router configuration
-
-import 'features/cart/data/repositories/cart_repository.dart';
-import 'features/cart/presentation/cubit/cart_cubit.dart';
-
-import 'features/artist_profile/data/repositories/artist_repository.dart';
-import 'features/artist_profile/presentation/cubit/artist_profile_cubit.dart';
-
-import 'features/artwork/data/datasources/artwork_remote_datasource.dart';
-import 'features/artwork/presentation/cubit/artwork_cubit.dart';
-
-import 'features/order/data/repositories/order_repository.dart';
-import 'features/order/presentation/cubit/order_cubit.dart';
-
-import 'features/feedback/data/repositories/feedback_repository.dart';
-import 'features/feedback/presentation/cubit/feedback_cubit.dart';
-
-import 'features/report/data/repositories/report_repository.dart';
-import 'features/report/presentation/cubit/report_cubit.dart';
-=======
 import 'features/home/controller/bloc/home_bloc.dart';
 import 'features/home/controller/bloc/home_event.dart';
+
 import 'features/navigation/controller/cubit/navigation_bar_cubit.dart';
+
 import 'core/res/theme/app_theme.dart';
-import 'core/res/theme/app_theme.dart';
-import 'features/splash/splash_screen.dart';
-import 'features/auth/controller/cubit/auth_cubit.dart';
 import 'core/router/app_router.dart';
->>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939
+
+import 'features/auth/controller/cubit/auth_cubit.dart';
+
+import 'features/cart/data/repositories/cart_repository.dart';
+import 'features/cart/controller/cubit/cart_cubit.dart';
+
+import 'features/artist_profile/data/repositories/artist_repository.dart';
+import 'features/artist_profile/controller/cubit/artist_profile_cubit.dart';
+
+import 'features/artwork/data/repositories/artwork_repository.dart';
+import 'features/artwork/controller/cubit/artwork_cubit.dart';
+
+import 'features/order/data/repositories/order_repository.dart';
+import 'features/order/controller/cubit/order_cubit.dart';
+
+import 'features/feedback/data/repositories/feedback_repository.dart';
+import 'features/feedback/controller/cubit/feedback_cubit.dart';
+
+import 'features/report/data/repositories/report_repository.dart';
+import 'features/report/controller/cubit/report_cubit.dart';
 
 class ThemeBloc extends Cubit<ThemeMode> {
   ThemeBloc() : super(ThemeMode.light);
 
   void toggleTheme() {
-    emit(
-      state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light,
-    );
+    emit(state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
   }
 }
 
@@ -58,24 +49,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseMessaging.onMessage.listen(
-    (RemoteMessage message) {
-      print(
-        "FOREGROUND MESSAGE TITLE: "
-        "${message.notification?.title}",
-      );
-
-      print(
-        "FOREGROUND MESSAGE BODY: "
-        "${message.notification?.body}",
-      );
-
-      print(
-        "FOREGROUND MESSAGE DATA: "
-        "${message.data}",
-      );
-    },
-  );
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("FOREGROUND MESSAGE TITLE: ${message.notification?.title}");
+    print("FOREGROUND MESSAGE BODY: ${message.notification?.body}");
+    print("FOREGROUND MESSAGE DATA: ${message.data}");
+  });
 
   runApp(const LovenApp());
 }
@@ -102,33 +80,33 @@ class LovenApp extends StatelessWidget {
         BlocProvider<ArtistProfileCubit>(
           create: (context) => ArtistProfileCubit(
             ArtistRepository(),
-            ),
           ),
+        ),
         BlocProvider<CartCubit>(
           create: (context) => CartCubit(
             CartRepository(),
-            ),
           ),
+        ),
         BlocProvider<ArtworkCubit>(
           create: (context) => ArtworkCubit(
-            ArtworkRemoteDataSource(),
+            ArtworkRepository(),
           ),
         ),
         BlocProvider<OrderCubit>(
           create: (context) => OrderCubit(
             OrderRepository(),
-            ),
           ),
+        ),
         BlocProvider<FeedbackCubit>(
           create: (context) => FeedbackCubit(
             FeedbackRepository(),
-            ),
           ),
+        ),
         BlocProvider<ReportCubit>(
           create: (context) => ReportCubit(
             ReportRepository(),
-            ),
           ),
+        ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
@@ -145,11 +123,10 @@ class LovenApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            theme: AppTheme.lightTheme, // Applying the custom theme
+            theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
             routerConfig: router,
-            // home: const SplashScreen(),
           );
         },
       ),

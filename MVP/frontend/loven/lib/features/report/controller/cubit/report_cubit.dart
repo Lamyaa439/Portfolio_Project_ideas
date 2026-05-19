@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:loven/features/report/data/repositories/report_repository.dart';
+import '../../data/repositories/report_repository.dart';
 import 'report_state.dart';
 
 class ReportCubit extends Cubit<ReportState> {
@@ -24,9 +24,9 @@ class ReportCubit extends Cubit<ReportState> {
         details: details,
       );
 
-      emit(ReportSuccess('Report submitted successfully'));
+      emit(ReportSuccess());
     } catch (e) {
-      emit(ReportError(e.toString()));
+      emit(ReportFailure(e.toString()));
     }
   }
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-<<<<<<<< HEAD:MVP/frontend/loven/lib/features/authentication/presentation/screens/login_page.dart
-import 'package:loven/presentation/home/screens/home_screen.dart';
-========
 import '../../../home/View/Screens/home_screen.dart';
->>>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939:MVP/frontend/loven/lib/features/auth/view/screens/login_page.dart
 import 'signup_page.dart';
 import '../../controller/cubit/auth_cubit.dart';
 import '../../controller/cubit/auth_state.dart';

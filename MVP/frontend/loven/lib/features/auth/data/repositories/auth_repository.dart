@@ -2,13 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-<<<<<<<< HEAD:MVP/frontend/loven/lib/features/authentication/data/repositories/auth_repository.dart
 import 'package:loven/core/network/api_constants.dart';
 import 'package:loven/core/storage/token_storage.dart';
-========
-import '../../../../core/network/api_constants.dart';
-import '../../../../core/storage/token_storage.dart';
->>>>>>>> 9a667a187fa857595d8ce0d9e597a4dfe3853939:MVP/frontend/loven/lib/features/auth/data/datasources/auth_remote_data_source.dart
 
 class AuthRepository {
   final TokenStorage _tokenStorage = TokenStorage();
