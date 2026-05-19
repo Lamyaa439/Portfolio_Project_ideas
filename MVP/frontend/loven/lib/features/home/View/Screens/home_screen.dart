@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../controller/bloc/home_bloc.dart';
 import '../../controller/bloc/home_state.dart';
 import '../../controller/bloc/home_event.dart';
+
 import '../widgets/art_card.dart';
 import '../../widgets/home_drawer.dart';
 

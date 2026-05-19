@@ -20,7 +20,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   final Color primaryIndigo = const Color(0xFF2E3192);
 
   Future<void> _logout(BuildContext context) async {
-    await TokenStorage().clearToken();
+    await TokenStorage().clearAccessToken();
     if (!context.mounted) return;
     Navigator.pushAndRemoveUntil(
       context,

@@ -30,7 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void> _logout() async {
-    await TokenStorage().clearToken();
+    await TokenStorage().clearAccessToken();
     if (!mounted) return;
     Navigator.pushAndRemoveUntil(
       context,
@@ -98,14 +98,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: isDarkMode
+                      decoration: BoxDecoration(
+                        color: isDarkMode
                         ? Colors.white10
                         : Colors.black.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(20),
-                    blurDelta: const Offset(
-                        0, 0), // If backed by backing backdrop filter
-                  ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                   child: Row(
                     children: [
                       _buildHeaderModeTab('Buyer', !isArtistMode),
@@ -146,17 +144,16 @@ class _DashboardPageState extends State<DashboardPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: isDarkMode
-                              ? const Color(0xFF1E1E24)
-                              : const Color(0xFFF1F1F5),
-                          borderRadius: BorderRadius.circular(32),
+                          ? Colors.white10
+                          : Colors.black.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.06),
-                              blurRadius: 15,
-                              offset: const Offset(0, 4),
-                            )
-                          ],
-                        ),
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 8,
+                              ),
+                            ],
+                          ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -202,7 +199,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                           child: Icon(
                             Icons.chat_bubble_outline_rounded,
-                            color: isDarkMode ? Colors.whiteAmd : primaryIndigo,
+                            color: isDarkMode ? Colors.white : primaryIndigo,
                             size: 24,
                           ),
                         ),
