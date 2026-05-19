@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:loven/features/splash/splash_screen.dart';
+import 'package:loven/features/home/View/art_details_screen.dart';
 import 'package:loven/features/auth/view/screens/signup_page.dart';
 import 'package:loven/features/navigation/view/screens/navigation_screen.dart';
 import 'package:loven/features/artist_profile/view/screens/artist_profile_screen.dart';
@@ -63,8 +64,12 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/art-details',
-      builder: (context, state) =>
-          const Center(child: Text('Art Details Protected Page')),
-    ),
+      builder: (context, state) {
+        final artItem = state.extra as dynamic;
+        return ArtDetailsScreen(
+          artItem: artItem,
+    );
+  },
+),
   ],
 );

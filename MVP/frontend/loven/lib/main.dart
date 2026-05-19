@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'core/storage/token_storage.dart';
 
 import 'firebase_options.dart';
 
@@ -48,6 +49,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final token = await TokenStorage().getAccessToken();
+  isUserBrowsingAsGuest = token == null || token.isEmpty;
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print("FOREGROUND MESSAGE TITLE: ${message.notification?.title}");

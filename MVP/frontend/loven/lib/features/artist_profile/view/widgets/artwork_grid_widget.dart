@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/res/theme/app_colors.dart';
 import '../../model/artist_model.dart';
@@ -43,7 +44,9 @@ class ArtworkGridWidget extends StatelessWidget {
           childAspectRatio: 0.72,
         ),
         itemBuilder: (context, index) {
-          return _ArtworkCard(artwork: artworks[index]);
+          return _ArtworkCard(
+            artwork: artworks[index],
+          );
         },
       ),
     );
@@ -51,7 +54,9 @@ class ArtworkGridWidget extends StatelessWidget {
 }
 
 class _ArtworkCard extends StatelessWidget {
-  const _ArtworkCard({required this.artwork});
+  const _ArtworkCard({
+    required this.artwork,
+  });
 
   final ArtworkModel artwork;
 
@@ -63,51 +68,62 @@ class _ArtworkCard extends StatelessWidget {
     final hasImage = artwork.artworkImageUrl != null &&
         artwork.artworkImageUrl!.isNotEmpty;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.onSurface.withValues(alpha: 0.12),
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          '/art-details',
+          extra: artwork,
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: colorScheme.onSurface.withValues(alpha: 0.12),
+          ),
         ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: hasImage
-                ? Image.network(
-                    artwork.artworkImageUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const _ImagePlaceholder(),
-                  )
-                : const _ImagePlaceholder(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  artwork.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 13),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatPrice(artwork.price),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.deepPurple,
-                  ),
-                ),
-              ],
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: hasImage
+                  ? Image.network(
+                      artwork.artworkImageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const _ImagePlaceholder(),
+                    )
+                  : const _ImagePlaceholder(),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    artwork.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatPrice(artwork.price),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.deepPurple,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
