@@ -5,13 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'firebase_options.dart';
-import 'presentation/home/bloc/home_bloc.dart';
-import 'presentation/home/bloc/home_event.dart';
-import 'features/navigation/cubit/navigation_bar_cubit.dart';
+import 'features/home/controller/bloc/home_bloc.dart';
+import 'features/home/controller/bloc/home_event.dart';
+import 'features/navigation/controller/cubit/navigation_bar_cubit.dart';
 import 'core/res/theme/app_theme.dart';
 import 'core/res/theme/app_theme.dart';
-import 'presentation/splash/splash_screen.dart';
-import 'presentation/auth/cubit/auth_cubit.dart';
+import 'features/splash/splash_screen.dart';
+import 'features/auth/controller/cubit/auth_cubit.dart';
 import 'core/router/app_router.dart';
 
 // Simple Cubit to manage theme switching logic
