@@ -6,6 +6,8 @@ import '../../controller/bloc/home_bloc.dart';
 import '../../controller/bloc/home_state.dart';
 import '../../controller/bloc/home_event.dart';
 
+import 'package:loven/features/cart/controller/cubit/cart_cubit.dart';
+
 import '../widgets/art_card.dart';
 import '../../widgets/home_drawer.dart';
 
@@ -16,6 +18,36 @@ class HomeScreen extends StatelessWidget {
 
   void _goToSignup(BuildContext context) {
     context.push('/signup?fromGuest=true');
+  }
+
+  Future<void> _addArtworkToCart({
+    required BuildContext context,
+    required Map<String, dynamic> art,
+  }) async {
+    final artworkId = art['id'] ?? art['artwork_id'];
+
+    print('ART OBJECT: $art');
+    print('ARTWORK ID SENT TO CART: $artworkId');
+
+    if (artworkId == null || artworkId.toString().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Artwork ID missing'),
+        ),
+      );
+      return;
+    }
+
+    await context.read<CartCubit>().addItem(
+          artworkId: artworkId.toString(),
+          quantity: 1,
+        );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${art['title'] ?? 'Artwork'} added to cart'),
+      ),
+    );
   }
 
   @override
@@ -35,10 +67,13 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  _buildSearchBar(theme, context), // Pass Context
+                  _buildSearchBar(theme, context),
                   const SizedBox(height: 10),
-                  _buildCategories(context, state.categories,
-                      state.selectedCategory), // Pass Active selection
+                  _buildCategories(
+                    context,
+                    state.categories,
+                    state.selectedCategory,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -50,7 +85,8 @@ class HomeScreen extends StatelessWidget {
                     height: 350,
                     child: state.artPieces.isEmpty
                         ? const Center(
-                            child: Text("No pieces found matching filters."))
+                            child: Text('No pieces found matching filters.'),
+                          )
                         : ListView.builder(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(left: 16),
@@ -61,19 +97,22 @@ class HomeScreen extends StatelessWidget {
                               return ArtCard(
                                 title: art['title'] ?? 'Untitled',
                                 artistName: art['artistName'] ??
-                                    "Artist #${art['artist_id']}",
+                                    'Artist #${art['artist_id']}',
                                 price: art['price']?.toString() ?? '0',
                                 imageUrl: art['image_url'] ?? '',
                                 description: art['description'] ??
                                     'Explore the story behind this unique piece of art.',
                                 isGuest: isGuest,
-                                onActionPressed: () {
+                                onActionPressed: () async {
                                   if (isGuest) {
                                     _goToSignup(context);
-                                  } else {
-                                    print(
-                                        "Action triggered for ${art['title']}");
+                                    return;
                                   }
+
+                                  await _addArtworkToCart(
+                                    context: context,
+                                    art: art,
+                                  );
                                 },
                               );
                             },
@@ -83,16 +122,16 @@ class HomeScreen extends StatelessWidget {
               ),
             );
           }
+
           if (state is HomeError) {
             return Center(child: Text(state.message));
           }
+
           return const Center(child: Text('Start exploring art!'));
         },
       ),
     );
   }
-
-  // --- Helper Methods ---
 
   Widget _buildSearchBar(ThemeData theme, BuildContext context) {
     return Padding(
@@ -118,8 +157,10 @@ class HomeScreen extends StatelessWidget {
               size: 20,
               color: theme.colorScheme.primary,
             ),
-            suffixIcon: Icon(Icons.search,
-                color: theme.colorScheme.onSurface.withOpacity(0.6)),
+            suffixIcon: Icon(
+              Icons.search,
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
           ),
         ),
       ),
@@ -127,7 +168,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategories(
-      BuildContext context, List<String> categories, String selectedCategory) {
+    BuildContext context,
+    List<String> categories,
+    String selectedCategory,
+  ) {
     return SizedBox(
       height: 60,
       child: ListView.builder(
@@ -148,7 +192,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(
-      BuildContext context, String title, bool isSelected) {
+    BuildContext context,
+    String title,
+    bool isSelected,
+  ) {
     final theme = Theme.of(context);
 
     return GestureDetector(

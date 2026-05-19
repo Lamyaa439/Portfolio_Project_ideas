@@ -4,6 +4,8 @@ import '../../../home/View/Screens/home_screen.dart';
 import 'signup_page.dart';
 import '../../controller/cubit/auth_cubit.dart';
 import '../../controller/cubit/auth_state.dart';
+import 'package:loven/core/router/app_router.dart';
+import 'package:loven/features/navigation/view/screens/navigation_screen.dart';
 
 class LoginPage extends StatefulWidget {
   final bool fromGuest;
@@ -52,15 +54,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _goToLoggedInHome() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-      (route) => false,
-    );
-  }
+void _goToLoggedInHome() {
+  isUserBrowsingAsGuest = false;
+
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const NavigationScreen(isGuest: false),
+    ),
+    (route) => false,
+  );
+}
 
   InputDecoration inputDecoration(String hint, ThemeData theme) {
     return InputDecoration(

@@ -7,6 +7,7 @@ import '../../controller/artist_profile_state.dart';
 import '../../model/artist_repository.dart';
 import '../widgets/artist_header_widget.dart';
 import '../widgets/artwork_grid_widget.dart';
+import 'package:go_router/go_router.dart';
 
 /// Artist profile screen — uses global [ThemeData] from [AppTheme].
 ///
@@ -171,12 +172,31 @@ class _SuccessContent extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
-                isPublicView ? 'Artworks' : 'My Artworks',
-                style: theme.textTheme.titleMedium,
-              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!isPublicView) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          context.push('/artworks/create');
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text('Upload Artwork'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  
+                  Text(
+                    isPublicView ? 'Artworks' : 'My Artworks',
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ],
             ),
           ),
+        ),
           SliverToBoxAdapter(
             child: ArtworkGridWidget(artworks: state.artworks),
           ),
