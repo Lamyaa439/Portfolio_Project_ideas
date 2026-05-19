@@ -37,6 +37,8 @@ class ArtistRemoteDataSourceImpl implements ArtistRemoteDataSource {
   Future<ArtistModel> getMyArtistProfile() async {
     final token = await tokenStorage.getToken();
 
+    print('TOKEN: $token');
+
     if (token == null) {
       throw Exception('No token found. Please login again.');
     }
@@ -49,11 +51,15 @@ class ArtistRemoteDataSourceImpl implements ArtistRemoteDataSource {
       },
     );
 
+    print('STATUS: ${response.statusCode}');
+    print('BODY: ${response.body}');
+
     if (response.statusCode == 200) {
       return ArtistModel.fromJson(json.decode(response.body));
     } else {
       throw Exception(
-          'Failed to load my artist profile: ${response.statusCode}');
+        'Failed to load my artist profile: ${response.statusCode}',
+      );
     }
   }
 }
