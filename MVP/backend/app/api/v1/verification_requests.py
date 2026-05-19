@@ -1,77 +1,60 @@
-from flask import Blueprint
-from flask import jsonify
-from flask import request
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from app.services.facade.verification_request_facade import (
-    VerificationRequestFacade
+    VerificationRequestFacade,
 )
 
 verification_requests_bp = Blueprint(
     "verification_requests",
-    __name__
+    __name__,
 )
 
 
-@verification_requests_bp.route(
-    "/verification-requests",
-    methods=["POST"]
-)
+def _json_body():
+    return request.get_json(silent=True) or {}
+
+
+@verification_requests_bp.post("/verification-requests")
+@jwt_required()
 def create_verification_request():
+    data = _json_body()
 
-    data = request.get_json()
+    result, status_code = VerificationRequestFacade.create_request(data)
 
-    result = (
-        VerificationRequestFacade.create_request(
-            data
-        )
-    )
-
-    return jsonify(result), 201
+    return jsonify(result), status_code
 
 
-@verification_requests_bp.route(
-    "/verification-requests",
-    methods=["GET"]
-)
+@verification_requests_bp.get("/verification-requests")
+@jwt_required()
 def get_all_verification_requests():
+    result, status_code = VerificationRequestFacade.get_all_requests()
 
-    result = (
-        VerificationRequestFacade.get_all_requests()
-    )
-
-    return jsonify(result), 200
+    return jsonify(result), status_code
 
 
-@verification_requests_bp.route(
-    "/verification-requests/<request_id>",
-    methods=["GET"]
-)
+@verification_requests_bp.get("/verification-requests/<request_id>")
+@jwt_required()
 def get_verification_request(request_id):
-
-    result = (
-        VerificationRequestFacade.get_request_by_id(
-            request_id
-        )
+    result, status_code = VerificationRequestFacade.get_request_by_id(
+        request_id,
     )
 
-    return jsonify(result), 200
+    return jsonify(result), status_code
 
 
-@verification_requests_bp.route(
-    "/verification-requests/<request_id>/status",
-    methods=["PATCH"]
-)
-def update_verification_request_status(
-    request_id
-):
+@verification_requests_bp.patch("/verification-requests/<request_id>/status")
+@jwt_required()
+def update_verification_request_status(request_id):
+    data = _json_body()
 
-    data = request.get_json()
+    status = data.get("status")
+    if not status:
+        return jsonify({"error": "status is required"}), 400
 
-    result = (
-        VerificationRequestFacade.update_request_status(
-            request_id,
-            data["status"]
-        )
+    result, status_code = VerificationRequestFacade.update_request_status(
+        request_id,
+        status,
     )
 
-    return jsonify(result), 200
+    return jsonify(result), status_code
