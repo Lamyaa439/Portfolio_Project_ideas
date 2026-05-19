@@ -1,5 +1,5 @@
 import '../../domain/entities/artwork.dart';
-import '../models/artist_model.dart';
+import '../../../home/models/artist_model.dart';
 import 'artist_remote_datasource.dart';
 
 class ArtistMockDataSource implements ArtistRemoteDataSource {

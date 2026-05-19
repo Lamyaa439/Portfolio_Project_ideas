@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models.BaseModel import BaseModel
+from app.models.base_model import BaseModel
 from sqlalchemy.orm import validates
 from app.core.security import hash_password, verify_password
 import re # used for Regular Expressions to validate complex string patterns (e.g., email format).

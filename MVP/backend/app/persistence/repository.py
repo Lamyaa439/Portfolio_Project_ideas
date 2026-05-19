@@ -59,11 +59,25 @@ class SQLAlchemyRepository(Repository):
         self.model = model
 
     def add(self, obj):
-        """ add object to database"""
+        """Add a new object and commit."""
+        return self.save(obj)
+
+    def save(self, obj):
+        """Persist an object (insert or update) with commit/rollback."""
         try:
             db.session.add(obj)
             db.session.commit()
             return obj
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
+    def execute_and_commit(self, statement):
+        """Execute a SQLAlchemy Core/ORM write statement and commit."""
+        try:
+            result = db.session.execute(statement)
+            db.session.commit()
+            return result
         except Exception as e:
             db.session.rollback()
             raise e
@@ -83,7 +97,6 @@ class SQLAlchemyRepository(Repository):
         """
         Fetch all records, excluding soft-deleted ones.
         """
-
         # Dynamically filters out soft-deleted records if the model supports logical deletion.
         if hasattr(self.model, 'deleted_at'):
             return self.model.query.filter(self.model.deleted_at.is_(None)).all()
@@ -91,19 +104,13 @@ class SQLAlchemyRepository(Repository):
 
     def update(self, obj_id, data):
         """Update object with new data."""
-        
         obj = self.get(obj_id)
         if not obj:
             return None
-        try:
-            for key, value in data.items():
-                setattr(obj, key, value)
-            db.session.commit()
-            return obj
-        except Exception as e:
-            db.session.rollback()
-            raise e
-        
+        for key, value in data.items():
+            setattr(obj, key, value)
+        return self.save(obj)
+
     def delete(self, obj_id):
         """Hard delete an object from the database."""
         obj = self.get(obj_id)
@@ -120,23 +127,17 @@ class SQLAlchemyRepository(Repository):
     def soft_delete(self, obj_id):
         """Marks a record as deleted without removing it from the DB."""
         from datetime import datetime, timezone
+
         obj = self.get(obj_id)
+        if not obj or not hasattr(obj, "deleted_at"):
+            return False
 
-        # if the table has "deleted_at" column
-        if obj and hasattr(obj, 'deleted_at'): 
-            try:
-                obj.deleted_at = datetime.now(timezone.utc) 
+        obj.deleted_at = datetime.now(timezone.utc)
+        if hasattr(obj, "is_active"):
+            obj.is_active = False
 
-                # Check if the model also has an is_active column before modifying it
-                if hasattr(obj, 'is_active'):
-                    obj.is_active = False
-                    
-                db.session.commit()
-                return True
-            except Exception as e:
-                db.session.rollback()
-                raise e
-        return False
+        self.save(obj)
+        return True
 
     def get_by_attribute(self, attr_name, attr_value):
         """
