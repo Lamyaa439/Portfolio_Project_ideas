@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/artist_model.dart';
+import '../../../home/models/artist_model.dart';
 
 abstract class ArtistRemoteDataSource {
   Future<ArtistModel> getArtistById(String artistId);
