@@ -9,6 +9,7 @@ class ArtistProfileBloc extends Bloc<ArtistProfileEvent, ArtistProfileState> {
   ArtistProfileBloc({required this.repository})
       : super(ArtistProfileInitial()) {
     on<GetArtistRequested>(_onGetArtistRequested);
+    on<GetMyArtistProfileRequested>(_onGetMyArtistProfileRequested);
   }
 
   Future<void> _onGetArtistRequested(
@@ -18,6 +19,19 @@ class ArtistProfileBloc extends Bloc<ArtistProfileEvent, ArtistProfileState> {
     emit(ArtistProfileLoading());
     try {
       final artist = await repository.getArtistById(event.artistId);
+      emit(ArtistProfileLoaded(artist));
+    } catch (e) {
+      emit(ArtistProfileError(e.toString()));
+    }
+  }
+
+  Future<void> _onGetMyArtistProfileRequested(
+    GetMyArtistProfileRequested event,
+    Emitter<ArtistProfileState> emit,
+  ) async {
+    emit(ArtistProfileLoading());
+    try {
+      final artist = await repository.getMyArtistProfile();
       emit(ArtistProfileLoaded(artist));
     } catch (e) {
       emit(ArtistProfileError(e.toString()));

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/artist_profile_cubit.dart';
+import '../bloc/artist_profile_bloc.dart';
+import '../bloc/artist_profile_event.dart';
 import '../bloc/artist_profile_state.dart';
 import '../widgets/artist_header.dart';
 import '../widgets/artist_bio.dart';
@@ -32,7 +33,7 @@ class ArtistProfileScreen extends StatelessWidget {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Color(0xFF1A1A1A)),
         ),
-        body: BlocBuilder<ArtistProfileCubit, ArtistProfileState>(
+        body: BlocBuilder<ArtistProfileBloc, ArtistProfileState>(
           builder: (context, state) {
             if (state is ArtistProfileLoading ||
                 state is ArtistProfileInitial) {
@@ -76,8 +77,8 @@ class ArtistProfileScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           context
-                              .read<ArtistProfileCubit>()
-                              .getArtist(artistId);
+                              .read<ArtistProfileBloc>()
+                              .add(GetArtistRequested(artistId));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1A1A1A),

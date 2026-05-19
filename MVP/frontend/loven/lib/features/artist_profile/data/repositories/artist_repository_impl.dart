@@ -11,4 +11,9 @@ class ArtistRepositoryImpl implements ArtistRepository {
   Future<Artist> getArtistById(String artistId) async {
     return await remoteDataSource.getArtistById(artistId);
   }
+
+  @override
+  Future<Artist> getMyArtistProfile() async {
+    return await remoteDataSource.getMyArtistProfile();
+  }
 }

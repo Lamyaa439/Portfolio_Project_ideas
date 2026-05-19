@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../core/network/api_constants.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../splash/splash_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/guest_settings_screen.dart';
+
+import '../../../features/artist_profile/data/datasources/artist_remote_datasource.dart';
+import '../../../features/artist_profile/data/repositories/artist_repository_impl.dart';
+import '../../../features/artist_profile/presentation/bloc/artist_profile_bloc.dart';
+import '../../../features/artist_profile/presentation/bloc/artist_profile_event.dart';
+import '../../../features/artist_profile/presentation/screens/artist_profile_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
   final bool isGuest;
@@ -188,7 +198,25 @@ class _HomeDrawerState extends State<HomeDrawer> {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  // Trigger profile view logic here
+
+                  final repository = ArtistRepositoryImpl(
+                    remoteDataSource: ArtistRemoteDataSourceImpl(
+                      client: http.Client(),
+                      baseUrl: ApiConstants.baseUrl,
+                      tokenStorage: TokenStorage(),
+                    ),
+                  );
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider(
+                        create: (_) => ArtistProfileBloc(repository: repository)
+                          ..add(GetMyArtistProfileRequested()),
+                        child: const ArtistProfileScreen(artistId: 'me'),
+                      ),
+                    ),
+                  );
                 },
                 child: CircleAvatar(
                   radius: 28,
