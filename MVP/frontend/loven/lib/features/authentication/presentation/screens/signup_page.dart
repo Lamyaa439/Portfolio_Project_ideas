@@ -4,10 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:loven/core/router/app_router.dart';
 import 'terms_page.dart';
 import 'privacy_policy_page.dart';
-<<<<<<< HEAD:MVP/frontend/loven/lib/features/authentication/presentation/screens/signup_page.dart
-import 'package:loven/presentation/home/screens/home_screen.dart';
-=======
->>>>>>> 045abf936f665ebb8b405b2debbba7b44ccea53a:MVP/frontend/loven/lib/presentation/auth/screens/signup_page.dart
 import 'login_page.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
