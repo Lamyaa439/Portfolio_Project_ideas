@@ -1,42 +1,75 @@
 from app.extensions import db
+from sqlalchemy.dialects.postgresql import UUID
 
-from app.models.verification_request import (
-    VerificationRequest
-)
+from app.models.base_model import BaseModel
 
-class VerificationRequestRepository:
 
-    @staticmethod
-    def create(data):
+# =========================================================
+# Model: VerificationRequest
+# =========================================================
+# Stores artist verification submissions.
+#
+# Each request belongs to an artist profile and keeps the
+# submitted institutional/document information needed for
+# review. The status field tracks the review lifecycle.
+# =========================================================
 
-        verification_request = VerificationRequest(
-            artist_profile_id=data["artist_profile_id"],
-            document_type=data.get("document_type"),
-            institution_name=data.get("institution_name"),
-            document_number=data.get("document_number"),
-            status="pending"
-        )
 
-        db.session.add(verification_request)
-        db.session.commit()
+class VerificationRequest(BaseModel):
 
-        return verification_request
+    __tablename__ = "verification_requests"
 
-    @staticmethod
-    def get_all():
+    artist_profile_id = db.Column(
+        UUID(as_uuid=True),
+        db.ForeignKey(
+            "artist_profiles.id",
+            ondelete="CASCADE"
+        ),
+        nullable=False
+    )
 
-        return VerificationRequest.query.all()
+    document_type = db.Column(
+        db.String(50),
+        nullable=True
+    )
 
-    @staticmethod
-    def get_by_id(request_id):
+    institution_name = db.Column(
+        db.String(255),
+        nullable=True
+    )
 
-        return VerificationRequest.query.get(request_id)
+    document_number = db.Column(
+        db.String(100),
+        nullable=True
+    )
 
-    @staticmethod
-    def update_status(request_obj, status):
+    status = db.Column(
+        db.String(50),
+        default="pending",
+        nullable=True
+    )
 
-        request_obj.status = status
+    def to_dict(self):
 
-        db.session.commit()
-
-        return request_obj
+        return {
+            "id": str(self.id) if self.id else None,
+            "artist_profile_id": (
+                str(self.artist_profile_id)
+                if self.artist_profile_id
+                else None
+            ),
+            "document_type": self.document_type,
+            "institution_name": self.institution_name,
+            "document_number": self.document_number,
+            "status": self.status,
+            "submitted_at": (
+                self.created_at.isoformat()
+                if self.created_at
+                else None
+            ),
+            "updated_at": (
+                self.updated_at.isoformat()
+                if self.updated_at
+                else None
+            ),
+        }
