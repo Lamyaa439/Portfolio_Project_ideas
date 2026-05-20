@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../controller/cubit/artwork_cubit.dart';
 import '../../controller/cubit/artwork_state.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateArtworkScreen extends StatefulWidget {
   const CreateArtworkScreen({super.key});
@@ -63,7 +64,7 @@ class _CreateArtworkScreenState
             ),
           );
 
-          Navigator.pop(context);
+          context.go('/');
         }
 
         if (state is ArtworkError) {
