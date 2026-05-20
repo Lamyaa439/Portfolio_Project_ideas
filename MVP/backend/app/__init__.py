@@ -15,13 +15,17 @@ from config import Config
 # Global JWT instance
 jwt = JWTManager()
 
-
 def create_app():
     app = Flask(__name__)
 
     # Enable CORS for API routes
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
-
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": "*"}},
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    )
     # Load application configuration
     app.config.from_object(Config)
 
