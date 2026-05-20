@@ -87,12 +87,15 @@ final GoRouter router = GoRouter(
       path: '/artworks/create',
       builder: (context, state) => const CreateArtworkScreen(),
     ),
-
+    
     GoRoute(
       path: '/art-details',
       builder: (context, state) {
-        final artItem = state.extra as ArtworkModel;
-
+        final extra = state.extra;
+        final artItem = extra is ArtworkModel
+        ? extra
+        : ArtworkModel.fromJson(extra as Map<String, dynamic>);
+        
         return ArtDetailsScreen(
           artItem: artItem,
         );
