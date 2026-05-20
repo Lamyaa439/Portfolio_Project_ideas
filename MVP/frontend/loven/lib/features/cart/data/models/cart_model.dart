@@ -16,23 +16,28 @@ class CartModel {
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
-    final data = json['cart'] ?? json;
+    final cartData = json['cart'] ?? {};
+
+    final items = (json['items'] as List? ?? [])
+        .map((item) => CartItemModel.fromJson(item))
+        .toList();
+
+    final subtotal = items.fold<double>(
+      0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
+
+    final shippingFee = items.fold<double>(
+      0,
+      (sum, item) => sum + item.shippingFee,
+    );
 
     return CartModel(
-      id: data['id']?.toString(),
-      items: (data['items'] as List? ?? [])
-          .map((item) => CartItemModel.fromJson(item))
-          .toList(),
-      subtotal: _toDouble(data['subtotal']),
-      shippingFee: _toDouble(data['shipping_fee']),
-      totalAmount: _toDouble(data['total_amount']),
+      id: cartData['id']?.toString(),
+      items: items,
+      subtotal: subtotal,
+      shippingFee: shippingFee,
+      totalAmount: subtotal + shippingFee,
     );
-  }
-
-  static double _toDouble(dynamic value) {
-    if (value == null) return 0;
-    if (value is int) return value.toDouble();
-    if (value is double) return value;
-    return double.tryParse(value.toString()) ?? 0;
   }
 }

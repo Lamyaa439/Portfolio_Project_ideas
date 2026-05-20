@@ -1,35 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:loven/core/res/theme/app_colors.dart';
+import 'package:loven/features/artist_profile/model/artist_model.dart';
+import 'package:loven/features/artist_profile/model/artist_repository.dart';
+import 'package:loven/features/cart/controller/cubit/cart_cubit.dart';
 
-class ArtDetailsScreen extends StatelessWidget {
-  final Map<String, dynamic> artItem;
+class ArtDetailsScreen extends StatefulWidget {
+  final ArtworkModel artItem;
 
-  const ArtDetailsScreen({super.key, required this.artItem});
+  const ArtDetailsScreen({
+    super.key,
+    required this.artItem,
+  });
+
+  @override
+  State<ArtDetailsScreen> createState() => _ArtDetailsScreenState();
+}
+
+class _ArtDetailsScreenState extends State<ArtDetailsScreen> {
+  bool _checkingOwner = true;
+  bool _isOwnArtwork = false;
+  bool _isAddingToCart = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfOwnArtwork();
+  }
+
+  Future<void> _checkIfOwnArtwork() async {
+    try {
+      final artist = await ArtistRepository().getMyProfile();
+
+      if (!mounted) return;
+
+      setState(() {
+        _isOwnArtwork = artist.id == widget.artItem.artistProfileId;
+        _checkingOwner = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+
+      setState(() {
+        _isOwnArtwork = false;
+        _checkingOwner = false;
+      });
+    }
+  }
+
+  Future<void> _addToCart() async {
+    if (_isOwnArtwork) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'You cannot buy your own artwork',
+          ),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isAddingToCart = true;
+    });
+
+    await context.read<CartCubit>().addItem(
+          artworkId: widget.artItem.id,
+          quantity: 1,
+        );
+
+    if (!mounted) return;
+
+    setState(() {
+      _isAddingToCart = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Artwork added to cart',
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // 1. Define theme variables
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
+    final isOutOfStock = (widget.artItem.quantityAvailable ?? 0) <= 0;
+
     return Scaffold(
-      // Use theme background color instead of hardcoded white
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        // Icon color adapts to theme
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+        iconTheme: IconThemeData(
+          color: theme.colorScheme.onSurface,
+        ),
         title: Text(
-          "Details",
-          style: TextStyle(color: theme.colorScheme.onSurface),
+          'Details',
+          style: TextStyle(
+            color: theme.colorScheme.onSurface,
+          ),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Artwork Card
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
@@ -45,88 +126,109 @@ class ArtDetailsScreen extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
-                  child: Stack(
-                    children: [
-                      Hero(
-                        tag: artItem['id'] ?? 'art_image',
-                        child: Image.asset(
-                          artItem['imageUrl'] ?? '',
+                  child: Hero(
+                    tag: widget.artItem.id,
+                    child: Image.network(
+                      widget.artItem.artworkImageUrl ?? '',
+                      height: 400,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (
+                        context,
+                        error,
+                        stackTrace,
+                      ) {
+                        return Container(
                           height: 400,
                           width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      // Floating Icons
-                      Positioned(
-                        top: 20,
-                        left: 20,
-                        child: Column(
-                          children: [
-                            _buildFloatingIcon(
-                                Icons.shopping_cart_outlined, isDarkMode, () {
-                              print("Added to cart");
-                            }),
-                            const SizedBox(height: 12),
-                            _buildFloatingIcon(
-                                Icons.favorite_border, isDarkMode, () {
-                              print("Liked!");
-                            }),
-                          ],
-                        ),
-                      ),
-                    ],
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.image_not_supported,
+                            size: 80,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
 
-            // Info Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 25,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        artItem['title'] ?? 'Untitled',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface, // Adapts color
+                      Expanded(
+                        child: Text(
+                          widget.artItem.title,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
                       ),
+
                       Text(
-                        '${artItem['price']} SAR',
+                        '${widget.artItem.price ?? 0} SAR',
                         style: const TextStyle(
-                            fontSize: 20,
-                            color: AppColors.primaryPurple,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          color: AppColors.primaryPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 15),
+
+                  const SizedBox(height: 20),
+
                   Row(
                     children: [
-                      const CircleAvatar(
-                        radius: 18,
-                        backgroundColor: AppColors.deepPurple,
-                        child:
-                            Icon(Icons.person, color: Colors.white, size: 18),
+                      const Icon(
+                        Icons.inventory_2_outlined,
+                        color: AppColors.deepPurple,
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 8),
                       Text(
-                        artItem['artistName'] ?? 'Unknown Artist',
+                        'Available: ${widget.artItem.quantityAvailable ?? 0}',
                         style: TextStyle(
                           fontSize: 16,
-                          color: theme.colorScheme.onSurface
-                              .withOpacity(0.7), // Subtle adapt
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ],
                   ),
-                  Divider(height: 40, color: theme.dividerColor),
+
+                  const SizedBox(height: 12),
+
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.local_shipping_outlined,
+                        color: AppColors.deepPurple,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Shipping Fee: ${widget.artItem.shippingFee ?? 0} SAR',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Divider(
+                    height: 40,
+                    color: theme.dividerColor,
+                  ),
+
                   Text(
                     'About this piece',
                     style: TextStyle(
@@ -135,75 +237,55 @@ class ArtDetailsScreen extends StatelessWidget {
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
+
                   const SizedBox(height: 10),
+
                   Text(
-                    artItem['description'] ?? 'No description provided.',
+                    widget.artItem.description ?? 'No description provided.',
                     style: TextStyle(
                       color: theme.colorScheme.onSurface.withOpacity(0.8),
                       height: 1.5,
                     ),
                   ),
+
                   const SizedBox(height: 30),
-                  Text(
-                    'More like this',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+
                   SizedBox(
-                    height: 180,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 140,
-                          margin: const EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: isDarkMode
-                                ? Colors.grey[900]
-                                : Colors.grey[100],
-                            image: const DecorationImage(
-                              image: AssetImage('images/art2.jpg'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: _checkingOwner ||
+                              _isAddingToCart ||
+                              _isOwnArtwork ||
+                              isOutOfStock
+                          ? null
+                          : _addToCart,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primaryContainer,
+                        foregroundColor: theme.colorScheme.onPrimaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: Text(
+                        _checkingOwner
+                            ? 'Checking...'
+                            : _isAddingToCart
+                                ? 'Adding...'
+                                : _isOwnArtwork
+                                    ? 'Your Artwork'
+                                    : isOutOfStock
+                                        ? 'Out of Stock'
+                                        : 'Add to Cart',
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 50),
                 ],
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  // Updated helper to handle dark mode icon backgrounds
-  Widget _buildFloatingIcon(
-      IconData icon, bool isDarkMode, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          // In dark mode, we use a darker, slightly transparent circle
-          color: isDarkMode
-              ? Colors.black.withOpacity(0.7)
-              : Colors.white.withOpacity(0.9),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          color: isDarkMode ? Colors.white : Colors.black,
-          size: 22,
         ),
       ),
     );

@@ -149,6 +149,9 @@ class ArtworkRepository {
       }),
     );
 
+    print('CREATE ARTWORK STATUS: ${response.statusCode}');
+    print('CREATE ARTWORK BODY: ${response.body}');
+    
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {

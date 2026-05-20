@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'home_event.dart';
 import 'home_state.dart';
+
 import 'package:loven/features/artwork/data/repositories/artwork_repository.dart';
+import 'package:loven/features/artist_profile/model/artist_model.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ArtworkRepository _artworkRepository;
@@ -17,51 +19,94 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc({
     ArtworkRepository? artworkRepository,
-  })  : _artworkRepository = artworkRepository ?? ArtworkRepository(),
+  })  : _artworkRepository =
+            artworkRepository ??
+                ArtworkRepository(),
         super(HomeLoading()) {
-    on<FetchHomeData>((event, emit) async {
+    on<FetchHomeData>((
+      event,
+      emit,
+    ) async {
       emit(HomeLoading());
-      
+
       try {
-        final artworks = (await _artworkRepository.getArtworks())
-        .cast<Map<String, dynamic>>();
-        
-        emit(HomeLoaded(
-          allArtworks: artworks,
-          categories: _categoryTags,
-          artPieces: artworks,
-        ));
-        } catch (e) {
-          emit(HomeError('Failed to fetch artworks: $e'));
-        }
-      });
+        final rawArtworks =
+            await _artworkRepository
+                .getArtworks();
 
-    on<FilterArtworks>((event, emit) {
-      if (state is! HomeLoaded) return;
+        final artworks =
+            rawArtworks
+                .map(
+                  (json) =>
+                      ArtworkModel.fromJson(
+                    json,
+                  ),
+                )
+                .toList();
 
-      final currentState = state as HomeLoaded;
+        emit(
+          HomeLoaded(
+            allArtworks: artworks,
+            categories: _categoryTags,
+            artPieces: artworks,
+          ),
+        );
+      } catch (e) {
+        emit(
+          HomeError(
+            'Failed to fetch artworks: $e',
+          ),
+        );
+      }
+    });
 
-      final search = event.searchText ?? currentState.searchQuery;
-      final category = event.category ?? currentState.selectedCategory;
+    on<FilterArtworks>((
+      event,
+      emit,
+    ) {
+      if (state is! HomeLoaded) {
+        return;
+      }
 
-      final filteredList = currentState.allArtworks.where((art) {
-        final title = art['title']?.toString().toLowerCase() ?? '';
-        final artCategory = art['category']?.toString() ?? '';
+      final currentState =
+          state as HomeLoaded;
+
+      final search =
+          event.searchText ??
+              currentState.searchQuery;
+
+      final category =
+          event.category ??
+              currentState
+                  .selectedCategory;
+
+      final filteredList =
+          currentState.allArtworks.where((
+        art,
+      ) {
+        final title =
+            art.title.toLowerCase();
 
         final matchesSearch =
-            search.isEmpty || title.contains(search.toLowerCase());
+            search.isEmpty ||
+                title.contains(
+                  search.toLowerCase(),
+                );
 
         final matchesCategory =
-            category == 'All' || artCategory == category;
+            category == 'All';
 
-        return matchesSearch && matchesCategory;
+        return matchesSearch &&
+            matchesCategory;
       }).toList();
 
-      emit(currentState.copyWith(
-        artPieces: filteredList,
-        searchQuery: search,
-        selectedCategory: category,
-      ));
+      emit(
+        currentState.copyWith(
+          artPieces: filteredList,
+          searchQuery: search,
+          selectedCategory: category,
+        ),
+      );
     });
   }
 }

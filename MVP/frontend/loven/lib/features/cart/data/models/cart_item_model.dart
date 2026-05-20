@@ -4,6 +4,7 @@ class CartItemModel {
   final String title;
   final String? imageUrl;
   final double price;
+  final double shippingFee;
   final int quantity;
 
   CartItemModel({
@@ -12,6 +13,7 @@ class CartItemModel {
     required this.title,
     this.imageUrl,
     required this.price,
+    required this.shippingFee,
     required this.quantity,
   });
 
@@ -26,12 +28,18 @@ class CartItemModel {
       title: artwork['title']?.toString() ??
           json['title']?.toString() ??
           'Artwork',
-      imageUrl: artwork['image_url']?.toString() ??
+      imageUrl: artwork['artwork_image_url']?.toString() ??
+          artwork['image_url']?.toString() ??
+          json['artwork_image_url']?.toString() ??
           json['image_url']?.toString(),
       price: _toDouble(
         json['price_at_purchase'] ??
             artwork['price'] ??
             json['price'],
+      ),
+      shippingFee: _toDouble(
+        artwork['shipping_fee'] ??
+            json['shipping_fee'],
       ),
       quantity: _toInt(json['quantity']),
     );

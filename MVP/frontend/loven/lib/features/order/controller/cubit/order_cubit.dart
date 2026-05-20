@@ -7,25 +7,23 @@ class OrderCubit extends Cubit<OrderState> {
   final OrderRepository _repository;
 
   OrderCubit(this._repository) : super(OrderInitial());
-
+  
   Future<void> createOrder({
-    required String buyerId,
     required double subtotal,
     required double shippingFee,
     required double totalAmount,
     required List<Map<String, dynamic>> items,
   }) async {
     emit(OrderLoading());
-
+    
     try {
       final order = await _repository.createOrder(
-        buyerId: buyerId,
         subtotal: subtotal,
         shippingFee: shippingFee,
         totalAmount: totalAmount,
         items: items,
       );
-
+      
       emit(OrderLoaded(order));
     } catch (e) {
       emit(OrderError(e.toString()));
