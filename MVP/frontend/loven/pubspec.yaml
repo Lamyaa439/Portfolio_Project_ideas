@@ -54,7 +54,7 @@ flutter_launcher_icons:
   image_path_ios: "assets/images/loven-logo.png"
   android: true
   ios: true
-  adaptive_icon_background: "assets/images/loven-logo.png"
+  adaptive_icon_background: "F9F6F0"
   adaptive_icon_foreground: "assets/images/loven-logo.png"
   # --- Flutter Specific Configuration ---
   # --- It must be at the very edge ---
