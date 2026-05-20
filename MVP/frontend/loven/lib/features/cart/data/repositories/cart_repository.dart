@@ -39,6 +39,9 @@ class CartRepository {
       }),
     );
 
+    print('ADD TO CART STATUS: ${response.statusCode}');
+    print('ADD TO CART BODY: ${response.body}');
+
     return jsonDecode(response.body);
   }
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../home/View/Screens/home_screen.dart';
-import 'signup_page.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../controller/cubit/auth_cubit.dart';
 import '../../controller/cubit/auth_state.dart';
+import 'package:loven/core/router/app_router.dart';
 
 class LoginPage extends StatefulWidget {
   final bool fromGuest;
@@ -43,23 +44,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _goToGuestHome() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(isGuest: true),
-      ),
-      (route) => false,
-    );
+    isUserBrowsingAsGuest = true;
+    context.go('/');
   }
-
+  
   void _goToLoggedInHome() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-      (route) => false,
-    );
+    isUserBrowsingAsGuest = false;
+    
+    if (!mounted) return;
+    
+    GoRouter.of(context).go('/');
   }
 
   InputDecoration inputDecoration(String hint, ThemeData theme) {
@@ -121,44 +115,44 @@ class _LoginPageState extends State<LoginPage> {
             body: Stack(
               children: [
                 SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 80),
-                        Center(
-                          child: Image.asset(
-                            'assets/images/loven-logo.png',
-                            width: 130,
-                            fit: BoxFit.contain,
-                          ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 24),
+                      Center(
+                        child: Image.asset(
+                          'assets/images/loven-logo.png',
+                          width: 105,
+                          fit: BoxFit.contain,
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Welcome back to LOVEN!',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.primary,
-                          ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Welcome back to LOVEN!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.primary,
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'Login to continue',
-                          style: TextStyle(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontSize: 14,
-                          ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Login to continue',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontSize: 14,
                         ),
-                        const SizedBox(height: 32),
-                        Container(
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 32,
-                            vertical: 48,
+                            vertical: 16,
                           ),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainerLow,
-                            borderRadius: BorderRadius.vertical(
+                            borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(40),
                             ),
                           ),
@@ -175,13 +169,17 @@ class _LoginPageState extends State<LoginPage> {
                                 TextFormField(
                                   controller: emailController,
                                   keyboardType: TextInputType.emailAddress,
-                                  decoration:
-                                      inputDecoration('Type your email', theme),
+                                  decoration: inputDecoration(
+                                    'Type your email',
+                                    theme,
+                                  ),
                                   enabled: !isLoading,
                                   style: TextStyle(
-                                      color: theme.colorScheme.onSurface),
+                                    color: theme.colorScheme.onSurface,
+                                  ),
                                   validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
+                                    if (value == null ||
+                                        value.trim().isEmpty) {
                                       return 'Email is required';
                                     }
 
@@ -192,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 24),
+                                const SizedBox(height: 22),
                                 const Text(
                                   'Password',
                                   style: TextStyle(fontSize: 16),
@@ -203,17 +201,19 @@ class _LoginPageState extends State<LoginPage> {
                                   obscureText: obscurePassword,
                                   enabled: !isLoading,
                                   style: TextStyle(
-                                      color: theme.colorScheme.onSurface),
+                                    color: theme.colorScheme.onSurface,
+                                  ),
                                   decoration: inputDecoration(
-                                          'Type your password', theme)
-                                      .copyWith(
+                                    'Type your password',
+                                    theme,
+                                  ).copyWith(
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         obscurePassword
                                             ? Icons.visibility_off
                                             : Icons.visibility,
-                                        color:
-                                            theme.colorScheme.onSurfaceVariant,
+                                        color: theme
+                                            .colorScheme.onSurfaceVariant,
                                       ),
                                       onPressed: isLoading
                                           ? null
@@ -237,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 14),
                                 InkWell(
                                   onTap: isLoading
                                       ? null
@@ -283,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 40),
+                                const SizedBox(height: 12),
                                 SizedBox(
                                   width: double.infinity,
                                   height: 48,
@@ -294,7 +294,8 @@ class _LoginPageState extends State<LoginPage> {
                                       foregroundColor:
                                           theme.colorScheme.onPrimary,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius:
+                                            BorderRadius.circular(12),
                                       ),
                                     ),
                                     onPressed: isLoading ? null : _login,
@@ -308,45 +309,39 @@ class _LoginPageState extends State<LoginPage> {
                                                   theme.colorScheme.onPrimary,
                                             ),
                                           )
-                                        // ? const Text('Logging in...')
                                         : const Text(
                                             'Login',
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16),
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                   ),
                                 ),
-                                const SizedBox(height: 28),
+                                const SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       "Don't have an account? ",
                                       style: TextStyle(
-                                          color: theme
-                                              .colorScheme.onSurfaceVariant),
+                                        color: theme
+                                            .colorScheme.onSurfaceVariant,
+                                      ),
                                     ),
                                     GestureDetector(
                                       onTap: isLoading
                                           ? null
                                           : () {
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SignupPage(
-                                                          fromGuest:
-                                                              widget.fromGuest),
-                                                ),
-                                              );
+                                              context.pushReplacement('/auth');
                                             },
                                       child: Text(
                                         'Sign up!',
                                         style: TextStyle(
                                           color: theme.colorScheme.primary,
                                           fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline,
+                                          decoration:
+                                              TextDecoration.underline,
                                         ),
                                       ),
                                     ),
@@ -356,8 +351,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -370,15 +365,7 @@ class _LoginPageState extends State<LoginPage> {
                         size: 28,
                         color: theme.colorScheme.onSurface,
                       ),
-                      onPressed: widget.fromGuest
-                          ? _goToGuestHome
-                          : () {
-                              if (Navigator.of(context).canPop()) {
-                                Navigator.of(context).pop();
-                              } else {
-                                _goToGuestHome();
-                              }
-                            },
+                      onPressed: _goToGuestHome,
                     ),
                   ),
                 ),

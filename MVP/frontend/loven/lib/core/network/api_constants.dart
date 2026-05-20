@@ -28,8 +28,8 @@ class ApiConstants {
   // Cart
   // =====================================================
 
-  static const String cart = baseUrl;
-  static const String cartItems = '$baseUrl/items';
+  static const String cart = '$baseUrl/carts/';
+  static const String cartItems = '$baseUrl/carts/items';
 
   // =====================================================
   // Orders

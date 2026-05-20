@@ -1,19 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:loven/features/artist_profile/model/artist_model.dart';
 
-abstract class HomeState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class HomeInitial extends HomeState {}
+abstract class HomeState {}
 
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  final List<Map<String, dynamic>> allArtworks;
-
+  final List<ArtworkModel> allArtworks;
+  final List<ArtworkModel> artPieces;
   final List<String> categories;
-  final List<dynamic> artPieces;
 
   final String selectedCategory;
   final String searchQuery;
@@ -27,30 +21,30 @@ class HomeLoaded extends HomeState {
   });
 
   HomeLoaded copyWith({
-    List<Map<String, dynamic>>? allArtworks,
+    List<ArtworkModel>? allArtworks,
+    List<ArtworkModel>? artPieces,
     List<String>? categories,
-    List<dynamic>? artPieces,
     String? selectedCategory,
     String? searchQuery,
   }) {
     return HomeLoaded(
-      allArtworks: allArtworks ?? this.allArtworks,
-      categories: categories ?? this.categories,
-      artPieces: artPieces ?? this.artPieces,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
-      searchQuery: searchQuery ?? this.searchQuery,
+      allArtworks:
+          allArtworks ?? this.allArtworks,
+      artPieces:
+          artPieces ?? this.artPieces,
+      categories:
+          categories ?? this.categories,
+      selectedCategory:
+          selectedCategory ??
+              this.selectedCategory,
+      searchQuery:
+          searchQuery ?? this.searchQuery,
     );
   }
-
-  @override
-  List<Object?> get props =>
-      [allArtworks, categories, artPieces, selectedCategory, searchQuery];
 }
 
 class HomeError extends HomeState {
   final String message;
-  HomeError(this.message);
 
-  @override
-  List<Object?> get props => [message];
+  HomeError(this.message);
 }

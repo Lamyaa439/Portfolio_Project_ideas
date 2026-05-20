@@ -9,7 +9,6 @@ class OrderRepository {
   final TokenStorage _tokenStorage = TokenStorage();
 
   Future<Map<String, dynamic>> createOrder({
-    required String buyerId,
     required double subtotal,
     required double shippingFee,
     required double totalAmount,
@@ -24,7 +23,6 @@ class OrderRepository {
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-        'buyer_id': buyerId,
         'subtotal': subtotal,
         'shipping_fee': shippingFee,
         'total_amount': totalAmount,

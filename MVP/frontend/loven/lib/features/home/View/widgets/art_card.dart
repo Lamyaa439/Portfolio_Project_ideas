@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:loven/core/res/theme/app_colors.dart';
+import 'package:loven/features/artist_profile/model/artist_model.dart';
 
 class ArtCard extends StatelessWidget {
-  final String title;
-  final String price;
-  final String imageUrl;
-  final String artistName;
-  final String description;
+  final ArtworkModel artwork;
   final bool isGuest;
   final VoidCallback onActionPressed;
 
   const ArtCard({
     super.key,
-    required this.title,
-    required this.price,
-    required this.imageUrl,
-    required this.artistName,
-    required this.description,
+    required this.artwork,
     required this.isGuest,
     required this.onActionPressed,
   });
@@ -26,14 +20,10 @@ class ArtCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push('/art-details', extra: {
-          'title': title,
-          'price': price,
-          'imageUrl': imageUrl,
-          'artistName': artistName,
-          'description': description,
-          'id': title,
-        });
+        context.push(
+          '/art-details',
+          extra: artwork,
+        );
       },
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -44,59 +34,84 @@ class ArtCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
                 Hero(
-                  tag: title,
+                  tag: artwork.id,
                   child: ClipRRect(
                     borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(20)),
-                    child: Image.asset(
-                      imageUrl,
+                        const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    child: Image.network(
+                      artwork.artworkImageUrl ??
+                          '',
                       fit: BoxFit.cover,
                       height: 200,
                       width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) {
+                      errorBuilder: (
+                        context,
+                        error,
+                        stackTrace,
+                      ) {
                         return Container(
                           height: 200,
                           color: Colors.grey[300],
-                          child: const Icon(Icons.broken_image, size: 50),
+                          child: const Icon(
+                            Icons.broken_image,
+                            size: 50,
+                          ),
                         );
                       },
                     ),
                   ),
                 ),
+
                 Positioned(
                   top: 10,
                   left: 10,
                   child: Column(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.white70,
+                        backgroundColor:
+                            Colors.white70,
                         child: IconButton(
-                          icon: const Icon(Icons.favorite_border,
-                              color: Colors.red),
+                          icon: const Icon(
+                            Icons.favorite_border,
+                            color: Colors.red,
+                          ),
                           onPressed: () {
-                            // 🎯 If a guest taps favorite, send them to login/signup
                             if (isGuest) {
-                              context.push('/auth');
+                              context.push(
+                                '/auth',
+                              );
                             } else {
                               onActionPressed();
                             }
                           },
                         ),
                       ),
+
                       const SizedBox(height: 8),
+
                       CircleAvatar(
-                        backgroundColor: Colors.white70,
+                        backgroundColor:
+                            Colors.white70,
                         child: IconButton(
-                          icon: const Icon(Icons.add_shopping_cart,
-                              color: AppColors.primaryBlue),
+                          icon: const Icon(
+                            Icons
+                                .add_shopping_cart,
+                            color: AppColors
+                                .primaryBlue,
+                          ),
                           onPressed: () {
                             if (isGuest) {
-                              context.push('/auth');
+                              context.push(
+                                '/auth',
+                              );
                             } else {
                               onActionPressed();
                             }
@@ -108,22 +123,30 @@ class ArtCard extends StatelessWidget {
                 ),
               ],
             ),
+
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding:
+                  const EdgeInsets.all(12.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 4),
                   Text(
-                    "By $artistName",
-                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    artwork.title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium,
                   ),
+
                   const SizedBox(height: 8),
+
                   Text(
-                    "$price SAR",
+                    '${artwork.price ?? 0} SAR',
                     style: const TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
+                      color: Colors.grey,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

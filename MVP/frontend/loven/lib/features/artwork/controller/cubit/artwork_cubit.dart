@@ -81,66 +81,62 @@ class ArtworkCubit extends Cubit<ArtworkState> {
       emit(ArtworkError(e.toString()));
     }
   }
-
+  
   Future<void> createArtwork({
     required String title,
     required String description,
     required double price,
-    required String imageUrl,
-    String? category,
-    String? medium,
-    String? dimensions,
-  }) async {
-    emit(ArtworkLoading());
-
-    try {
-      final artwork = await _repository.createArtwork(
-        title: title,
-        description: description,
-        price: price,
-        imageUrl: imageUrl,
-        category: category,
-        medium: medium,
-        dimensions: dimensions,
-      );
-
-      emit(ArtworkLoaded(artwork));
-    } catch (e) {
-      emit(ArtworkError(e.toString()));
-    }
-  }
+    required int quantityAvailable,
+    required double shippingFee,
+    required String artworkImageUrl,
+    }) async {
+      emit(ArtworkLoading());
+      
+      try {
+        final artwork = await _repository.createArtwork(
+          title: title,
+          description: description,
+          price: price,
+          quantityAvailable: quantityAvailable,
+          shippingFee: shippingFee,
+          artworkImageUrl: artworkImageUrl,
+        );
+        
+        emit(ArtworkLoaded(artwork));
+        } catch (e) {
+          emit(ArtworkError(e.toString()));
+        }
+      }
 
   Future<void> updateArtwork({
     required String artworkId,
     String? title,
     String? description,
     double? price,
-    String? imageUrl,
-    String? category,
-    String? medium,
-    String? dimensions,
+    int? quantityAvailable,
+    double? shippingFee,
+    String? artworkImageUrl,
     String? status,
   }) async {
     emit(ArtworkLoading());
-
+    
     try {
       final artwork = await _repository.updateArtwork(
         artworkId: artworkId,
         title: title,
         description: description,
         price: price,
-        imageUrl: imageUrl,
-        category: category,
-        medium: medium,
-        dimensions: dimensions,
+        quantityAvailable: quantityAvailable,
+        shippingFee: shippingFee,
+        artworkImageUrl: artworkImageUrl,
         status: status,
       );
-
+      
       emit(ArtworkLoaded(artwork));
-    } catch (e) {
-      emit(ArtworkError(e.toString()));
+      } catch (e) {
+        emit(ArtworkError(e.toString()));
+      }
     }
-  }
 
   Future<void> deleteArtwork({
     required String artworkId,

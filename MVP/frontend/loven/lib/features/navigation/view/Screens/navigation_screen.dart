@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loven/features/artist_profile/view/screens/artist_profile_screen.dart';
 import 'package:loven/features/home/View/Screens/home_screen.dart';
-import 'package:loven/features/home/View/Screens/settings_screen.dart';
 import '../../../../main.dart';
 import '../../controller/cubit/navigation_bar_cubit.dart';
 import '../widget/navigation_widget.dart';
+import 'package:loven/features/cart/view/screens/cart_screen.dart';
 
 class NavigationScreen extends StatelessWidget {
   final bool isGuest;
@@ -46,19 +46,12 @@ class NavigationScreen extends StatelessWidget {
           index: state.currentIndex,
           children: [
             const HomeScreen(),
-            const SettingsScreen(),
             isGuest
-            ? const Center(
-              child: Text('Guest Mode: Sign in to view profiles'),
-            )
+            ? const Center(child: Text('Guest Mode: Sign in to view your cart'))
+            : const CartScreen(),
+            isGuest
+            ? const Center(child: Text('Guest Mode: Sign in to view profiles'))
             : const ArtistProfileScreen(),
-            isGuest
-            ? const Center(
-              child: Text('Guest Mode: Sign in to view your cart'),
-            )
-            : const Center(
-              child: Text('Cart Content Coming Soon'),
-            ),
           ],
         );
       }),
