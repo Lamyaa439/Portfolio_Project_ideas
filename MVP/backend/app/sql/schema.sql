@@ -192,8 +192,16 @@ CREATE TABLE IF NOT EXISTS "payments" (
     "order_id" UUID NOT NULL UNIQUE,
     "moyasar_payment_id" VARCHAR(255) UNIQUE,
     "amount" DECIMAL(10,2) CHECK (amount >= 0),
-    "status" VARCHAR(50) DEFAULT 'pending',
+
+    "status" VARCHAR(50) DEFAULT 'initiated',
     "currency" VARCHAR(10) DEFAULT 'SAR',
+
+    -- apple pay, mada, visa
+    "source_type" VARCHAR(50),
+    "failure_reason" TEXT,
+    "refunded_amount" DECIMAL(10,2) DEFAULT 0.00 CHECK (refunded_amount >= 0 AND refunded_amount <= amount),
+    "refunded_at" TIMESTAMP,
+    "gateway_fee" DECIMAL(10,2) DEFAULT 0.00,
     "paid_at" TIMESTAMP,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
